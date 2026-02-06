@@ -1,0 +1,21 @@
+/* OBS Bible Free Version - Icons CSS */
+
+/* Icon styles can be added here */
+/* This file is prepared for future icon integration */
+
+@font-face {
+    font-family: 'BibleIcons';
+    src: url('data:application/octet-stream;') format('woff');
+}
+
+/* Utility classes for icons */
+.icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    stroke-width: 0;
+    stroke: currentColor;
+    fill: currentColor;
+}
+
+/* Add more icon classes as needed */

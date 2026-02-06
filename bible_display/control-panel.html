@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OBS Bible Free Version - Control Panel</title>
+    <link rel="stylesheet" href="../common/css/style-control_panel.css">
+    <link rel="stylesheet" href="../common/css/cp-icons.css">
+    <link rel="stylesheet" href="../common/css/themes/dark/theme.css">
+    <script src="../common/js/jquery.js"></script>
+    <script src="../common/js/jscolor.js"></script>
+    <script src="../common/js/versets.js"></script>
+    <script src="../common/js/bible-api.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="main-panel">
+            <h1>Bible Query</h1>
+            
+            <!-- Bible Selection -->
+            <div class="form-group">
+                <label for="bibleSelect">Bible:</label>
+                <select id="bibleSelect" class="form-control">
+                    <option value="louis_segond">Louis Segond</option>
+                    <option value="bible_du_semeur">Bible du Semeur</option>
+                    <option value="nouvelle_king_james">Nouvelle King James</option>
+                    <option value="ostervald">Ostervald</option>
+                </select>
+            </div>
+
+            <!-- Reference Input with Books Dropdown -->
+            <div class="form-group">
+                <label for="referenceInput">Référence:</label>
+                <div class="reference-input-wrapper">
+                    <input type="text" id="referenceInput" class="form-control" placeholder="Saisissez ou sélectionnez un livre">
+                    <datalist id="versesDatalist"></datalist>
+                </div>
+            </div>
+
+            <!-- Books Dropdown List -->
+            <div id="versesDropdown" class="books-dropdown-section">
+                <div class="books-dropdown">
+                    <div id="booksList" class="books-list">
+                        <!-- Books will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Display Button -->
+            <button id="displayBtn" class="btn btn-primary">Submit</button>
+
+            <!-- Currently Displayed Verse (hidden by default) -->
+            <div id="currentVerse" class="current-verse-section">
+                <div class="current-verse-display">
+                    <p>Aucun verset sélectionné</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <button class="nav-btn" id="searchBtn" title="Rechercher">
+            <span class="icon">🔍</span>
+            <span class="label">Search</span>
+        </button>
+        <button class="nav-btn" id="bibleBtn" title="Bible">
+            <span class="icon">📖</span>
+            <span class="label">Bible</span>
+        </button>
+        <button class="nav-btn" id="listBtn" title="Liste">
+            <span class="icon">☰</span>
+            <span class="label">List</span>
+        </button>
+        <button class="nav-btn" id="themeBtn" title="Thème">
+            <span class="icon">🎨</span>
+            <span class="label">Theme</span>
+        </button>
+        <button class="nav-btn" id="settingsBtn" title="Paramètres">
+            <span class="icon">⚙️</span>
+            <span class="label">Settings</span>
+        </button>
+    </div>
+
+    <script>
+        // Initialize the control panel with Bible API
+        
+        // Initialize books list from Bible API
+        function initializeBooksDropdown() {
+            const booksList = $('#booksList');
+            booksList.empty();
+            
+            const books = getBooks();
+            books.forEach(bookName => {
+                const bookItem = $(`<div class="book-item" data-book="${bookName.toLowerCase()}">${bookName}</div>`);
+                bookItem.click(function() {
+                    $('#referenceInput').val(bookName);
+                    $('.book-item').removeClass('active');
+                    $(this).addClass('active');
+                    toggleBooksDropdown(false);
+                });
+                booksList.append(bookItem);
+            });
+        }
+
+        // Toggle books dropdown visibility
+        function toggleBooksDropdown(show) {
+            if (show === undefined) {
+                $('#versesDropdown').toggleClass('show');
+            } else {
+                if (show) {
+                    $('#versesDropdown').addClass('show');
+                } else {
+                    $('#versesDropdown').removeClass('show');
+                }
+            }
+        }
+
+        // Display verse with data from Bible API
+        function displayVerse(reference) {
+            const verses = getVersesByReference(reference);
+            
+            if (verses && verses.length > 0) {
+                const firstVerse = verses[0];
+                let textContent = verses.map(v => v.text).join(' ');
+                
+                // Sauvegarder dans localStorage pour le browser-source.html
+                localStorage.setItem('currentVerseReference', firstVerse.reference);
+                localStorage.setItem('currentVerseText', textContent);
+                localStorage.setItem('currentVerseSource', 'King James Bible');
+                
+                $('#currentVerse').addClass('show').html(`
+                    <div class="current-verse-display">
+                        <div>
+                            <p><strong>${firstVerse.book} ${firstVerse.chapter}:${firstVerse.verse}</strong></p>
+                            <p>"${textContent}"</p>
+                        </div>
+                    </div>
+                `);
+            } else {
+                $('#currentVerse').removeClass('show');
+            }
+        }
+
+        // Event listeners
+        $(document).ready(function() {
+            // Attendre que la Bible soit chargée
+            setTimeout(() => {
+                initializeBooksDropdown();
+                loadDefaultVerse();
+            }, 1000);
+
+            // Reference input focus - show dropdown with books
+            $('#referenceInput').on('focus', function() {
+                toggleBooksDropdown(true);
+            });
+
+            // Reference input blur - hide dropdown (with delay for click handling)
+            $('#referenceInput').on('blur', function() {
+                setTimeout(() => {
+                    toggleBooksDropdown(false);
+                }, 200);
+            });
+
+            // Reference input autocomplete - filtre les livres
+            $('#referenceInput').on('input', function() {
+                const input = $(this).val().trim();
+                const booksList = $('#booksList');
+                
+                if (input.length > 0) {
+                    // Recherche avec autocomplétion
+                    const matchedBooks = searchBooks(input);
+                    booksList.empty();
+                    
+                    if (matchedBooks.length > 0) {
+                        matchedBooks.forEach(bookName => {
+                            const bookItem = $(`<div class="book-item" data-book="${bookName.toLowerCase()}">${bookName}</div>`);
+                            bookItem.click(function() {
+                                $('#referenceInput').val(bookName);
+                                $('.book-item').removeClass('active');
+                                $(this).addClass('active');
+                                toggleBooksDropdown(false);
+                            });
+                            booksList.append(bookItem);
+                        });
+                        $('#versesDropdown').addClass('show');
+                    } else {
+                        booksList.html('<div class="no-results">Aucun livre trouvé</div>');
+                    }
+                } else {
+                    // Afficher tous les livres
+                    initializeBooksDropdown();
+                }
+            });
+
+            // Display button
+            $('#displayBtn').click(function() {
+                const reference = $('#referenceInput').val().trim();
+                if (reference) {
+                    displayVerse(reference);
+                } else {
+                    alert('Veuillez saisir une référence (ex: Genesis 1:1)');
+                }
+            });
+
+            // Enter key to display verse
+            $('#referenceInput').keypress(function(e) {
+                if (e.which === 13) {
+                    $('#displayBtn').click();
+                }
+            });
+
+            // Bottom nav buttons
+            $('#searchBtn').click(function() {
+                console.log('Search clicked');
+            });
+
+            $('#bibleBtn').click(function() {
+                console.log('Bible clicked');
+            });
+
+            $('#listBtn').click(function() {
+                console.log('List clicked');
+            });
+
+            $('#themeBtn').click(function() {
+                console.log('Theme clicked');
+            });
+
+            $('#settingsBtn').click(function() {
+                console.log('Settings clicked');
+            });
+        });
+
+        // Charger un verset de test par défaut
+        function loadDefaultVerse() {
+            const defaultVerse = "Genesis 1:1";
+            $('#referenceInput').val(defaultVerse);
+            displayVerse(defaultVerse);
+        }
+    </script>
+</body>
+</html>
