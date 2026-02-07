@@ -53,7 +53,9 @@
             lastText = text;
 
             if (reference && text) {
-                const abbr = source ? ' (' + source.replace(/[^A-Za-z]/g, '').substring(0, 3).toUpperCase() + ')' : '';
+                // Extract abbreviation from parentheses (e.g. "Louis Segond (LSG)" → "LSG")
+                const parenMatch = source.match(/\(([^)]+)\)/);
+                const abbr = source ? ' (' + (parenMatch ? parenMatch[1].toUpperCase() : source.substring(0, 3).toUpperCase()) + ')' : '';
                 $('#verseReference').text(reference + abbr);
                 $('#verseText').text(text);
 
