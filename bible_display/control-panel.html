@@ -22,11 +22,11 @@
     <div class="tab-content" id="tabSearch">
         <div class="container">
             <div class="main-panel">
-                <h1>Bible Query</h1>
+                <h1 data-i18n="searchTitle">Bible Query</h1>
 
                 <!-- Bible Selection -->
                 <div class="form-group">
-                    <label for="bibleSelect">Bible:</label>
+                    <label for="bibleSelect" data-i18n="labelBible">Bible:</label>
                     <select id="bibleSelect" class="form-control">
                         <!-- Options populated dynamically -->
                     </select>
@@ -34,10 +34,10 @@
 
                 <!-- Reference Input with Autocomplete -->
                 <div class="form-group">
-                    <label for="referenceInput">Reference:</label>
+                    <label for="referenceInput" data-i18n="labelReference">Reference:</label>
                     <div class="reference-input-wrapper">
                         <input type="text" id="referenceInput" class="form-control" 
-                               placeholder="Type a book name..." autocomplete="off">
+                               data-i18n-placeholder="placeholderBook" placeholder="Type a book name..." autocomplete="off">
                     </div>
                 </div>
 
@@ -49,7 +49,7 @@
                 </div>
 
                 <!-- Submit Button -->
-                <button id="displayBtn" class="btn btn-primary">Submit</button>
+                <button id="displayBtn" class="btn btn-primary" data-i18n="btnSubmit">Submit</button>
             </div>
         </div>
     </div>
@@ -62,16 +62,16 @@
                     <button id="bibleBackBtn" class="btn-back" title="Retour">&#8592;</button>
                     <h2 id="bibleTitle">Bible</h2>
                     <div class="bible-toolbar">
-                        <button id="btnPrevChapter" class="toolbar-btn" title="Chapitre précédent">&#9664;</button>
-                        <button id="btnNextChapter" class="toolbar-btn" title="Chapitre suivant">&#9654;</button>
-                        <button id="btnPrevVerse" class="toolbar-btn" title="Verset précédent (↑)">&#8593;</button>
-                        <button id="btnNextVerse" class="toolbar-btn" title="Verset suivant (↓)">&#8595;</button>
-                        <button id="btnAddToList" class="toolbar-btn toolbar-btn-add" title="Ajouter aux favoris (+)">&#43;</button>
+                        <button id="btnPrevChapter" class="toolbar-btn" data-i18n-title="titlePrevChapter" title="Chapitre précédent">&#9664;</button>
+                        <button id="btnNextChapter" class="toolbar-btn" data-i18n-title="titleNextChapter" title="Chapitre suivant">&#9654;</button>
+                        <button id="btnPrevVerse" class="toolbar-btn" data-i18n-title="titlePrevVerse" title="Verset précédent (↑)">&#8593;</button>
+                        <button id="btnNextVerse" class="toolbar-btn" data-i18n-title="titleNextVerse" title="Verset suivant (↓)">&#8595;</button>
+                        <button id="btnAddToList" class="toolbar-btn toolbar-btn-add" data-i18n-title="titleAddFav" title="Ajouter aux favoris (+)">&#43;</button>
                     </div>
                 </div>
                 <div id="versesContainer" class="verses-container">
                     <!-- Verses displayed here -->
-                    <p class="empty-msg">No verses selected.</p>
+                    <p class="empty-msg" data-i18n="emptyVerses">No verses selected.</p>
                 </div>
             </div>
         </div>
@@ -82,11 +82,11 @@
         <div class="container bible-container">
             <div class="main-panel bible-panel">
                 <div class="bible-header">
-                    <h2 style="flex:1;">Favorites</h2>
-                    <button id="btnClearList" class="toolbar-btn toolbar-btn-danger" title="Tout supprimer">🗑️</button>
+                    <h2 style="flex:1;" data-i18n="listTitle">Favorites</h2>
+                    <button id="btnClearList" class="toolbar-btn toolbar-btn-danger" data-i18n-title="titleDeleteAll" title="Delete all">🗑️</button>
                 </div>
                 <div id="favoritesContainer" class="favorites-container">
-                    <p class="empty-msg" id="emptyFavMsg">No favorites yet. Use the <strong>+</strong> button to add verses.</p>
+                    <p class="empty-msg" id="emptyFavMsg" data-i18n-html="emptyFavorites">No favorites yet. Use the <strong>+</strong> button to add verses.</p>
                 </div>
             </div>
         </div>
@@ -96,8 +96,8 @@
     <div class="tab-content" id="tabTheme" style="display:none;">
         <div class="container">
             <div class="main-panel">
-                <h1>Theme</h1>
-                <p class="section-desc">Choose a theme for the Bible display (browser source).</p>
+                <h1 data-i18n="themeTitle">Theme</h1>
+                <p class="section-desc" data-i18n="themeDesc">Choose a theme for the Bible display (browser source).</p>
                 <div class="theme-grid">
                     <div class="theme-card" data-theme="classic-dark">
                         <div class="theme-preview" style="background:linear-gradient(135deg,#1e1e32,#2d2d46);border-top:3px solid #0a84ff;">
@@ -164,13 +164,27 @@
     <div class="tab-content" id="tabSettings" style="display:none;">
         <div class="container">
             <div class="main-panel settings-panel">
-                <h1>Settings</h1>
+                <h1 data-i18n="settingsTitle">Settings</h1>
+
+                <!-- Language -->
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-title" data-i18n="settingLanguage">Language</span>
+                        <span class="setting-desc" data-i18n="settingLanguageDesc">Interface language for the control panel.</span>
+                    </div>
+                    <div class="setting-control">
+                        <select id="languageSelect" class="setting-select">
+                            <option value="fr">Français</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                </div>
 
                 <!-- Reference Font Size -->
                 <div class="setting-row">
                     <div class="setting-info">
-                        <span class="setting-title">Reference Font Size</span>
-                        <span class="setting-desc">Scales the font size of the verse reference display.</span>
+                        <span class="setting-title" data-i18n="settingRefFontSize">Reference Font Size</span>
+                        <span class="setting-desc" data-i18n="settingRefFontSizeDesc">Scales the font size of the verse reference display.</span>
                     </div>
                     <div class="setting-control">
                         <div class="spin-control">
@@ -186,8 +200,8 @@
                 <!-- Verse Font Size -->
                 <div class="setting-row">
                     <div class="setting-info">
-                        <span class="setting-title">Verse Font Size</span>
-                        <span class="setting-desc">Scales the font size of displayed Bible verses.</span>
+                        <span class="setting-title" data-i18n="settingVerseFontSize">Verse Font Size</span>
+                        <span class="setting-desc" data-i18n="settingVerseFontSizeDesc">Scales the font size of displayed Bible verses.</span>
                     </div>
                     <div class="setting-control">
                         <div class="spin-control">
@@ -203,8 +217,8 @@
                 <!-- Line Spacing -->
                 <div class="setting-row">
                     <div class="setting-info">
-                        <span class="setting-title">Line Spacing</span>
-                        <span class="setting-desc">Controls the line height of the verse text.</span>
+                        <span class="setting-title" data-i18n="settingLineSpacing">Line Spacing</span>
+                        <span class="setting-desc" data-i18n="settingLineSpacingDesc">Controls the line height of the verse text.</span>
                     </div>
                     <div class="setting-control">
                         <div class="spin-control">
@@ -220,8 +234,8 @@
                 <!-- Maximum number of lines -->
                 <div class="setting-row">
                     <div class="setting-info">
-                        <span class="setting-title">Maximum number of lines</span>
-                        <span class="setting-desc">Splits Bible verses into different slides if there are too many lines. Leave at 0 for no limit.</span>
+                        <span class="setting-title" data-i18n="settingMaxLines">Maximum number of lines</span>
+                        <span class="setting-desc" data-i18n="settingMaxLinesDesc">Splits Bible verses into different slides if there are too many lines. Leave at 0 for no limit.</span>
                     </div>
                     <div class="setting-control">
                         <div class="spin-control">
@@ -237,8 +251,8 @@
                 <!-- Opacity -->
                 <div class="setting-row">
                     <div class="setting-info">
-                        <span class="setting-title">Opacity</span>
-                        <span class="setting-desc">Controls the transparency of the verse display block.</span>
+                        <span class="setting-title" data-i18n="settingOpacity">Opacity</span>
+                        <span class="setting-desc" data-i18n="settingOpacityDesc">Controls the transparency of the verse display block.</span>
                     </div>
                     <div class="setting-control">
                         <div class="spin-control">
@@ -254,14 +268,14 @@
                 <!-- Text Alignment -->
                 <div class="setting-row">
                     <div class="setting-info">
-                        <span class="setting-title">Text Alignment</span>
-                        <span class="setting-desc">Sets the text alignment for the verse display.</span>
+                        <span class="setting-title" data-i18n="settingAlignment">Text Alignment</span>
+                        <span class="setting-desc" data-i18n="settingAlignmentDesc">Sets the text alignment for the verse display.</span>
                     </div>
                     <div class="setting-control">
                         <select id="alignmentSelect" class="setting-select">
-                            <option value="left">Left</option>
-                            <option value="center" selected>Center</option>
-                            <option value="right">Right</option>
+                            <option value="left" data-i18n="alignLeft">Left</option>
+                            <option value="center" selected data-i18n="alignCenter">Center</option>
+                            <option value="right" data-i18n="alignRight">Right</option>
                         </select>
                     </div>
                 </div>
@@ -269,17 +283,17 @@
                 <!-- Transition Effect -->
                 <div class="setting-row">
                     <div class="setting-info">
-                        <span class="setting-title">Transition Effect</span>
-                        <span class="setting-desc">Animation used when displaying and hiding verses.</span>
+                        <span class="setting-title" data-i18n="settingTransition">Transition Effect</span>
+                        <span class="setting-desc" data-i18n="settingTransitionDesc">Animation used when displaying and hiding verses.</span>
                     </div>
                     <div class="setting-control">
                         <select id="transitionSelect" class="setting-select">
-                            <option value="fade">Fade</option>
-                            <option value="slide-up">Slide Up</option>
-                            <option value="slide-down">Slide Down</option>
-                            <option value="slide-left">Slide Left</option>
-                            <option value="zoom">Zoom</option>
-                            <option value="none">None</option>
+                            <option value="fade" data-i18n="transFade">Fade</option>
+                            <option value="slide-up" data-i18n="transSlideUp">Slide Up</option>
+                            <option value="slide-down" data-i18n="transSlideDown">Slide Down</option>
+                            <option value="slide-left" data-i18n="transSlideLeft">Slide Left</option>
+                            <option value="zoom" data-i18n="transZoom">Zoom</option>
+                            <option value="none" data-i18n="transNone">None</option>
                         </select>
                     </div>
                 </div>
@@ -287,8 +301,8 @@
                 <!-- Auto-hide -->
                 <div class="setting-row">
                     <div class="setting-info">
-                        <span class="setting-title">Auto-hide Verse</span>
-                        <span class="setting-desc">Automatically hides the verse after a set duration.</span>
+                        <span class="setting-title" data-i18n="settingAutoHide">Auto-hide Verse</span>
+                        <span class="setting-desc" data-i18n="settingAutoHideDesc">Automatically hides the verse after a set duration.</span>
                     </div>
                     <div class="setting-control">
                         <label class="toggle-switch">
@@ -301,8 +315,8 @@
                 <!-- Auto-hide Timer -->
                 <div class="setting-row" id="autoHideTimerSection" style="display:none;">
                     <div class="setting-info">
-                        <span class="setting-title">Auto-hide Delay</span>
-                        <span class="setting-desc">Number of seconds before the verse disappears.</span>
+                        <span class="setting-title" data-i18n="settingAutoHideDelay">Auto-hide Delay</span>
+                        <span class="setting-desc" data-i18n="settingAutoHideDelayDesc">Number of seconds before the verse disappears.</span>
                     </div>
                     <div class="setting-control">
                         <div class="spin-control">
@@ -318,13 +332,13 @@
                 <!-- Current Theme -->
                 <div class="setting-row">
                     <div class="setting-info">
-                        <span class="setting-title">Current Theme</span>
-                        <span class="setting-desc">Visual style applied to the browser source display.</span>
+                        <span class="setting-title" data-i18n="settingTheme">Current Theme</span>
+                        <span class="setting-desc" data-i18n="settingThemeDesc">Visual style applied to the browser source display.</span>
                     </div>
                     <div class="setting-control">
                         <div class="theme-select-row">
                             <span id="currentThemeName" class="current-theme-label">Classic Dark</span>
-                            <button id="goToThemes" class="btn-link">Change →</button>
+                            <button id="goToThemes" class="btn-link" data-i18n="btnChange">Change →</button>
                         </div>
                     </div>
                 </div>
@@ -334,29 +348,208 @@
 
     <!-- Bottom Navigation Bar -->
     <div class="bottom-nav">
-        <button class="nav-btn active" data-tab="tabSearch" title="Rechercher">
+        <button class="nav-btn active" data-tab="tabSearch">
             <span class="icon">🔍</span>
-            <span class="label">Search</span>
+            <span class="label" data-i18n="navSearch">Search</span>
         </button>
-        <button class="nav-btn" data-tab="tabBible" title="Bible">
+        <button class="nav-btn" data-tab="tabBible">
             <span class="icon">📖</span>
-            <span class="label">Bible</span>
+            <span class="label" data-i18n="navBible">Bible</span>
         </button>
-        <button class="nav-btn" data-tab="tabList" title="Liste">
+        <button class="nav-btn" data-tab="tabList">
             <span class="icon">☰</span>
-            <span class="label">List</span>
+            <span class="label" data-i18n="navList">List</span>
         </button>
-        <button class="nav-btn" data-tab="tabTheme" title="Thème">
+        <button class="nav-btn" data-tab="tabTheme">
             <span class="icon">🎨</span>
-            <span class="label">Theme</span>
+            <span class="label" data-i18n="navTheme">Theme</span>
         </button>
-        <button class="nav-btn" data-tab="tabSettings" title="Paramètres">
+        <button class="nav-btn" data-tab="tabSettings">
             <span class="icon">⚙️</span>
-            <span class="label">Settings</span>
+            <span class="label" data-i18n="navSettings">Settings</span>
         </button>
     </div>
 
     <script>
+        // ====== i18n ======
+        const i18n = {
+            fr: {
+                // Search tab
+                searchTitle: 'Recherche Biblique',
+                labelBible: 'Bible :',
+                labelReference: 'Référence :',
+                placeholderBook: 'Tapez un nom de livre...',
+                btnSubmit: 'Afficher',
+                // Bible tab
+                emptyVerses: 'Aucun verset sélectionné.',
+                // List tab
+                listTitle: 'Favoris',
+                titleDeleteAll: 'Tout supprimer',
+                emptyFavorites: 'Aucun favori. Utilisez le bouton <strong>+</strong> pour ajouter des versets.',
+                favRemove: 'Supprimer',
+                // Theme tab
+                themeTitle: 'Thème',
+                themeDesc: 'Choisissez un thème pour l\'affichage biblique (source navigateur).',
+                // Settings tab
+                settingsTitle: 'Paramètres',
+                settingLanguage: 'Langue',
+                settingLanguageDesc: 'Langue de l\'interface du panneau de contrôle.',
+                settingRefFontSize: 'Taille police référence',
+                settingRefFontSizeDesc: 'Taille de la police pour la référence du verset.',
+                settingVerseFontSize: 'Taille police verset',
+                settingVerseFontSizeDesc: 'Taille de la police pour le texte des versets.',
+                settingLineSpacing: 'Interligne',
+                settingLineSpacingDesc: 'Contrôle la hauteur de ligne du texte.',
+                settingMaxLines: 'Nombre max. de lignes',
+                settingMaxLinesDesc: 'Divise les versets en diapositives si trop de lignes. 0 = pas de limite.',
+                settingOpacity: 'Opacité',
+                settingOpacityDesc: 'Contrôle la transparence du bloc d\'affichage.',
+                settingAlignment: 'Alignement du texte',
+                settingAlignmentDesc: 'Définit l\'alignement du texte des versets.',
+                alignLeft: 'Gauche',
+                alignCenter: 'Centre',
+                alignRight: 'Droite',
+                settingTransition: 'Effet de transition',
+                settingTransitionDesc: 'Animation utilisée pour afficher et masquer les versets.',
+                transFade: 'Fondu',
+                transSlideUp: 'Glisser haut',
+                transSlideDown: 'Glisser bas',
+                transSlideLeft: 'Glisser gauche',
+                transZoom: 'Zoom',
+                transNone: 'Aucun',
+                settingAutoHide: 'Masquer automatiquement',
+                settingAutoHideDesc: 'Masque automatiquement le verset après un délai.',
+                settingAutoHideDelay: 'Délai de masquage',
+                settingAutoHideDelayDesc: 'Nombre de secondes avant disparition du verset.',
+                settingTheme: 'Thème actuel',
+                settingThemeDesc: 'Style visuel appliqué à la source navigateur.',
+                btnChange: 'Changer →',
+                // Nav bar
+                navSearch: 'Recherche',
+                navBible: 'Bible',
+                navList: 'Liste',
+                navTheme: 'Thème',
+                navSettings: 'Paramètres',
+                // Toolbar titles
+                titlePrevChapter: 'Chapitre précédent',
+                titleNextChapter: 'Chapitre suivant',
+                titlePrevVerse: 'Verset précédent (↑)',
+                titleNextVerse: 'Verset suivant (↓)',
+                titleAddFav: 'Ajouter aux favoris (+)',
+                titleDeleteAll: 'Tout supprimer',
+                // Dynamic messages
+                noBookFound: 'Aucun livre trouvé',
+                noBibleFound: '-- Aucune Bible trouvée --',
+                bookNotFound: 'Livre introuvable : ',
+                chapterNotFound: 'Chapitre {ch} introuvable dans {book}',
+                versesNotFound: 'Verset(s) introuvable(s) : ',
+                invalidRef: 'Format invalide. Essayez : Genèse 1 ou Jean 3:16',
+                noDataFor: 'Aucune donnée pour '
+            },
+            en: {
+                searchTitle: 'Bible Query',
+                labelBible: 'Bible:',
+                labelReference: 'Reference:',
+                placeholderBook: 'Type a book name...',
+                btnSubmit: 'Submit',
+                emptyVerses: 'No verses selected.',
+                listTitle: 'Favorites',
+                titleDeleteAll: 'Delete all',
+                emptyFavorites: 'No favorites yet. Use the <strong>+</strong> button to add verses.',
+                favRemove: 'Remove',
+                themeTitle: 'Theme',
+                themeDesc: 'Choose a theme for the Bible display (browser source).',
+                settingsTitle: 'Settings',
+                settingLanguage: 'Language',
+                settingLanguageDesc: 'Interface language for the control panel.',
+                settingRefFontSize: 'Reference Font Size',
+                settingRefFontSizeDesc: 'Scales the font size of the verse reference display.',
+                settingVerseFontSize: 'Verse Font Size',
+                settingVerseFontSizeDesc: 'Scales the font size of displayed Bible verses.',
+                settingLineSpacing: 'Line Spacing',
+                settingLineSpacingDesc: 'Controls the line height of the verse text.',
+                settingMaxLines: 'Maximum number of lines',
+                settingMaxLinesDesc: 'Splits Bible verses into different slides if there are too many lines. Leave at 0 for no limit.',
+                settingOpacity: 'Opacity',
+                settingOpacityDesc: 'Controls the transparency of the verse display block.',
+                settingAlignment: 'Text Alignment',
+                settingAlignmentDesc: 'Sets the text alignment for the verse display.',
+                alignLeft: 'Left',
+                alignCenter: 'Center',
+                alignRight: 'Right',
+                settingTransition: 'Transition Effect',
+                settingTransitionDesc: 'Animation used when displaying and hiding verses.',
+                transFade: 'Fade',
+                transSlideUp: 'Slide Up',
+                transSlideDown: 'Slide Down',
+                transSlideLeft: 'Slide Left',
+                transZoom: 'Zoom',
+                transNone: 'None',
+                settingAutoHide: 'Auto-hide Verse',
+                settingAutoHideDesc: 'Automatically hides the verse after a set duration.',
+                settingAutoHideDelay: 'Auto-hide Delay',
+                settingAutoHideDelayDesc: 'Number of seconds before the verse disappears.',
+                settingTheme: 'Current Theme',
+                settingThemeDesc: 'Visual style applied to the browser source display.',
+                btnChange: 'Change →',
+                navSearch: 'Search',
+                navBible: 'Bible',
+                navList: 'List',
+                navTheme: 'Theme',
+                navSettings: 'Settings',
+                titlePrevChapter: 'Previous chapter',
+                titleNextChapter: 'Next chapter',
+                titlePrevVerse: 'Previous verse (↑)',
+                titleNextVerse: 'Next verse (↓)',
+                titleAddFav: 'Add to favorites (+)',
+                titleDeleteAll: 'Delete all',
+                noBookFound: 'No book found',
+                noBibleFound: '-- No Bible found --',
+                bookNotFound: 'Book not found: ',
+                chapterNotFound: 'Chapter {ch} not found in {book}',
+                versesNotFound: 'Verse(s) not found: ',
+                invalidRef: 'Invalid reference format. Try: Genesis 1 or John 3:16',
+                noDataFor: 'No data found for '
+            }
+        };
+
+        let currentLang = localStorage.getItem('bibleLanguage') || 'fr';
+
+        function t(key, replacements) {
+            let text = (i18n[currentLang] && i18n[currentLang][key]) || (i18n.en[key]) || key;
+            if (replacements) {
+                for (const [k, v] of Object.entries(replacements)) {
+                    text = text.replace(`{${k}}`, v);
+                }
+            }
+            return text;
+        }
+
+        function applyLanguage() {
+            // Text content
+            $('[data-i18n]').each(function() {
+                const key = $(this).data('i18n');
+                $(this).text(t(key));
+            });
+            // HTML content (for bold tags etc.)
+            $('[data-i18n-html]').each(function() {
+                const key = $(this).data('i18n-html');
+                $(this).html(t(key));
+            });
+            // Placeholders
+            $('[data-i18n-placeholder]').each(function() {
+                const key = $(this).data('i18n-placeholder');
+                $(this).attr('placeholder', t(key));
+            });
+            // Titles
+            $('[data-i18n-title]').each(function() {
+                const key = $(this).data('i18n-title');
+                $(this).attr('title', t(key));
+            });
+            // Update html lang attribute
+            $('html').attr('lang', currentLang);
+        }
+
         // ====== State ======
         let selectedBook = null;
         let isLoading = false;
@@ -382,7 +575,7 @@
             select.empty();
 
             if (versions.length === 0) {
-                select.append('<option value="">-- No Bible found --</option>');
+                select.append('<option value="">' + t('noBibleFound') + '</option>');
                 console.error('No Bible versions found. Check that JS files are loaded.');
                 return;
             }
@@ -418,7 +611,7 @@
             list.empty();
 
             if (items.length === 0) {
-                list.html('<div class="autocomplete-item no-results">No book found</div>');
+                list.html('<div class="autocomplete-item no-results">' + t('noBookFound') + '</div>');
             } else {
                 items.forEach(bookName => {
                     const item = $(`<div class="autocomplete-item">${bookName}</div>`);
@@ -505,7 +698,7 @@
             if (parsed) {
                 const bookKey = findBook(parsed.book);
                 if (!bookKey) {
-                    showBibleError('Book not found: ' + parsed.book);
+                    showBibleError(t('bookNotFound') + parsed.book);
                     return;
                 }
 
@@ -517,7 +710,7 @@
                     if (verses.length > 0) {
                         displayVerses(verses, `${localName} ${parsed.chapter}`, bookKey, parsed.chapter);
                     } else {
-                        showBibleError(`Chapter ${parsed.chapter} not found in ${localName}`);
+                        showBibleError(t('chapterNotFound', {ch: parsed.chapter, book: localName}));
                     }
                 } else {
                     // Specific verse or range
@@ -528,7 +721,7 @@
                             : `${localName} ${parsed.chapter}:${parsed.verse}-${parsed.verseEnd}`;
                         displayVerses(verses, rangeStr, bookKey, parsed.chapter);
                     } else {
-                        showBibleError(`Verse(s) not found: ${reference}`);
+                        showBibleError(t('versesNotFound') + reference);
                     }
                 }
             } else {
@@ -541,10 +734,10 @@
                     if (verses.length > 0) {
                         displayVerses(verses, `${localName} 1`, bookKey, '1');
                     } else {
-                        showBibleError(`No data found for ${localName}`);
+                        showBibleError(t('noDataFor') + localName);
                     }
                 } else {
-                    showBibleError('Invalid reference format. Try: Genèse 1 or Jean 3:16');
+                    showBibleError(t('invalidRef'));
                 }
             }
         }
@@ -759,6 +952,11 @@
 
         // Highlight currently saved theme on load
         function loadSettings() {
+            // Language
+            currentLang = localStorage.getItem('bibleLanguage') || 'fr';
+            $('#languageSelect').val(currentLang);
+            applyLanguage();
+
             const savedTheme = localStorage.getItem('bibleTheme') || 'classic-dark';
             $(`.theme-card[data-theme="${savedTheme}"]`).addClass('selected');
             $('#currentThemeName').text($(`.theme-card[data-theme="${savedTheme}"] .theme-name`).text() || 'Classic Dark');
@@ -819,6 +1017,13 @@
 
         $('#transitionSelect').on('change', function() {
             localStorage.setItem('bibleTransition', $(this).val());
+        });
+
+        // ====== Settings: Language ======
+        $('#languageSelect').on('change', function() {
+            currentLang = $(this).val();
+            localStorage.setItem('bibleLanguage', currentLang);
+            applyLanguage();
         });
 
         // ====== Settings: Auto-hide ======
@@ -966,7 +1171,7 @@
             container.empty();
 
             if (favs.length === 0) {
-                container.html('<p class="empty-msg">No favorites yet. Use the <strong>+</strong> button to add verses.</p>');
+                container.html('<p class="empty-msg">' + t('emptyFavorites') + '</p>');
                 return;
             }
 
@@ -978,7 +1183,7 @@
                             <div class="fav-ref">${fav.reference} <span class="fav-version">(${fav.version})</span></div>
                             <div class="fav-text">${shortText}</div>
                         </div>
-                        <button class="fav-remove" title="Supprimer">✕</button>
+                        <button class="fav-remove" title="${t('favRemove')}">✕</button>
                     </div>
                 `);
 
