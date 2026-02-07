@@ -22,13 +22,14 @@
         let lastText = '';
 
         function applySettings() {
-            const fontSize = localStorage.getItem('bibleFontSize') || '18';
+            const refFontSize = localStorage.getItem('bibleRefFontSize') || '20';
+            const verseFontSize = localStorage.getItem('bibleVerseFontSize') || '18';
             const alignment = localStorage.getItem('bibleAlignment') || 'center';
             const theme = localStorage.getItem('bibleTheme') || 'classic-dark';
 
-            // Font size
-            $('#verseText').css('font-size', fontSize + 'px');
-            $('#verseReference').css('font-size', Math.max(14, parseInt(fontSize) + 2) + 'px');
+            // Font sizes (independent)
+            $('#verseReference').css('font-size', refFontSize + 'px');
+            $('#verseText').css('font-size', verseFontSize + 'px');
 
             // Alignment
             $('#verseDisplay').css('text-align', alignment);
@@ -71,7 +72,7 @@
         // Listen for storage events (from control panel)
         window.addEventListener('storage', function(e) {
             if (['currentVerseReference', 'currentVerseText', 'currentVerseSource',
-                 'bibleFontSize', 'bibleAlignment', 'bibleTheme'].includes(e.key)) {
+                 'bibleRefFontSize', 'bibleVerseFontSize', 'bibleAlignment', 'bibleTheme'].includes(e.key)) {
                 updateVerseDisplay();
             }
         });

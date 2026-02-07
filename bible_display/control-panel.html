@@ -154,15 +154,26 @@
             <div class="main-panel">
                 <h1>Settings</h1>
 
-                <!-- Font Size -->
+                <!-- Reference Font Size -->
                 <div class="settings-section">
-                    <label>Font Size</label>
+                    <label>Reference Font Size</label>
                     <div class="font-size-control">
-                        <button id="fontDecrease" class="btn-setting" title="Réduire">A−</button>
-                        <span id="fontSizeValue" class="font-size-value">18px</span>
-                        <button id="fontIncrease" class="btn-setting" title="Agrandir">A+</button>
+                        <button id="refFontDecrease" class="btn-setting" title="Réduire">A−</button>
+                        <span id="refFontSizeValue" class="font-size-value">20px</span>
+                        <button id="refFontIncrease" class="btn-setting" title="Agrandir">A+</button>
                     </div>
-                    <input type="range" id="fontSizeSlider" class="setting-slider" min="12" max="40" value="18">
+                    <input type="range" id="refFontSizeSlider" class="setting-slider" min="10" max="48" value="20">
+                </div>
+
+                <!-- Verse Font Size -->
+                <div class="settings-section">
+                    <label>Verse Font Size</label>
+                    <div class="font-size-control">
+                        <button id="verseFontDecrease" class="btn-setting" title="Réduire">A−</button>
+                        <span id="verseFontSizeValue" class="font-size-value">18px</span>
+                        <button id="verseFontIncrease" class="btn-setting" title="Agrandir">A+</button>
+                    </div>
+                    <input type="range" id="verseFontSizeSlider" class="setting-slider" min="10" max="48" value="18">
                 </div>
 
                 <!-- Text Alignment -->
@@ -485,35 +496,61 @@
             $(`.theme-card[data-theme="${savedTheme}"]`).addClass('selected');
             $('#currentThemeName').text($(`.theme-card[data-theme="${savedTheme}"] .theme-name`).text() || 'Classic Dark');
 
-            const savedSize = localStorage.getItem('bibleFontSize') || '18';
-            $('#fontSizeSlider').val(savedSize);
-            $('#fontSizeValue').text(savedSize + 'px');
+            const savedRefSize = localStorage.getItem('bibleRefFontSize') || '20';
+            $('#refFontSizeSlider').val(savedRefSize);
+            $('#refFontSizeValue').text(savedRefSize + 'px');
+
+            const savedVerseSize = localStorage.getItem('bibleVerseFontSize') || '18';
+            $('#verseFontSizeSlider').val(savedVerseSize);
+            $('#verseFontSizeValue').text(savedVerseSize + 'px');
 
             const savedAlign = localStorage.getItem('bibleAlignment') || 'center';
             $('.btn-align').removeClass('active');
             $(`.btn-align[data-align="${savedAlign}"]`).addClass('active');
         }
 
-        // ====== Settings: Font Size ======
-        function updateFontSize(size) {
-            size = Math.max(12, Math.min(40, parseInt(size)));
-            $('#fontSizeSlider').val(size);
-            $('#fontSizeValue').text(size + 'px');
-            localStorage.setItem('bibleFontSize', size.toString());
+        // ====== Settings: Reference Font Size ======
+        function updateRefFontSize(size) {
+            size = Math.max(10, Math.min(48, parseInt(size)));
+            $('#refFontSizeSlider').val(size);
+            $('#refFontSizeValue').text(size + 'px');
+            localStorage.setItem('bibleRefFontSize', size.toString());
         }
 
-        $('#fontSizeSlider').on('input', function() {
-            updateFontSize($(this).val());
+        $('#refFontSizeSlider').on('input', function() {
+            updateRefFontSize($(this).val());
         });
 
-        $('#fontIncrease').click(function() {
-            const current = parseInt($('#fontSizeSlider').val());
-            updateFontSize(current + 2);
+        $('#refFontIncrease').click(function() {
+            const current = parseInt($('#refFontSizeSlider').val());
+            updateRefFontSize(current + 2);
         });
 
-        $('#fontDecrease').click(function() {
-            const current = parseInt($('#fontSizeSlider').val());
-            updateFontSize(current - 2);
+        $('#refFontDecrease').click(function() {
+            const current = parseInt($('#refFontSizeSlider').val());
+            updateRefFontSize(current - 2);
+        });
+
+        // ====== Settings: Verse Font Size ======
+        function updateVerseFontSize(size) {
+            size = Math.max(10, Math.min(48, parseInt(size)));
+            $('#verseFontSizeSlider').val(size);
+            $('#verseFontSizeValue').text(size + 'px');
+            localStorage.setItem('bibleVerseFontSize', size.toString());
+        }
+
+        $('#verseFontSizeSlider').on('input', function() {
+            updateVerseFontSize($(this).val());
+        });
+
+        $('#verseFontIncrease').click(function() {
+            const current = parseInt($('#verseFontSizeSlider').val());
+            updateVerseFontSize(current + 2);
+        });
+
+        $('#verseFontDecrease').click(function() {
+            const current = parseInt($('#verseFontSizeSlider').val());
+            updateVerseFontSize(current - 2);
         });
 
         // ====== Settings: Alignment ======
