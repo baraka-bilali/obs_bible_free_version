@@ -151,115 +151,169 @@
     <!-- ===== SETTINGS TAB ===== -->
     <div class="tab-content" id="tabSettings" style="display:none;">
         <div class="container">
-            <div class="main-panel">
+            <div class="main-panel settings-panel">
                 <h1>Settings</h1>
 
                 <!-- Reference Font Size -->
-                <div class="settings-section">
-                    <label>Reference Font Size</label>
-                    <div class="font-size-control">
-                        <button id="refFontDecrease" class="btn-setting" title="Réduire">A−</button>
-                        <span id="refFontSizeValue" class="font-size-value">20px</span>
-                        <button id="refFontIncrease" class="btn-setting" title="Agrandir">A+</button>
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-title">Reference Font Size</span>
+                        <span class="setting-desc">Scales the font size of the verse reference display.</span>
                     </div>
-                    <input type="range" id="refFontSizeSlider" class="setting-slider" min="10" max="48" value="20">
+                    <div class="setting-control">
+                        <div class="spin-control">
+                            <input type="number" id="refFontSizeInput" class="spin-input" value="20" min="10" max="48">
+                            <div class="spin-buttons">
+                                <button class="spin-up" id="refFontIncrease">▲</button>
+                                <button class="spin-down" id="refFontDecrease">▼</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Verse Font Size -->
-                <div class="settings-section">
-                    <label>Verse Font Size</label>
-                    <div class="font-size-control">
-                        <button id="verseFontDecrease" class="btn-setting" title="Réduire">A−</button>
-                        <span id="verseFontSizeValue" class="font-size-value">18px</span>
-                        <button id="verseFontIncrease" class="btn-setting" title="Agrandir">A+</button>
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-title">Verse Font Size</span>
+                        <span class="setting-desc">Scales the font size of displayed Bible verses.</span>
                     </div>
-                    <input type="range" id="verseFontSizeSlider" class="setting-slider" min="10" max="48" value="18">
+                    <div class="setting-control">
+                        <div class="spin-control">
+                            <input type="number" id="verseFontSizeInput" class="spin-input" value="18" min="10" max="48">
+                            <div class="spin-buttons">
+                                <button class="spin-up" id="verseFontIncrease">▲</button>
+                                <button class="spin-down" id="verseFontDecrease">▼</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Line Spacing -->
-                <div class="settings-section">
-                    <label>Line Spacing</label>
-                    <div class="font-size-control">
-                        <button id="lineHeightDecrease" class="btn-setting" title="Réduire">−</button>
-                        <span id="lineHeightValue" class="font-size-value">1.6</span>
-                        <button id="lineHeightIncrease" class="btn-setting" title="Agrandir">+</button>
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-title">Line Spacing</span>
+                        <span class="setting-desc">Controls the line height of the verse text.</span>
                     </div>
-                    <input type="range" id="lineHeightSlider" class="setting-slider" min="10" max="30" value="16" step="1">
+                    <div class="setting-control">
+                        <div class="spin-control">
+                            <input type="number" id="lineHeightInput" class="spin-input" value="1.6" min="1.0" max="3.0" step="0.1">
+                            <div class="spin-buttons">
+                                <button class="spin-up" id="lineHeightIncrease">▲</button>
+                                <button class="spin-down" id="lineHeightDecrease">▼</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Text Alignment -->
-                <div class="settings-section">
-                    <label>Alignment</label>
-                    <div class="alignment-control">
-                        <button class="btn-align active" data-align="left" title="Gauche">⬛◻◻</button>
-                        <button class="btn-align" data-align="center" title="Centre">◻⬛◻</button>
-                        <button class="btn-align" data-align="right" title="Droite">◻◻⬛</button>
+                <!-- Maximum number of lines -->
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-title">Maximum number of lines</span>
+                        <span class="setting-desc">Splits Bible verses into different slides if there are too many lines. Leave at 0 for no limit.</span>
+                    </div>
+                    <div class="setting-control">
+                        <div class="spin-control">
+                            <input type="number" id="maxLinesInput" class="spin-input" value="0" min="0" max="10">
+                            <div class="spin-buttons">
+                                <button class="spin-up" id="maxLinesIncrease">▲</button>
+                                <button class="spin-down" id="maxLinesDecrease">▼</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Opacity -->
-                <div class="settings-section">
-                    <label>Opacity</label>
-                    <div class="font-size-control">
-                        <button id="opacityDecrease" class="btn-setting" title="Réduire">−</button>
-                        <span id="opacityValue" class="font-size-value">100%</span>
-                        <button id="opacityIncrease" class="btn-setting" title="Agrandir">+</button>
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-title">Opacity</span>
+                        <span class="setting-desc">Controls the transparency of the verse display block.</span>
                     </div>
-                    <input type="range" id="opacitySlider" class="setting-slider" min="10" max="100" value="100">
+                    <div class="setting-control">
+                        <div class="spin-control">
+                            <input type="number" id="opacityInput" class="spin-input" value="100" min="10" max="100" step="5">
+                            <div class="spin-buttons">
+                                <button class="spin-up" id="opacityIncrease">▲</button>
+                                <button class="spin-down" id="opacityDecrease">▼</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Max Lines -->
-                <div class="settings-section">
-                    <label>Max Lines (Long Verses)</label>
-                    <div class="font-size-control">
-                        <button id="maxLinesDecrease" class="btn-setting" title="Réduire">−</button>
-                        <span id="maxLinesValue" class="font-size-value">Auto</span>
-                        <button id="maxLinesIncrease" class="btn-setting" title="Agrandir">+</button>
+                <!-- Text Alignment -->
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-title">Text Alignment</span>
+                        <span class="setting-desc">Sets the text alignment for the verse display.</span>
                     </div>
-                    <input type="range" id="maxLinesSlider" class="setting-slider" min="0" max="10" value="0">
-                    <p style="font-size: 12px; color: #8892b0; margin-top: 8px;">0 = Auto (unlimited), 1-10 = Fixed lines</p>
+                    <div class="setting-control">
+                        <select id="alignmentSelect" class="setting-select">
+                            <option value="left">Left</option>
+                            <option value="center" selected>Center</option>
+                            <option value="right">Right</option>
+                        </select>
+                    </div>
                 </div>
 
                 <!-- Transition Effect -->
-                <div class="settings-section">
-                    <label>Transition Effect</label>
-                    <div class="transition-select-grid">
-                        <button class="btn-transition active" data-transition="fade">Fade</button>
-                        <button class="btn-transition" data-transition="slide-up">Slide Up</button>
-                        <button class="btn-transition" data-transition="slide-down">Slide Down</button>
-                        <button class="btn-transition" data-transition="zoom">Zoom</button>
-                        <button class="btn-transition" data-transition="slide-left">Slide Left</button>
-                        <button class="btn-transition" data-transition="none">None</button>
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-title">Transition Effect</span>
+                        <span class="setting-desc">Animation used when displaying and hiding verses.</span>
+                    </div>
+                    <div class="setting-control">
+                        <select id="transitionSelect" class="setting-select">
+                            <option value="fade">Fade</option>
+                            <option value="slide-up">Slide Up</option>
+                            <option value="slide-down">Slide Down</option>
+                            <option value="slide-left">Slide Left</option>
+                            <option value="zoom">Zoom</option>
+                            <option value="none">None</option>
+                        </select>
                     </div>
                 </div>
 
                 <!-- Auto-hide -->
-                <div class="settings-section">
-                    <label>Auto-hide Verse</label>
-                    <div class="autohide-control">
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-title">Auto-hide Verse</span>
+                        <span class="setting-desc">Automatically hides the verse after a set duration.</span>
+                    </div>
+                    <div class="setting-control">
                         <label class="toggle-switch">
                             <input type="checkbox" id="autoHideToggle">
                             <span class="toggle-slider"></span>
                         </label>
-                        <span class="toggle-label">Hide after display</span>
-                    </div>
-                    <div id="autoHideTimerSection" style="display:none; margin-top: 12px;">
-                        <label style="font-size: 13px; color: #8892b0;">Hide after (seconds)</label>
-                        <div class="font-size-control" style="margin-top: 8px;">
-                            <button id="timerDecrease" class="btn-setting" title="Réduire">−</button>
-                            <span id="timerValue" class="font-size-value">5s</span>
-                            <button id="timerIncrease" class="btn-setting" title="Agrandir">+</button>
-                        </div>
-                        <input type="range" id="timerSlider" class="setting-slider" min="2" max="20" value="5">
                     </div>
                 </div>
 
-                <!-- Current Theme Preview -->
-                <div class="settings-section">
-                    <label>Current Theme</label>
-                    <div class="current-theme-info">
-                        <span id="currentThemeName">Classic Dark</span>
-                        <button id="goToThemes" class="btn-link">Change →</button>
+                <!-- Auto-hide Timer -->
+                <div class="setting-row" id="autoHideTimerSection" style="display:none;">
+                    <div class="setting-info">
+                        <span class="setting-title">Auto-hide Delay</span>
+                        <span class="setting-desc">Number of seconds before the verse disappears.</span>
+                    </div>
+                    <div class="setting-control">
+                        <div class="spin-control">
+                            <input type="number" id="timerInput" class="spin-input" value="5" min="2" max="20">
+                            <div class="spin-buttons">
+                                <button class="spin-up" id="timerIncrease">▲</button>
+                                <button class="spin-down" id="timerDecrease">▼</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Theme -->
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-title">Current Theme</span>
+                        <span class="setting-desc">Visual style applied to the browser source display.</span>
+                    </div>
+                    <div class="setting-control">
+                        <div class="theme-select-row">
+                            <span id="currentThemeName" class="current-theme-label">Classic Dark</span>
+                            <button id="goToThemes" class="btn-link">Change →</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -678,169 +732,62 @@
             $(`.theme-card[data-theme="${savedTheme}"]`).addClass('selected');
             $('#currentThemeName').text($(`.theme-card[data-theme="${savedTheme}"] .theme-name`).text() || 'Classic Dark');
 
-            const savedRefSize = localStorage.getItem('bibleRefFontSize') || '20';
-            $('#refFontSizeSlider').val(savedRefSize);
-            $('#refFontSizeValue').text(savedRefSize + 'px');
-
-            const savedVerseSize = localStorage.getItem('bibleVerseFontSize') || '18';
-            $('#verseFontSizeSlider').val(savedVerseSize);
-            $('#verseFontSizeValue').text(savedVerseSize + 'px');
-
-            const savedLineHeight = localStorage.getItem('bibleLineHeight') || '1.6';
-            const sliderVal = Math.round(parseFloat(savedLineHeight) * 10);
-            $('#lineHeightSlider').val(sliderVal);
-            $('#lineHeightValue').text(savedLineHeight);
-
-            const savedAlign = localStorage.getItem('bibleAlignment') || 'center';
-            $('.btn-align').removeClass('active');
-            $(`.btn-align[data-align="${savedAlign}"]`).addClass('active');
-
-            const savedOpacity = localStorage.getItem('bibleOpacity') || '100';
-            $('#opacitySlider').val(savedOpacity);
-            $('#opacityValue').text(savedOpacity + '%');
-
-            const savedMaxLines = localStorage.getItem('bibleMaxLines') || '0';
-            $('#maxLinesSlider').val(savedMaxLines);
-            $('#maxLinesValue').text(savedMaxLines === '0' ? 'Auto' : savedMaxLines);
-
-            const savedTransition = localStorage.getItem('bibleTransition') || 'fade';
-            $('.btn-transition').removeClass('active');
-            $(`.btn-transition[data-transition="${savedTransition}"]`).addClass('active');
+            $('#refFontSizeInput').val(localStorage.getItem('bibleRefFontSize') || '20');
+            $('#verseFontSizeInput').val(localStorage.getItem('bibleVerseFontSize') || '18');
+            $('#lineHeightInput').val(localStorage.getItem('bibleLineHeight') || '1.6');
+            $('#maxLinesInput').val(localStorage.getItem('bibleMaxLines') || '0');
+            $('#opacityInput').val(localStorage.getItem('bibleOpacity') || '100');
+            $('#alignmentSelect').val(localStorage.getItem('bibleAlignment') || 'center');
+            $('#transitionSelect').val(localStorage.getItem('bibleTransition') || 'fade');
 
             const savedAutoHide = localStorage.getItem('bibleAutoHide') === 'true';
             $('#autoHideToggle').prop('checked', savedAutoHide);
             $('#autoHideTimerSection').toggle(savedAutoHide);
-
-            const savedTimer = localStorage.getItem('bibleAutoHideTimer') || '5';
-            $('#timerSlider').val(savedTimer);
-            $('#timerValue').text(savedTimer + 's');
+            $('#timerInput').val(localStorage.getItem('bibleAutoHideTimer') || '5');
         }
 
-        // ====== Settings: Reference Font Size ======
-        function updateRefFontSize(size) {
-            size = Math.max(10, Math.min(48, parseInt(size)));
-            $('#refFontSizeSlider').val(size);
-            $('#refFontSizeValue').text(size + 'px');
-            localStorage.setItem('bibleRefFontSize', size.toString());
+        // ====== Settings: Spin controls ======
+        function bindSpinControl(inputId, upId, downId, storageKey, step, min, max, isFloat) {
+            const $input = $(`#${inputId}`);
+
+            function save() {
+                let val = isFloat ? parseFloat($input.val()) : parseInt($input.val());
+                val = Math.max(min, Math.min(max, isNaN(val) ? min : val));
+                $input.val(isFloat ? val.toFixed(1) : val);
+                localStorage.setItem(storageKey, isFloat ? val.toFixed(1) : val.toString());
+            }
+
+            $input.on('change', save);
+
+            $(`#${upId}`).click(function() {
+                let val = isFloat ? parseFloat($input.val()) : parseInt($input.val());
+                val = Math.min(max, val + step);
+                $input.val(isFloat ? val.toFixed(1) : val);
+                save();
+            });
+
+            $(`#${downId}`).click(function() {
+                let val = isFloat ? parseFloat($input.val()) : parseInt($input.val());
+                val = Math.max(min, val - step);
+                $input.val(isFloat ? val.toFixed(1) : val);
+                save();
+            });
         }
 
-        $('#refFontSizeSlider').on('input', function() {
-            updateRefFontSize($(this).val());
+        bindSpinControl('refFontSizeInput', 'refFontIncrease', 'refFontDecrease', 'bibleRefFontSize', 1, 10, 48, false);
+        bindSpinControl('verseFontSizeInput', 'verseFontIncrease', 'verseFontDecrease', 'bibleVerseFontSize', 1, 10, 48, false);
+        bindSpinControl('lineHeightInput', 'lineHeightIncrease', 'lineHeightDecrease', 'bibleLineHeight', 0.1, 1.0, 3.0, true);
+        bindSpinControl('maxLinesInput', 'maxLinesIncrease', 'maxLinesDecrease', 'bibleMaxLines', 1, 0, 10, false);
+        bindSpinControl('opacityInput', 'opacityIncrease', 'opacityDecrease', 'bibleOpacity', 5, 10, 100, false);
+        bindSpinControl('timerInput', 'timerIncrease', 'timerDecrease', 'bibleAutoHideTimer', 1, 2, 20, false);
+
+        // ====== Settings: Select controls ======
+        $('#alignmentSelect').on('change', function() {
+            localStorage.setItem('bibleAlignment', $(this).val());
         });
 
-        $('#refFontIncrease').click(function() {
-            const current = parseInt($('#refFontSizeSlider').val());
-            updateRefFontSize(current + 2);
-        });
-
-        $('#refFontDecrease').click(function() {
-            const current = parseInt($('#refFontSizeSlider').val());
-            updateRefFontSize(current - 2);
-        });
-
-        // ====== Settings: Verse Font Size ======
-        function updateVerseFontSize(size) {
-            size = Math.max(10, Math.min(48, parseInt(size)));
-            $('#verseFontSizeSlider').val(size);
-            $('#verseFontSizeValue').text(size + 'px');
-            localStorage.setItem('bibleVerseFontSize', size.toString());
-        }
-
-        $('#verseFontSizeSlider').on('input', function() {
-            updateVerseFontSize($(this).val());
-        });
-
-        $('#verseFontIncrease').click(function() {
-            const current = parseInt($('#verseFontSizeSlider').val());
-            updateVerseFontSize(current + 2);
-        });
-
-        $('#verseFontDecrease').click(function() {
-            const current = parseInt($('#verseFontSizeSlider').val());
-            updateVerseFontSize(current - 2);
-        });
-
-        // ====== Settings: Line Spacing ======
-        function updateLineHeight(sliderVal) {
-            sliderVal = Math.max(10, Math.min(30, parseInt(sliderVal)));
-            const lineHeight = (sliderVal / 10).toFixed(1);
-            $('#lineHeightSlider').val(sliderVal);
-            $('#lineHeightValue').text(lineHeight);
-            localStorage.setItem('bibleLineHeight', lineHeight);
-        }
-
-        $('#lineHeightSlider').on('input', function() {
-            updateLineHeight($(this).val());
-        });
-
-        $('#lineHeightIncrease').click(function() {
-            const current = parseInt($('#lineHeightSlider').val());
-            updateLineHeight(current + 2);
-        });
-
-        $('#lineHeightDecrease').click(function() {
-            const current = parseInt($('#lineHeightSlider').val());
-            updateLineHeight(current - 2);
-        });
-
-        // ====== Settings: Alignment ======
-        $('.btn-align').click(function() {
-            const align = $(this).data('align');
-            $('.btn-align').removeClass('active');
-            $(this).addClass('active');
-            localStorage.setItem('bibleAlignment', align);
-        });
-
-        // ====== Settings: Opacity ======
-        function updateOpacity(value) {
-            value = Math.max(10, Math.min(100, parseInt(value)));
-            $('#opacitySlider').val(value);
-            $('#opacityValue').text(value + '%');
-            localStorage.setItem('bibleOpacity', value.toString());
-        }
-
-        $('#opacitySlider').on('input', function() {
-            updateOpacity($(this).val());
-        });
-
-        $('#opacityIncrease').click(function() {
-            const current = parseInt($('#opacitySlider').val());
-            updateOpacity(current + 5);
-        });
-
-        $('#opacityDecrease').click(function() {
-            const current = parseInt($('#opacitySlider').val());
-            updateOpacity(current - 5);
-        });
-
-        // ====== Settings: Max Lines ======
-        function updateMaxLines(value) {
-            value = Math.max(0, Math.min(10, parseInt(value)));
-            $('#maxLinesSlider').val(value);
-            $('#maxLinesValue').text(value === 0 ? 'Auto' : value.toString());
-            localStorage.setItem('bibleMaxLines', value.toString());
-        }
-
-        $('#maxLinesSlider').on('input', function() {
-            updateMaxLines($(this).val());
-        });
-
-        $('#maxLinesIncrease').click(function() {
-            const current = parseInt($('#maxLinesSlider').val());
-            updateMaxLines(current + 1);
-        });
-
-        $('#maxLinesDecrease').click(function() {
-            const current = parseInt($('#maxLinesSlider').val());
-            updateMaxLines(current - 1);
-        });
-
-        // ====== Settings: Transition ======
-        $('.btn-transition').click(function() {
-            const transition = $(this).data('transition');
-            $('.btn-transition').removeClass('active');
-            $(this).addClass('active');
-            localStorage.setItem('bibleTransition', transition);
+        $('#transitionSelect').on('change', function() {
+            localStorage.setItem('bibleTransition', $(this).val());
         });
 
         // ====== Settings: Auto-hide ======
@@ -848,27 +795,6 @@
             const enabled = $(this).is(':checked');
             localStorage.setItem('bibleAutoHide', enabled.toString());
             $('#autoHideTimerSection').toggle(enabled);
-        });
-
-        function updateAutoHideTimer(seconds) {
-            seconds = Math.max(2, Math.min(20, parseInt(seconds)));
-            $('#timerSlider').val(seconds);
-            $('#timerValue').text(seconds + 's');
-            localStorage.setItem('bibleAutoHideTimer', seconds.toString());
-        }
-
-        $('#timerSlider').on('input', function() {
-            updateAutoHideTimer($(this).val());
-        });
-
-        $('#timerIncrease').click(function() {
-            const current = parseInt($('#timerSlider').val());
-            updateAutoHideTimer(current + 1);
-        });
-
-        $('#timerDecrease').click(function() {
-            const current = parseInt($('#timerSlider').val());
-            updateAutoHideTimer(current - 1);
         });
 
         // ====== Settings: Go to themes ======

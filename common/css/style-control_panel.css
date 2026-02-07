@@ -529,130 +529,149 @@ select.form-control option {
     letter-spacing: 0.5px;
 }
 
-/* ===== Settings Tab ===== */
-.settings-section {
-    margin-bottom: 24px;
+/* ===== Settings Tab (Clean Layout) ===== */
+.settings-panel {
+    padding: 20px 16px !important;
 }
 
-.settings-section label {
-    margin-bottom: 10px;
+.settings-panel h1 {
+    font-size: 18px !important;
+    margin-bottom: 16px !important;
 }
 
-.font-size-control {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    margin-bottom: 10px;
-}
-
-.btn-setting {
-    background: #0f3460;
-    border: 2px solid #1a3a5c;
-    color: #ccd6f6;
-    font-size: 14px;
-    font-weight: 700;
-    width: 44px;
-    height: 44px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btn-setting:hover {
-    border-color: #0a84ff;
-    background: rgba(10, 132, 255, 0.15);
-    color: #0a84ff;
-}
-
-.font-size-value {
-    color: #ffffff;
-    font-size: 20px;
-    font-weight: 700;
-    min-width: 60px;
-    text-align: center;
-}
-
-.setting-slider {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 100%;
-    height: 6px;
-    background: #1a3a5c;
-    border-radius: 3px;
-    outline: none;
-    cursor: pointer;
-}
-
-.setting-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    background: #0a84ff;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 2px solid #ffffff;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-.setting-slider::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    background: #0a84ff;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 2px solid #ffffff;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-.alignment-control {
-    display: flex;
-    gap: 8px;
-}
-
-.btn-align {
-    flex: 1;
-    background: #0f3460;
-    border: 2px solid #1a3a5c;
-    color: #8892b0;
-    font-size: 10px;
-    padding: 12px 8px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    letter-spacing: 2px;
-}
-
-.btn-align:hover {
-    border-color: #0a84ff;
-    color: #ccd6f6;
-}
-
-.btn-align.active {
-    background: rgba(10, 132, 255, 0.2);
-    border-color: #0a84ff;
-    color: #0a84ff;
-}
-
-.current-theme-info {
+.setting-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #0f3460;
-    border: 2px solid #1a3a5c;
-    border-radius: 8px;
-    padding: 12px 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(26, 58, 92, 0.5);
+    gap: 16px;
 }
 
-.current-theme-info span {
+.setting-row:last-child {
+    border-bottom: none;
+}
+
+.setting-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.setting-title {
+    display: block;
     color: #ccd6f6;
     font-size: 14px;
     font-weight: 600;
+    margin-bottom: 3px;
 }
+
+.setting-desc {
+    display: block;
+    color: #5a6785;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.setting-control {
+    flex-shrink: 0;
+}
+
+/* Spin control (number input + up/down arrows) */
+.spin-control {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid #1a3a5c;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #0a1929;
+}
+
+.spin-input {
+    width: 52px;
+    background: #0a1929;
+    border: none;
+    color: #ccd6f6;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    padding: 6px 4px;
+    outline: none;
+    -moz-appearance: textfield;
+}
+
+.spin-input::-webkit-inner-spin-button,
+.spin-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.spin-buttons {
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid #1a3a5c;
+}
+
+.spin-up, .spin-down {
+    background: #0f2847;
+    border: none;
+    color: #8892b0;
+    font-size: 8px;
+    padding: 0 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.spin-up {
+    border-bottom: 1px solid #1a3a5c;
+}
+
+.spin-up:hover, .spin-down:hover {
+    background: rgba(10, 132, 255, 0.2);
+    color: #0a84ff;
+}
+
+/* Select dropdown */
+.setting-select {
+    background: #0a1929;
+    border: 1px solid #1a3a5c;
+    border-radius: 4px;
+    color: #ccd6f6;
+    font-size: 13px;
+    padding: 7px 28px 7px 10px;
+    outline: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238892b0'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    min-width: 120px;
+}
+
+.setting-select:hover {
+    border-color: #0a84ff;
+}
+
+/* Theme row */
+.theme-select-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.current-theme-label {
+    color: #8892b0;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* Toggle (keep existing) */
 
 .btn-link {
     background: none;
@@ -667,42 +686,6 @@ select.form-control option {
 .btn-link:hover {
     color: #48a8ff;
     text-decoration: underline;
-}
-/* ===== Transition Select Grid ===== */
-.transition-select-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-}
-
-.btn-transition {
-    background: #0f3460;
-    border: 2px solid #1a3a5c;
-    color: #8892b0;
-    font-size: 13px;
-    padding: 10px 8px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-weight: 600;
-}
-
-.btn-transition:hover {
-    border-color: #0a84ff;
-    color: #ccd6f6;
-}
-
-.btn-transition.active {
-    background: rgba(10, 132, 255, 0.2);
-    border-color: #0a84ff;
-    color: #0a84ff;
-}
-
-/* ===== Auto-hide Toggle ===== */
-.autohide-control {
-    display: flex;
-    align-items: center;
-    gap: 12px;
 }
 
 .toggle-switch {
