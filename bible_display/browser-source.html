@@ -119,6 +119,9 @@
             }
 
             if (reference && text) {
+                // Is this the first verse appearing (hidden → visible)?
+                const isEntrance = !isDisplayVisible;
+
                 // Show the block if it was hidden
                 $('#verseDisplay').removeClass('hidden');
                 
@@ -128,17 +131,14 @@
                 $('#verseReference').text(reference + abbr);
                 $('#verseText').text(text);
 
-                // Apply entrance transition every time a verse is displayed
-                const transition = localStorage.getItem('bibleTransition') || 'fade';
-
-                // Remove all transition classes
-                $('#verseDisplay').removeClass('fade-in slide-up slide-down slide-left zoom none fade-out slide-up-out slide-down-out slide-left-out zoom-out');
-                
-                // Force reflow
-                void document.getElementById('verseDisplay').offsetWidth;
-                
-                // Add entrance transition class
-                $('#verseDisplay').addClass(transition);
+                // Entrance transition ONLY when going from nothing → first verse
+                // Switching between verses = instant update, no animation
+                if (isEntrance) {
+                    const transition = localStorage.getItem('bibleTransition') || 'fade';
+                    $('#verseDisplay').removeClass('fade-in slide-up slide-down slide-left zoom none fade-out slide-up-out slide-down-out slide-left-out zoom-out');
+                    void document.getElementById('verseDisplay').offsetWidth;
+                    $('#verseDisplay').addClass(transition);
+                }
 
                 isDisplayVisible = true;
 
