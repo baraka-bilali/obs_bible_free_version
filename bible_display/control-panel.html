@@ -491,13 +491,17 @@
 
                 // Click to select/send verse
                 verseEl.on('click', function() {
+                    const wasSelected = $(this).hasClass('selected');
+                    
                     $('.verse-item').removeClass('selected');
                     $(this).addClass('selected');
 
-                    // Save to localStorage for browser-source
-                    localStorage.setItem('currentVerseReference', v.reference || `${title}`);
-                    localStorage.setItem('currentVerseText', v.text);
-                    localStorage.setItem('currentVerseSource', versionName);
+                    // Only update localStorage (trigger browser-source) if it wasn't already selected
+                    if (!wasSelected) {
+                        localStorage.setItem('currentVerseReference', v.reference || `${title}`);
+                        localStorage.setItem('currentVerseText', v.text);
+                        localStorage.setItem('currentVerseSource', versionName);
+                    }
                 });
 
                 container.append(verseEl);
