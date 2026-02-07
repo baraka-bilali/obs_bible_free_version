@@ -1,10 +1,15 @@
 # 📖 OBS Bible Free Version — Affichage de versets bibliques pour OBS Studio
 
+> *« Ta parole est une lampe à mes pieds, et une lumière sur mon sentier. »* — Psaume 119:105
+
 Système complet pour afficher des versets bibliques en temps réel dans **OBS Studio**, avec panneau de contrôle web, hotkeys et thèmes personnalisables.
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Auteur](https://img.shields.io/badge/auteur-Becker_Baraka-purple.svg)
+![License](https://img.shields.io/badge/licence-GPL--3.0-blue.svg)
 ![OBS](https://img.shields.io/badge/OBS_Studio-compatible-green.svg)
 ![Languages](https://img.shields.io/badge/langues-FR_|_EN-orange.svg)
+
+**Créé avec ❤️ et foi par [Becker Baraka](https://github.com/becker-baraka)** — Ingénieur passionné & Chrétien.
 
 ---
 
@@ -54,7 +59,7 @@ obs_bible_free_version/
 │   └── ...
 │
 ├── logos/                         # Logos et ressources graphiques
-├── LICENSE                        # Licence MIT
+├── LICENSE                        # Licence GPL-3.0
 └── README.md
 ```
 
@@ -192,10 +197,19 @@ Pour changer de thème, modifier le lien CSS dans `browser-source.html` et `cont
 
 ## 📄 Licence
 
-Ce projet est sous licence [MIT](LICENSE).
+Copyright © 2025-2026 **Becker Baraka**. Tous droits réservés.
+
+Ce projet est sous licence [GNU General Public License v3.0](LICENSE). Vous êtes libre de l'utiliser, le modifier et le redistribuer sous les mêmes conditions. Voir le fichier [LICENSE](LICENSE) pour les détails.
 
 Les textes bibliques inclus (LSG 1910, KJV, WEB) sont dans le **domaine public**.
 
 ---
 
-Adapté du projet [Animated-Lower-Thirds](https://github.com/). Scraping LSG 1910 via [BibleGateway.com](https://www.biblegateway.com/).
+## 👤 Auteur
+
+**Becker Baraka** — Ingénieur passionné & Chrétien
+
+- Conçu et développé intégralement de A à Z
+- Scraping des données bibliques via [BibleGateway.com](https://www.biblegateway.com/)
+
+> *Soli Deo Gloria* 🙏
