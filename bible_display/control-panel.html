@@ -9,235 +9,372 @@
     <link rel="stylesheet" href="../common/css/themes/dark/theme.css">
     <script src="../common/js/jquery.js"></script>
     <script src="../common/js/jscolor.js"></script>
-    <script src="../common/js/versets.js"></script>
     <script src="../common/js/bible-api.js"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="main-panel">
-            <h1>Bible Query</h1>
-            
-            <!-- Bible Selection -->
-            <div class="form-group">
-                <label for="bibleSelect">Bible:</label>
-                <select id="bibleSelect" class="form-control">
-                    <option value="louis_segond">Louis Segond</option>
-                    <option value="bible_du_semeur">Bible du Semeur</option>
-                    <option value="nouvelle_king_james">Nouvelle King James</option>
-                    <option value="ostervald">Ostervald</option>
-                </select>
-            </div>
+    <!-- ===== SEARCH TAB (main view) ===== -->
+    <div class="tab-content" id="tabSearch">
+        <div class="container">
+            <div class="main-panel">
+                <h1>Bible Query</h1>
 
-            <!-- Reference Input with Books Dropdown -->
-            <div class="form-group">
-                <label for="referenceInput">Référence:</label>
-                <div class="reference-input-wrapper">
-                    <input type="text" id="referenceInput" class="form-control" placeholder="Saisissez ou sélectionnez un livre">
-                    <datalist id="versesDatalist"></datalist>
+                <!-- Bible Selection -->
+                <div class="form-group">
+                    <label for="bibleSelect">Bible:</label>
+                    <select id="bibleSelect" class="form-control">
+                        <!-- Options populated dynamically -->
+                    </select>
                 </div>
-            </div>
 
-            <!-- Books Dropdown List -->
-            <div id="versesDropdown" class="books-dropdown-section">
-                <div class="books-dropdown">
-                    <div id="booksList" class="books-list">
-                        <!-- Books will be populated here -->
+                <!-- Reference Input with Autocomplete -->
+                <div class="form-group">
+                    <label for="referenceInput">Reference:</label>
+                    <div class="reference-input-wrapper">
+                        <input type="text" id="referenceInput" class="form-control" 
+                               placeholder="Type a book name..." autocomplete="off">
                     </div>
                 </div>
-            </div>
 
-            <!-- Display Button -->
-            <button id="displayBtn" class="btn btn-primary">Submit</button>
-
-            <!-- Currently Displayed Verse (hidden by default) -->
-            <div id="currentVerse" class="current-verse-section">
-                <div class="current-verse-display">
-                    <p>Aucun verset sélectionné</p>
+                <!-- Autocomplete Dropdown -->
+                <div id="autocompleteDropdown" class="autocomplete-dropdown">
+                    <div id="autocompleteList" class="autocomplete-list">
+                        <!-- Items populated dynamically -->
+                    </div>
                 </div>
+
+                <!-- Submit Button -->
+                <button id="displayBtn" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== BIBLE TAB ===== -->
+    <div class="tab-content" id="tabBible" style="display:none;">
+        <div class="container bible-container">
+            <div class="main-panel bible-panel">
+                <div class="bible-header">
+                    <button id="bibleBackBtn" class="btn-back" title="Retour">&#8592;</button>
+                    <h2 id="bibleTitle">Bible</h2>
+                </div>
+                <div id="versesContainer" class="verses-container">
+                    <!-- Verses displayed here -->
+                    <p class="empty-msg">No verses selected.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== LIST TAB ===== -->
+    <div class="tab-content" id="tabList" style="display:none;">
+        <div class="container">
+            <div class="main-panel">
+                <h1>List</h1>
+                <p style="color:#888;text-align:center;padding:40px 0;">Coming soon...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== THEME TAB ===== -->
+    <div class="tab-content" id="tabTheme" style="display:none;">
+        <div class="container">
+            <div class="main-panel">
+                <h1>Theme</h1>
+                <p style="color:#888;text-align:center;padding:40px 0;">Coming soon...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SETTINGS TAB ===== -->
+    <div class="tab-content" id="tabSettings" style="display:none;">
+        <div class="container">
+            <div class="main-panel">
+                <h1>Settings</h1>
+                <p style="color:#888;text-align:center;padding:40px 0;">Coming soon...</p>
             </div>
         </div>
     </div>
 
     <!-- Bottom Navigation Bar -->
     <div class="bottom-nav">
-        <button class="nav-btn" id="searchBtn" title="Rechercher">
+        <button class="nav-btn active" data-tab="tabSearch" title="Rechercher">
             <span class="icon">🔍</span>
             <span class="label">Search</span>
         </button>
-        <button class="nav-btn" id="bibleBtn" title="Bible">
+        <button class="nav-btn" data-tab="tabBible" title="Bible">
             <span class="icon">📖</span>
             <span class="label">Bible</span>
         </button>
-        <button class="nav-btn" id="listBtn" title="Liste">
+        <button class="nav-btn" data-tab="tabList" title="Liste">
             <span class="icon">☰</span>
             <span class="label">List</span>
         </button>
-        <button class="nav-btn" id="themeBtn" title="Thème">
+        <button class="nav-btn" data-tab="tabTheme" title="Thème">
             <span class="icon">🎨</span>
             <span class="label">Theme</span>
         </button>
-        <button class="nav-btn" id="settingsBtn" title="Paramètres">
+        <button class="nav-btn" data-tab="tabSettings" title="Paramètres">
             <span class="icon">⚙️</span>
             <span class="label">Settings</span>
         </button>
     </div>
 
     <script>
-        // Initialize the control panel with Bible API
-        
-        // Initialize books list from Bible API
-        function initializeBooksDropdown() {
-            const booksList = $('#booksList');
-            booksList.empty();
-            
-            const books = getBooks();
-            books.forEach(bookName => {
-                const bookItem = $(`<div class="book-item" data-book="${bookName.toLowerCase()}">${bookName}</div>`);
-                bookItem.click(function() {
-                    $('#referenceInput').val(bookName);
-                    $('.book-item').removeClass('active');
-                    $(this).addClass('active');
-                    toggleBooksDropdown(false);
-                });
-                booksList.append(bookItem);
-            });
+        // ====== State ======
+        let selectedBook = null;
+        let isLoading = false;
+
+        // ====== Tab Navigation ======
+        function switchTab(tabId) {
+            $('.tab-content').hide();
+            $('#' + tabId).show();
+            $('.nav-btn').removeClass('active');
+            $(`.nav-btn[data-tab="${tabId}"]`).addClass('active');
         }
 
-        // Toggle books dropdown visibility
-        function toggleBooksDropdown(show) {
-            if (show === undefined) {
-                $('#versesDropdown').toggleClass('show');
-            } else {
-                if (show) {
-                    $('#versesDropdown').addClass('show');
-                } else {
-                    $('#versesDropdown').removeClass('show');
-                }
-            }
-        }
-
-        // Display verse with data from Bible API
-        function displayVerse(reference) {
-            const verses = getVersesByReference(reference);
-            
-            if (verses && verses.length > 0) {
-                const firstVerse = verses[0];
-                let textContent = verses.map(v => v.text).join(' ');
-                
-                // Sauvegarder dans localStorage pour le browser-source.html
-                localStorage.setItem('currentVerseReference', firstVerse.reference);
-                localStorage.setItem('currentVerseText', textContent);
-                localStorage.setItem('currentVerseSource', 'King James Bible');
-                
-                $('#currentVerse').addClass('show').html(`
-                    <div class="current-verse-display">
-                        <div>
-                            <p><strong>${firstVerse.book} ${firstVerse.chapter}:${firstVerse.verse}</strong></p>
-                            <p>"${textContent}"</p>
-                        </div>
-                    </div>
-                `);
-            } else {
-                $('#currentVerse').removeClass('show');
-            }
-        }
-
-        // Event listeners
-        $(document).ready(function() {
-            // Attendre que la Bible soit chargée
-            setTimeout(() => {
-                initializeBooksDropdown();
-                loadDefaultVerse();
-            }, 1000);
-
-            // Reference input focus - show dropdown with books
-            $('#referenceInput').on('focus', function() {
-                toggleBooksDropdown(true);
-            });
-
-            // Reference input blur - hide dropdown (with delay for click handling)
-            $('#referenceInput').on('blur', function() {
-                setTimeout(() => {
-                    toggleBooksDropdown(false);
-                }, 200);
-            });
-
-            // Reference input autocomplete - filtre les livres
-            $('#referenceInput').on('input', function() {
-                const input = $(this).val().trim();
-                const booksList = $('#booksList');
-                
-                if (input.length > 0) {
-                    // Recherche avec autocomplétion
-                    const matchedBooks = searchBooks(input);
-                    booksList.empty();
-                    
-                    if (matchedBooks.length > 0) {
-                        matchedBooks.forEach(bookName => {
-                            const bookItem = $(`<div class="book-item" data-book="${bookName.toLowerCase()}">${bookName}</div>`);
-                            bookItem.click(function() {
-                                $('#referenceInput').val(bookName);
-                                $('.book-item').removeClass('active');
-                                $(this).addClass('active');
-                                toggleBooksDropdown(false);
-                            });
-                            booksList.append(bookItem);
-                        });
-                        $('#versesDropdown').addClass('show');
-                    } else {
-                        booksList.html('<div class="no-results">Aucun livre trouvé</div>');
-                    }
-                } else {
-                    // Afficher tous les livres
-                    initializeBooksDropdown();
-                }
-            });
-
-            // Display button
-            $('#displayBtn').click(function() {
-                const reference = $('#referenceInput').val().trim();
-                if (reference) {
-                    displayVerse(reference);
-                } else {
-                    alert('Veuillez saisir une référence (ex: Genesis 1:1)');
-                }
-            });
-
-            // Enter key to display verse
-            $('#referenceInput').keypress(function(e) {
-                if (e.which === 13) {
-                    $('#displayBtn').click();
-                }
-            });
-
-            // Bottom nav buttons
-            $('#searchBtn').click(function() {
-                console.log('Search clicked');
-            });
-
-            $('#bibleBtn').click(function() {
-                console.log('Bible clicked');
-            });
-
-            $('#listBtn').click(function() {
-                console.log('List clicked');
-            });
-
-            $('#themeBtn').click(function() {
-                console.log('Theme clicked');
-            });
-
-            $('#settingsBtn').click(function() {
-                console.log('Settings clicked');
-            });
+        $('.nav-btn').click(function() {
+            const tabId = $(this).data('tab');
+            switchTab(tabId);
         });
 
-        // Charger un verset de test par défaut
-        function loadDefaultVerse() {
-            const defaultVerse = "Genesis 1:1";
-            $('#referenceInput').val(defaultVerse);
-            displayVerse(defaultVerse);
+        // ====== Bible Version Loader ======
+        async function initVersions() {
+            console.log('Initializing Bible versions...');
+            const versions = await loadLocalVersions();
+            const select = $('#bibleSelect');
+            select.empty();
+
+            if (versions.length === 0) {
+                select.append('<option value="">-- No Bible found --</option>');
+                console.error('No Bible versions found. Check file paths.');
+                return;
+            }
+
+            versions.forEach((v, idx) => {
+                select.append(`<option value="${idx}">${v.name}</option>`);
+            });
+
+            console.log(`Dropdown populated with ${versions.length} versions`);
+
+            // Load the first version by default
+            if (versions.length > 0) {
+                await loadBible(versions[0].path, versions[0].mappingKey);
+                console.log('Default Bible loaded:', versions[0].name);
+            }
         }
+
+        // When Bible version changes, reload
+        $('#bibleSelect').on('change', async function() {
+            const idx = parseInt($(this).val());
+            if (availableVersions[idx]) {
+                isLoading = true;
+                $('#referenceInput').val('');
+                hideAutocomplete();
+                await loadBible(availableVersions[idx].path, availableVersions[idx].mappingKey);
+                isLoading = false;
+            }
+        });
+
+        // ====== Autocomplete ======
+        function showAutocomplete(items) {
+            const list = $('#autocompleteList');
+            list.empty();
+
+            if (items.length === 0) {
+                list.html('<div class="autocomplete-item no-results">No book found</div>');
+            } else {
+                items.forEach(bookName => {
+                    const item = $(`<div class="autocomplete-item">${bookName}</div>`);
+                    item.on('mousedown', function(e) {
+                        e.preventDefault(); // prevent blur
+                        selectBook(bookName);
+                    });
+                    list.append(item);
+                });
+            }
+
+            $('#autocompleteDropdown').addClass('show');
+        }
+
+        function hideAutocomplete() {
+            $('#autocompleteDropdown').removeClass('show');
+        }
+
+        function selectBook(bookName) {
+            selectedBook = bookName;
+            $('#referenceInput').val(bookName + ' ');
+            hideAutocomplete();
+            // Focus back on input so user can type chapter
+            $('#referenceInput').focus();
+        }
+
+        // ====== Reference Input Handler ======
+        $('#referenceInput').on('input', function() {
+            const input = $(this).val().trim();
+
+            if (input.length === 0) {
+                hideAutocomplete();
+                selectedBook = null;
+                return;
+            }
+
+            // Check if input contains a chapter number (book has been selected)
+            const parsed = parseReference(input);
+            if (parsed && findBook(parsed.book)) {
+                // User is typing chapter/verse, hide autocomplete
+                hideAutocomplete();
+                return;
+            }
+
+            // Check if the input exactly matches a book (user selected from list)
+            const exactBook = bibleBookNames.find(b => b.toLowerCase() === input.toLowerCase());
+            if (exactBook) {
+                selectedBook = exactBook;
+                hideAutocomplete();
+                return;
+            }
+
+            // Otherwise, show autocomplete suggestions
+            const matches = searchBooks(input);
+            showAutocomplete(matches);
+        });
+
+        $('#referenceInput').on('focus', function() {
+            const input = $(this).val().trim();
+            if (input.length > 0) {
+                const parsed = parseReference(input);
+                if (!parsed || !findBook(parsed.book)) {
+                    const matches = searchBooks(input);
+                    if (matches.length > 0) {
+                        showAutocomplete(matches);
+                    }
+                }
+            }
+        });
+
+        $('#referenceInput').on('blur', function() {
+            setTimeout(() => hideAutocomplete(), 150);
+        });
+
+        // ====== Submit / Display ======
+        function submitReference() {
+            const reference = $('#referenceInput').val().trim();
+            if (!reference) {
+                return;
+            }
+
+            const parsed = parseReference(reference);
+
+            if (parsed) {
+                const bookKey = findBook(parsed.book);
+                if (!bookKey) {
+                    showBibleError('Book not found: ' + parsed.book);
+                    return;
+                }
+
+                const localName = getLocalizedBookName(bookKey);
+
+                if (parsed.verse === null) {
+                    // Whole chapter: "Book Chapter"
+                    const verses = getChapter(bookKey, parsed.chapter);
+                    if (verses.length > 0) {
+                        displayVerses(verses, `${localName} ${parsed.chapter}`);
+                    } else {
+                        showBibleError(`Chapter ${parsed.chapter} not found in ${localName}`);
+                    }
+                } else {
+                    // Specific verse or range
+                    const verses = getVersesByReference(reference);
+                    if (verses) {
+                        const rangeStr = parsed.verse === parsed.verseEnd
+                            ? `${localName} ${parsed.chapter}:${parsed.verse}`
+                            : `${localName} ${parsed.chapter}:${parsed.verse}-${parsed.verseEnd}`;
+                        displayVerses(verses, rangeStr);
+                    } else {
+                        showBibleError(`Verse(s) not found: ${reference}`);
+                    }
+                }
+            } else {
+                // Maybe just a book name? Show all chapters info
+                const bookKey = findBook(reference);
+                if (bookKey) {
+                    const localName = getLocalizedBookName(bookKey);
+                    // Default to chapter 1
+                    const verses = getChapter(bookKey, '1');
+                    if (verses.length > 0) {
+                        displayVerses(verses, `${localName} 1`);
+                    } else {
+                        showBibleError(`No data found for ${localName}`);
+                    }
+                } else {
+                    showBibleError('Invalid reference format. Try: Genèse 1 or Jean 3:16');
+                }
+            }
+        }
+
+        function displayVerses(verses, title) {
+            const container = $('#versesContainer');
+            container.empty();
+
+            // Get the current Bible version name
+            const idx = parseInt($('#bibleSelect').val());
+            const versionName = availableVersions[idx] ? availableVersions[idx].name : '';
+
+            $('#bibleTitle').text(title);
+
+            verses.forEach(v => {
+                const verseEl = $(`
+                    <div class="verse-item" data-ref="${v.reference || ''}">
+                        <span class="verse-num">${v.verse}</span>
+                        <span class="verse-text">${v.text}</span>
+                    </div>
+                `);
+
+                // Click to select/send verse
+                verseEl.on('click', function() {
+                    $('.verse-item').removeClass('selected');
+                    $(this).addClass('selected');
+
+                    // Save to localStorage for browser-source
+                    localStorage.setItem('currentVerseReference', v.reference || `${title}`);
+                    localStorage.setItem('currentVerseText', v.text);
+                    localStorage.setItem('currentVerseSource', versionName);
+                });
+
+                container.append(verseEl);
+            });
+
+            // Switch to Bible tab
+            switchTab('tabBible');
+        }
+
+        function showBibleError(msg) {
+            const container = $('#versesContainer');
+            container.html(`<div class="bible-error"><p>⚠️ ${msg}</p></div>`);
+            switchTab('tabBible');
+        }
+
+        // Submit button
+        $('#displayBtn').click(function() {
+            submitReference();
+        });
+
+        // Enter key
+        $('#referenceInput').keypress(function(e) {
+            if (e.which === 13) {
+                hideAutocomplete();
+                submitReference();
+            }
+        });
+
+        // Back button in Bible tab
+        $('#bibleBackBtn').click(function() {
+            switchTab('tabSearch');
+        });
+
+        // ====== Init ======
+        $(document).ready(async function() {
+            await initVersions();
+        });
     </script>
 </body>
 </html>
