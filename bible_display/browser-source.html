@@ -21,6 +21,7 @@
         let lastReference = '';
         let lastText = '';
         let autoHideTimeout = null;
+        let isDisplayVisible = false; // Track whether the block is currently showing
 
         function applySettings() {
             const refFontSize = localStorage.getItem('bibleRefFontSize') || '20';
@@ -69,6 +70,8 @@
         }
 
         function hideVerse() {
+            if (!isDisplayVisible) return;
+
             // Get transition type for fade-out
             const transition = localStorage.getItem('bibleTransition') || 'fade';
             
@@ -84,6 +87,7 @@
                 $('#verseDisplay').addClass('hidden'); // Hide the entire block
                 lastReference = '';
                 lastText = '';
+                isDisplayVisible = false;
             }, 600); // Match animation duration
         }
 
@@ -115,6 +119,9 @@
             }
 
             if (reference && text) {
+                // Determine if this is the first verse (entrance) or just a verse switch
+                const isEntrance = !isDisplayVisible;
+
                 // Show the block if it was hidden
                 $('#verseDisplay').removeClass('hidden');
                 
@@ -124,17 +131,21 @@
                 $('#verseReference').text(reference + abbr);
                 $('#verseText').text(text);
 
-                // Get transition type
-                const transition = localStorage.getItem('bibleTransition') || 'fade';
+                // Only apply entrance transition when going from hidden → visible
+                if (isEntrance) {
+                    const transition = localStorage.getItem('bibleTransition') || 'fade';
 
-                // Remove all transition classes
-                $('#verseDisplay').removeClass('fade-in slide-up slide-down slide-left zoom none fade-out slide-up-out slide-down-out slide-left-out zoom-out');
-                
-                // Force reflow
-                void document.getElementById('verseDisplay').offsetWidth;
-                
-                // Add new transition class
-                $('#verseDisplay').addClass(transition);
+                    // Remove all transition classes
+                    $('#verseDisplay').removeClass('fade-in slide-up slide-down slide-left zoom none fade-out slide-up-out slide-down-out slide-left-out zoom-out');
+                    
+                    // Force reflow
+                    void document.getElementById('verseDisplay').offsetWidth;
+                    
+                    // Add entrance transition class
+                    $('#verseDisplay').addClass(transition);
+                }
+
+                isDisplayVisible = true;
 
                 // Auto-hide if enabled
                 const autoHide = localStorage.getItem('bibleAutoHide') === 'true';
