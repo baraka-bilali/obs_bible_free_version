@@ -208,6 +208,18 @@
                     <input type="range" id="opacitySlider" class="setting-slider" min="10" max="100" value="100">
                 </div>
 
+                <!-- Max Lines -->
+                <div class="settings-section">
+                    <label>Max Lines (Long Verses)</label>
+                    <div class="font-size-control">
+                        <button id="maxLinesDecrease" class="btn-setting" title="Réduire">−</button>
+                        <span id="maxLinesValue" class="font-size-value">Auto</span>
+                        <button id="maxLinesIncrease" class="btn-setting" title="Agrandir">+</button>
+                    </div>
+                    <input type="range" id="maxLinesSlider" class="setting-slider" min="0" max="10" value="0">
+                    <p style="font-size: 12px; color: #8892b0; margin-top: 8px;">0 = Auto (unlimited), 1-10 = Fixed lines</p>
+                </div>
+
                 <!-- Transition Effect -->
                 <div class="settings-section">
                     <label>Transition Effect</label>
@@ -583,6 +595,10 @@
             $('#opacitySlider').val(savedOpacity);
             $('#opacityValue').text(savedOpacity + '%');
 
+            const savedMaxLines = localStorage.getItem('bibleMaxLines') || '0';
+            $('#maxLinesSlider').val(savedMaxLines);
+            $('#maxLinesValue').text(savedMaxLines === '0' ? 'Auto' : savedMaxLines);
+
             const savedTransition = localStorage.getItem('bibleTransition') || 'fade';
             $('.btn-transition').removeClass('active');
             $(`.btn-transition[data-transition="${savedTransition}"]`).addClass('active');
@@ -691,6 +707,28 @@
         $('#opacityDecrease').click(function() {
             const current = parseInt($('#opacitySlider').val());
             updateOpacity(current - 5);
+        });
+
+        // ====== Settings: Max Lines ======
+        function updateMaxLines(value) {
+            value = Math.max(0, Math.min(10, parseInt(value)));
+            $('#maxLinesSlider').val(value);
+            $('#maxLinesValue').text(value === 0 ? 'Auto' : value.toString());
+            localStorage.setItem('bibleMaxLines', value.toString());
+        }
+
+        $('#maxLinesSlider').on('input', function() {
+            updateMaxLines($(this).val());
+        });
+
+        $('#maxLinesIncrease').click(function() {
+            const current = parseInt($('#maxLinesSlider').val());
+            updateMaxLines(current + 1);
+        });
+
+        $('#maxLinesDecrease').click(function() {
+            const current = parseInt($('#maxLinesSlider').val());
+            updateMaxLines(current - 1);
         });
 
         // ====== Settings: Transition ======

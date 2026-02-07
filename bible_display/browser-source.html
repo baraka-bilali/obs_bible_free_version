@@ -29,6 +29,7 @@
             const alignment = localStorage.getItem('bibleAlignment') || 'center';
             const theme = localStorage.getItem('bibleTheme') || 'classic-dark';
             const opacity = localStorage.getItem('bibleOpacity') || '100';
+            const maxLines = parseInt(localStorage.getItem('bibleMaxLines') || '0');
 
             // Font sizes (independent)
             $('#verseReference').css('font-size', refFontSize + 'px');
@@ -42,6 +43,26 @@
 
             // Opacity
             $('#verseDisplay').css('opacity', parseFloat(opacity) / 100);
+
+            // Max lines (text clamp)
+            if (maxLines > 0) {
+                $('#verseText').css({
+                    'display': '-webkit-box',
+                    '-webkit-line-clamp': maxLines.toString(),
+                    '-webkit-box-orient': 'vertical',
+                    'overflow': 'hidden',
+                    'text-overflow': 'ellipsis'
+                });
+            } else {
+                // Remove clamp (auto/unlimited)
+                $('#verseText').css({
+                    'display': 'block',
+                    '-webkit-line-clamp': 'unset',
+                    '-webkit-box-orient': 'unset',
+                    'overflow': 'visible',
+                    'text-overflow': 'clip'
+                });
+            }
 
             // Theme
             $('body').attr('data-theme', theme);
@@ -130,7 +151,7 @@
         window.addEventListener('storage', function(e) {
             if (['currentVerseReference', 'currentVerseText', 'currentVerseSource',
                  'bibleRefFontSize', 'bibleVerseFontSize', 'bibleLineHeight', 'bibleAlignment', 'bibleTheme',
-                 'bibleOpacity', 'bibleTransition', 'bibleAutoHide', 'bibleAutoHideTimer'].includes(e.key)) {
+                 'bibleOpacity', 'bibleMaxLines', 'bibleTransition', 'bibleAutoHide', 'bibleAutoHideTimer'].includes(e.key)) {
                 updateVerseDisplay();
             }
         });
