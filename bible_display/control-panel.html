@@ -9,6 +9,12 @@
     <link rel="stylesheet" href="../common/css/themes/dark/theme.css">
     <script src="../common/js/jquery.js"></script>
     <script src="../common/js/jscolor.js"></script>
+    <!-- Bible data (pre-generated JS files, works with file:// protocol) -->
+    <script src="../bible-versions/js/versions-index.js"></script>
+    <script src="../bible-versions/js/book_name_mapping.js"></script>
+    <script src="../bible-versions/js/LSG.js"></script>
+    <script src="../bible-versions/js/KJV.js"></script>
+    <script src="../bible-versions/js/WEB.js"></script>
     <script src="../common/js/bible-api.js"></script>
 </head>
 <body>
@@ -224,15 +230,15 @@
         });
 
         // ====== Bible Version Loader ======
-        async function initVersions() {
+        function initVersions() {
             console.log('Initializing Bible versions...');
-            const versions = await loadLocalVersions();
+            const versions = getAvailableVersions();
             const select = $('#bibleSelect');
             select.empty();
 
             if (versions.length === 0) {
                 select.append('<option value="">-- No Bible found --</option>');
-                console.error('No Bible versions found. Check file paths.');
+                console.error('No Bible versions found. Check that JS files are loaded.');
                 return;
             }
 
@@ -244,19 +250,19 @@
 
             // Load the first version by default
             if (versions.length > 0) {
-                await loadBible(versions[0].path, versions[0].mappingKey);
+                loadBible(versions[0].key, versions[0].mappingKey);
                 console.log('Default Bible loaded:', versions[0].name);
             }
         }
 
         // When Bible version changes, reload
-        $('#bibleSelect').on('change', async function() {
+        $('#bibleSelect').on('change', function() {
             const idx = parseInt($(this).val());
             if (availableVersions[idx]) {
                 isLoading = true;
                 $('#referenceInput').val('');
                 hideAutocomplete();
-                await loadBible(availableVersions[idx].path, availableVersions[idx].mappingKey);
+                loadBible(availableVersions[idx].key, availableVersions[idx].mappingKey);
                 isLoading = false;
             }
         });
@@ -459,8 +465,8 @@
         });
 
         // ====== Init ======
-        $(document).ready(async function() {
-            await initVersions();
+        $(document).ready(function() {
+            initVersions();
             loadSettings();
         });
 

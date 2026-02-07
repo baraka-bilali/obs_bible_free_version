@@ -1,5 +1,6 @@
 /* ========================
-   BIBLE API - Charge les versets depuis les fichiers JSON
+   BIBLE API - Works without a web server (file:// protocol)
+   Loads Bible data from pre-generated JS files via <script> tags
    ======================== */
 
 let bibleData = {};
@@ -11,17 +12,29 @@ let reverseMapping = {};    // Current version: Localized -> English
 let currentVersion = '';
 let availableVersions = [];
 
-// Load book name mappings
-async function loadBookNameMapping() {
-    try {
-        const response = await fetch('../bible-versions/book_name_mapping.json');
-        if (response.ok) {
-            bookNameMapping = await response.json();
-            console.log('✓ Book name mapping loaded');
-        }
-    } catch (e) {
-        console.warn('Could not load book name mapping:', e.message);
+// Initialize: read data from global window objects (set by <script> tags)
+function initBookNameMapping() {
+    if (window.BOOK_NAME_MAPPING) {
+        bookNameMapping = window.BOOK_NAME_MAPPING;
+        console.log('✓ Book name mapping loaded');
+    } else {
+        console.warn('✗ Book name mapping not found (book_name_mapping.js not loaded)');
     }
+}
+
+// Get available versions from the pre-generated index
+function getAvailableVersions() {
+    initBookNameMapping();
+
+    if (window.BIBLE_VERSIONS_INDEX) {
+        availableVersions = window.BIBLE_VERSIONS_INDEX;
+        console.log(`✓ ${availableVersions.length} versions available`);
+    } else {
+        console.warn('✗ Versions index not found (versions-index.js not loaded)');
+        availableVersions = [];
+    }
+
+    return availableVersions;
 }
 
 // Apply mapping for a specific version
@@ -65,83 +78,25 @@ function getEnglishBookName(localizedName) {
     return null;
 }
 
-// Load locally available Bible versions
-async function loadLocalVersions() {
-    // Load mapping first
-    await loadBookNameMapping();
-
-    const localVersions = [];
-
-    const filesToTry = [
-        { locale: 'fr', file: 'LSG', displayName: 'Louis Segond (LSG)', mappingKey: 'FRENCH: LOUIS SEGOND (1910)' },
-        { locale: 'en', file: 'KING JAMES BIBLE', displayName: 'King James Bible (KJV)', mappingKey: null },
-        { locale: 'en', file: 'WORLD ENGLISH BIBLE', displayName: 'World English Bible (WEB)', mappingKey: null }
-    ];
-
-    for (const entry of filesToTry) {
-        const encodedFile = encodeURIComponent(entry.file);
-        const path = `../bible-versions/versions/${entry.locale}/${encodedFile}.json`;
-        try {
-            const response = await fetch(path);
-            if (response.ok) {
-                localVersions.push({
-                    name: entry.displayName,
-                    locale: entry.locale,
-                    fileName: entry.file,
-                    path: path,
-                    mappingKey: entry.mappingKey
-                });
-                console.log(`✓ Version found: ${entry.displayName}`);
-            } else {
-                console.warn(`✗ Could not find ${entry.displayName}: HTTP ${response.status}`);
-            }
-        } catch (e) {
-            console.warn(`✗ Error loading ${entry.displayName}:`, e.message);
-        }
-    }
-
-    availableVersions = localVersions;
-    console.log(`Total versions found: ${localVersions.length}`);
-    return localVersions;
-}
-
-// Charger la Bible depuis le fichier JSON
-async function loadBible(path, mappingKey) {
-    try {
-        const response = await fetch(path);
-        const data = await response.json();
-
-        // Handle two JSON formats:
-        // Format 1 (LSG): { version, language, books: { Book: { chapter: { verse: text } } } }
-        // Format 2 (KJV/WEB): { Book: { chapter: { verse: text } } }
-        if (data.books) {
-            bibleData = data.books;
-            currentVersion = data.version || '';
-        } else {
-            bibleData = {};
-            for (const key of Object.keys(data)) {
-                if (typeof data[key] === 'object' && data[key] !== null && !Array.isArray(data[key])) {
-                    const firstKey = Object.keys(data[key])[0];
-                    if (firstKey && !isNaN(firstKey)) {
-                        bibleData[key] = data[key];
-                    }
-                }
-            }
-            currentVersion = '';
-        }
-
-        // Extract book list (English keys)
-        bibleBooks = Object.keys(bibleData);
-
-        // Apply localized mapping
-        applyBookMapping(mappingKey || null);
-
-        console.log(`Bible chargée avec ${bibleBooks.length} livres`);
-        return true;
-    } catch (error) {
-        console.error('Erreur lors du chargement de la Bible:', error);
+// Load a Bible version from the global registry (no fetch needed)
+function loadBible(versionKey, mappingKey) {
+    if (!window.BIBLE_DATA_REGISTRY || !window.BIBLE_DATA_REGISTRY[versionKey]) {
+        console.error(`✗ Bible "${versionKey}" not found in registry. Is the JS file loaded?`);
         return false;
     }
+
+    const entry = window.BIBLE_DATA_REGISTRY[versionKey];
+    bibleData = entry.books;
+    currentVersion = entry.meta ? entry.meta.version : versionKey;
+
+    // Extract book list (English keys)
+    bibleBooks = Object.keys(bibleData);
+
+    // Apply localized mapping
+    applyBookMapping(mappingKey || null);
+
+    console.log(`✓ Bible "${versionKey}" loaded with ${bibleBooks.length} books`);
+    return true;
 }
 
 // Obtenir un verset spécifique (uses English key internally)
