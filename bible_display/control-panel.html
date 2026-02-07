@@ -508,14 +508,42 @@
                     if (wasSelected) {
                         // Deselect and clear browser-source
                         $(this).removeClass('selected');
+                        $(this).find('.verse-chunks-nav').remove();
+                        $(this).find('.verse-text').text(v.text);
                         localStorage.setItem('currentVerseReference', '');
                         localStorage.setItem('currentVerseText', '');
                         localStorage.setItem('currentVerseSource', '');
                     } else {
-                        // Select and send to browser-source
+                        // Deselect previous
                         $('.verse-item').removeClass('selected');
+                        $('.verse-chunks-nav').remove();
+                        // Restore full text on previously selected items
+                        $('.verse-item').each(function() {
+                            const origText = $(this).data('fulltext');
+                            if (origText) $(this).find('.verse-text').text(origText);
+                        });
+
                         $(this).addClass('selected');
+
+                        // Check max lines and split if needed
+                        const maxLines = parseInt(localStorage.getItem('bibleMaxLines') || '0');
+                        if (maxLines > 0) {
+                            const chunks = splitTextIntoChunks(v.text, maxLines);
+                            if (chunks.length > 1) {
+                                // Store data for navigation
+                                $(this).data('fulltext', v.text);
+                                $(this).data('chunks', chunks);
+                                $(this).data('chunk-index', 0);
+                                $(this).data('chunk-ref', v.reference || title);
+                                $(this).data('chunk-version', versionName);
+
+                                // Show chunk 1 with nav
+                                showVerseChunk($(this), 0);
+                                return;
+                            }
+                        }
                         
+                        // Normal (no chunking needed)
                         localStorage.setItem('currentVerseReference', v.reference || `${title}`);
                         localStorage.setItem('currentVerseText', v.text);
                         localStorage.setItem('currentVerseSource', versionName);
@@ -527,6 +555,82 @@
 
             // Switch to Bible tab
             switchTab('tabBible');
+        }
+
+        // Split text into chunks that approximate the max line count
+        function splitTextIntoChunks(text, maxLines) {
+            // Estimate ~60 chars per line as a rough average for the browser-source display
+            const charsPerLine = 55;
+            const chunkSize = maxLines * charsPerLine;
+            
+            if (text.length <= chunkSize) return [text];
+            
+            const chunks = [];
+            let remaining = text;
+            
+            while (remaining.length > 0) {
+                if (remaining.length <= chunkSize) {
+                    chunks.push(remaining.trim());
+                    break;
+                }
+                
+                // Find a good break point (space, comma, semicolon) near the chunk size
+                let breakAt = chunkSize;
+                // Search backward for a space to avoid cutting words
+                while (breakAt > chunkSize * 0.7 && remaining[breakAt] !== ' ') {
+                    breakAt--;
+                }
+                if (breakAt <= chunkSize * 0.7) breakAt = chunkSize; // fallback
+                
+                chunks.push(remaining.substring(0, breakAt).trim());
+                remaining = remaining.substring(breakAt).trim();
+            }
+            
+            return chunks;
+        }
+
+        // Show a specific chunk of a verse
+        function showVerseChunk(verseEl, chunkIdx) {
+            const chunks = verseEl.data('chunks');
+            const ref = verseEl.data('chunk-ref');
+            const versionName = verseEl.data('chunk-version');
+            
+            chunkIdx = Math.max(0, Math.min(chunks.length - 1, chunkIdx));
+            verseEl.data('chunk-index', chunkIdx);
+
+            // Update text display in control panel
+            const displayText = chunks[chunkIdx] + (chunkIdx < chunks.length - 1 ? ' ...' : '');
+            verseEl.find('.verse-text').html(
+                `<span class="chunk-text">${displayText}</span>`
+            );
+
+            // Remove old nav, add new
+            verseEl.find('.verse-chunks-nav').remove();
+            const nav = $(`
+                <div class="verse-chunks-nav">
+                    <button class="chunk-btn chunk-prev" ${chunkIdx === 0 ? 'disabled' : ''}>◀</button>
+                    <span class="chunk-indicator">${chunkIdx + 1} / ${chunks.length}</span>
+                    <button class="chunk-btn chunk-next" ${chunkIdx === chunks.length - 1 ? 'disabled' : ''}>▶</button>
+                </div>
+            `);
+
+            nav.find('.chunk-prev').on('click', function(e) {
+                e.stopPropagation();
+                showVerseChunk(verseEl, chunkIdx - 1);
+            });
+
+            nav.find('.chunk-next').on('click', function(e) {
+                e.stopPropagation();
+                showVerseChunk(verseEl, chunkIdx + 1);
+            });
+
+            verseEl.append(nav);
+
+            // Send chunk to browser-source
+            const suffix = chunks.length > 1 ? ` (${chunkIdx + 1}/${chunks.length})` : '';
+            localStorage.setItem('currentVerseReference', ref + suffix);
+            localStorage.setItem('currentVerseText', chunks[chunkIdx]);
+            localStorage.setItem('currentVerseSource', versionName);
         }
 
         function showBibleError(msg) {
