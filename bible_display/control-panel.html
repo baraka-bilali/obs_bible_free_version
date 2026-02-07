@@ -493,11 +493,17 @@
                 verseEl.on('click', function() {
                     const wasSelected = $(this).hasClass('selected');
                     
-                    $('.verse-item').removeClass('selected');
-                    $(this).addClass('selected');
-
-                    // Only update localStorage (trigger browser-source) if it wasn't already selected
-                    if (!wasSelected) {
+                    if (wasSelected) {
+                        // Deselect and clear browser-source
+                        $(this).removeClass('selected');
+                        localStorage.setItem('currentVerseReference', '');
+                        localStorage.setItem('currentVerseText', '');
+                        localStorage.setItem('currentVerseSource', '');
+                    } else {
+                        // Select and send to browser-source
+                        $('.verse-item').removeClass('selected');
+                        $(this).addClass('selected');
+                        
                         localStorage.setItem('currentVerseReference', v.reference || `${title}`);
                         localStorage.setItem('currentVerseText', v.text);
                         localStorage.setItem('currentVerseSource', versionName);

@@ -48,16 +48,33 @@
         }
 
         function hideVerse() {
-            $('#verseReference').text('');
-            $('#verseText').text('');
-            lastReference = '';
-            lastText = '';
+            // Get transition type for fade-out
+            const transition = localStorage.getItem('bibleTransition') || 'fade';
+            
+            // Add fade-out class based on transition type
+            $('#verseDisplay').removeClass('fade-in slide-up slide-down slide-left zoom none');
+            $('#verseDisplay').addClass(transition + '-out');
+            
+            // Wait for animation to complete before clearing text
+            setTimeout(function() {
+                $('#verseReference').text('');
+                $('#verseText').text('');
+                $('#verseDisplay').removeClass(transition + '-out');
+                lastReference = '';
+                lastText = '';
+            }, 600); // Match animation duration
         }
 
         function updateVerseDisplay() {
             const reference = localStorage.getItem('currentVerseReference') || '';
             const text = localStorage.getItem('currentVerseText') || '';
             const source = localStorage.getItem('currentVerseSource') || '';
+
+            // Check if verse was cleared (deselected)
+            if (!reference && !text && (lastReference || lastText)) {
+                hideVerse();
+                return;
+            }
 
             // Only update if something changed
             if (reference === lastReference && text === lastText) {
@@ -86,7 +103,7 @@
                 const transition = localStorage.getItem('bibleTransition') || 'fade';
 
                 // Remove all transition classes
-                $('#verseDisplay').removeClass('fade-in slide-up slide-down slide-left zoom none');
+                $('#verseDisplay').removeClass('fade-in slide-up slide-down slide-left zoom none fade-out slide-up-out slide-down-out slide-left-out zoom-out');
                 
                 // Force reflow
                 void document.getElementById('verseDisplay').offsetWidth;
