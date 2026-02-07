@@ -176,6 +176,17 @@
                     <input type="range" id="verseFontSizeSlider" class="setting-slider" min="10" max="48" value="18">
                 </div>
 
+                <!-- Line Spacing -->
+                <div class="settings-section">
+                    <label>Line Spacing</label>
+                    <div class="font-size-control">
+                        <button id="lineHeightDecrease" class="btn-setting" title="Réduire">−</button>
+                        <span id="lineHeightValue" class="font-size-value">1.6</span>
+                        <button id="lineHeightIncrease" class="btn-setting" title="Agrandir">+</button>
+                    </div>
+                    <input type="range" id="lineHeightSlider" class="setting-slider" min="10" max="30" value="16" step="1">
+                </div>
+
                 <!-- Text Alignment -->
                 <div class="settings-section">
                     <label>Alignment</label>
@@ -504,6 +515,11 @@
             $('#verseFontSizeSlider').val(savedVerseSize);
             $('#verseFontSizeValue').text(savedVerseSize + 'px');
 
+            const savedLineHeight = localStorage.getItem('bibleLineHeight') || '1.6';
+            const sliderVal = Math.round(parseFloat(savedLineHeight) * 10);
+            $('#lineHeightSlider').val(sliderVal);
+            $('#lineHeightValue').text(savedLineHeight);
+
             const savedAlign = localStorage.getItem('bibleAlignment') || 'center';
             $('.btn-align').removeClass('active');
             $(`.btn-align[data-align="${savedAlign}"]`).addClass('active');
@@ -551,6 +567,29 @@
         $('#verseFontDecrease').click(function() {
             const current = parseInt($('#verseFontSizeSlider').val());
             updateVerseFontSize(current - 2);
+        });
+
+        // ====== Settings: Line Spacing ======
+        function updateLineHeight(sliderVal) {
+            sliderVal = Math.max(10, Math.min(30, parseInt(sliderVal)));
+            const lineHeight = (sliderVal / 10).toFixed(1);
+            $('#lineHeightSlider').val(sliderVal);
+            $('#lineHeightValue').text(lineHeight);
+            localStorage.setItem('bibleLineHeight', lineHeight);
+        }
+
+        $('#lineHeightSlider').on('input', function() {
+            updateLineHeight($(this).val());
+        });
+
+        $('#lineHeightIncrease').click(function() {
+            const current = parseInt($('#lineHeightSlider').val());
+            updateLineHeight(current + 2);
+        });
+
+        $('#lineHeightDecrease').click(function() {
+            const current = parseInt($('#lineHeightSlider').val());
+            updateLineHeight(current - 2);
         });
 
         // ====== Settings: Alignment ======

@@ -24,12 +24,16 @@
         function applySettings() {
             const refFontSize = localStorage.getItem('bibleRefFontSize') || '20';
             const verseFontSize = localStorage.getItem('bibleVerseFontSize') || '18';
+            const lineHeight = localStorage.getItem('bibleLineHeight') || '1.6';
             const alignment = localStorage.getItem('bibleAlignment') || 'center';
             const theme = localStorage.getItem('bibleTheme') || 'classic-dark';
 
             // Font sizes (independent)
             $('#verseReference').css('font-size', refFontSize + 'px');
             $('#verseText').css('font-size', verseFontSize + 'px');
+
+            // Line spacing
+            $('#verseText').css('line-height', lineHeight);
 
             // Alignment
             $('#verseDisplay').css('text-align', alignment);
@@ -72,7 +76,7 @@
         // Listen for storage events (from control panel)
         window.addEventListener('storage', function(e) {
             if (['currentVerseReference', 'currentVerseText', 'currentVerseSource',
-                 'bibleRefFontSize', 'bibleVerseFontSize', 'bibleAlignment', 'bibleTheme'].includes(e.key)) {
+                 'bibleRefFontSize', 'bibleVerseFontSize', 'bibleLineHeight', 'bibleAlignment', 'bibleTheme'].includes(e.key)) {
                 updateVerseDisplay();
             }
         });
