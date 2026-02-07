@@ -55,11 +55,12 @@
             $('#verseDisplay').removeClass('fade-in slide-up slide-down slide-left zoom none');
             $('#verseDisplay').addClass(transition + '-out');
             
-            // Wait for animation to complete before clearing text
+            // Wait for animation to complete before hiding completely
             setTimeout(function() {
                 $('#verseReference').text('');
                 $('#verseText').text('');
                 $('#verseDisplay').removeClass(transition + '-out');
+                $('#verseDisplay').addClass('hidden'); // Hide the entire block
                 lastReference = '';
                 lastText = '';
             }, 600); // Match animation duration
@@ -93,6 +94,9 @@
             }
 
             if (reference && text) {
+                // Show the block if it was hidden
+                $('#verseDisplay').removeClass('hidden');
+                
                 // Extract abbreviation from parentheses (e.g. "Louis Segond (LSG)" → "LSG")
                 const parenMatch = source.match(/\(([^)]+)\)/);
                 const abbr = source ? ' (' + (parenMatch ? parenMatch[1].toUpperCase() : source.substring(0, 3).toUpperCase()) + ')' : '';

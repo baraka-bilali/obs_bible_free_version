@@ -38,6 +38,10 @@ body {
     right: 0;
 }
 
+.verse-display.hidden {
+    display: none;
+}
+
 .verse-content {
     position: relative;
     z-index: 1;
