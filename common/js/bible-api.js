@@ -37,6 +37,20 @@ function getAvailableVersions() {
     return availableVersions;
 }
 
+// Normalize book key: convert Roman numeral prefixes and variant names
+// so that data keys like "I Samuel", "II Kings", "III John", "Revelation of John"
+// can match mapping keys like "1 Samuel", "2 Kings", "3 John", "Revelation"
+function normalizeBookKey(key) {
+    let k = key.trim();
+    // Convert Roman numeral prefixes to Arabic
+    k = k.replace(/^III\s+/, '3 ');
+    k = k.replace(/^II\s+/, '2 ');
+    k = k.replace(/^I\s+/, '1 ');
+    // Normalize variant names
+    if (k === 'Revelation of John') k = 'Revelation';
+    return k;
+}
+
 // Apply mapping for a specific version
 function applyBookMapping(mappingKey) {
     currentMapping = {};
@@ -44,9 +58,24 @@ function applyBookMapping(mappingKey) {
 
     if (mappingKey && bookNameMapping[mappingKey]) {
         const map = bookNameMapping[mappingKey];
+
+        // Build a lookup from normalized mapping key -> localized name
+        const normalizedMap = {};
         for (const [eng, localized] of Object.entries(map)) {
-            currentMapping[eng] = localized;
-            reverseMapping[localized.toLowerCase()] = eng;
+            normalizedMap[eng] = localized;
+            // Also store by normalized key for fallback matching
+            normalizedMap[normalizeBookKey(eng)] = localized;
+        }
+
+        // Map each Bible data key to its localized name
+        for (const bookKey of bibleBooks) {
+            const normalized = normalizeBookKey(bookKey);
+            // Try exact match first, then normalized match
+            const localized = normalizedMap[bookKey] || normalizedMap[normalized];
+            if (localized) {
+                currentMapping[bookKey] = localized;
+                reverseMapping[localized.toLowerCase()] = bookKey;
+            }
         }
     }
 
@@ -135,7 +164,9 @@ function getChapter(book, chapter) {
                 verses.push({
                     verse: verseNum,
                     text: chapterData[verseNum],
-                    reference: `${localName} ${chapter}:${verseNum}`
+                    reference: `${localName} ${chapter}:${verseNum}`,
+                    bookKey: book,
+                    chapter: chStr
                 });
             }
             return verses;
