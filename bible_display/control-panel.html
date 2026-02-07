@@ -79,7 +79,65 @@
         <div class="container">
             <div class="main-panel">
                 <h1>Theme</h1>
-                <p style="color:#888;text-align:center;padding:40px 0;">Coming soon...</p>
+                <p class="section-desc">Choose a theme for the Bible display (browser source).</p>
+                <div class="theme-grid">
+                    <div class="theme-card" data-theme="classic-dark">
+                        <div class="theme-preview" style="background:linear-gradient(135deg,#1e1e32,#2d2d46);border-top:3px solid #0a84ff;">
+                            <span style="color:#0a84ff;font-size:10px;font-weight:700;">JEAN 3:16</span>
+                            <span style="color:#e8e8e8;font-size:9px;">Car Dieu a tant aimé...</span>
+                        </div>
+                        <span class="theme-name">Classic Dark</span>
+                    </div>
+                    <div class="theme-card" data-theme="royal-purple">
+                        <div class="theme-preview" style="background:linear-gradient(135deg,#30104a,#481c6e);border-top:3px solid #b44dff;">
+                            <span style="color:#d89eff;font-size:10px;font-weight:700;">JEAN 3:16</span>
+                            <span style="color:#f0e6ff;font-size:9px;">Car Dieu a tant aimé...</span>
+                        </div>
+                        <span class="theme-name">Royal Purple</span>
+                    </div>
+                    <div class="theme-card" data-theme="warm-gold">
+                        <div class="theme-preview" style="background:linear-gradient(135deg,#32230a,#4b3714);border-top:3px solid #d4a017;">
+                            <span style="color:#f5c842;font-size:10px;font-weight:700;">JEAN 3:16</span>
+                            <span style="color:#faebd7;font-size:9px;">Car Dieu a tant aimé...</span>
+                        </div>
+                        <span class="theme-name">Warm Gold</span>
+                    </div>
+                    <div class="theme-card" data-theme="ocean-blue">
+                        <div class="theme-preview" style="background:linear-gradient(135deg,#0a1e3c,#0f325a);border-top:3px solid #00b4d8;">
+                            <span style="color:#48cae4;font-size:10px;font-weight:700;">JEAN 3:16</span>
+                            <span style="color:#caf0f8;font-size:9px;">Car Dieu a tant aimé...</span>
+                        </div>
+                        <span class="theme-name">Ocean Blue</span>
+                    </div>
+                    <div class="theme-card" data-theme="clean-white">
+                        <div class="theme-preview" style="background:linear-gradient(135deg,#f5f5f5,#ffffff);border-top:3px solid #333;">
+                            <span style="color:#222;font-size:10px;font-weight:700;">JEAN 3:16</span>
+                            <span style="color:#333;font-size:9px;">Car Dieu a tant aimé...</span>
+                        </div>
+                        <span class="theme-name">Clean White</span>
+                    </div>
+                    <div class="theme-card" data-theme="forest-green">
+                        <div class="theme-preview" style="background:linear-gradient(135deg,#0f2819,#193c23);border-top:3px solid #2ecc71;">
+                            <span style="color:#55efc4;font-size:10px;font-weight:700;">JEAN 3:16</span>
+                            <span style="color:#d4efdf;font-size:9px;">Car Dieu a tant aimé...</span>
+                        </div>
+                        <span class="theme-name">Forest Green</span>
+                    </div>
+                    <div class="theme-card" data-theme="crimson">
+                        <div class="theme-preview" style="background:linear-gradient(135deg,#370a0f,#551419);border-top:3px solid #e74c3c;">
+                            <span style="color:#ff7675;font-size:10px;font-weight:700;">JEAN 3:16</span>
+                            <span style="color:#fce4e4;font-size:9px;">Car Dieu a tant aimé...</span>
+                        </div>
+                        <span class="theme-name">Crimson</span>
+                    </div>
+                    <div class="theme-card" data-theme="transparent">
+                        <div class="theme-preview" style="background:rgba(0,0,0,0.55);border-top:none;">
+                            <span style="color:#fff;font-size:10px;font-weight:700;">JEAN 3:16</span>
+                            <span style="color:#f0f0f0;font-size:9px;">Car Dieu a tant aimé...</span>
+                        </div>
+                        <span class="theme-name">Transparent</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -89,7 +147,36 @@
         <div class="container">
             <div class="main-panel">
                 <h1>Settings</h1>
-                <p style="color:#888;text-align:center;padding:40px 0;">Coming soon...</p>
+
+                <!-- Font Size -->
+                <div class="settings-section">
+                    <label>Font Size</label>
+                    <div class="font-size-control">
+                        <button id="fontDecrease" class="btn-setting" title="Réduire">A−</button>
+                        <span id="fontSizeValue" class="font-size-value">18px</span>
+                        <button id="fontIncrease" class="btn-setting" title="Agrandir">A+</button>
+                    </div>
+                    <input type="range" id="fontSizeSlider" class="setting-slider" min="12" max="40" value="18">
+                </div>
+
+                <!-- Text Alignment -->
+                <div class="settings-section">
+                    <label>Alignment</label>
+                    <div class="alignment-control">
+                        <button class="btn-align active" data-align="left" title="Gauche">⬛◻◻</button>
+                        <button class="btn-align" data-align="center" title="Centre">◻⬛◻</button>
+                        <button class="btn-align" data-align="right" title="Droite">◻◻⬛</button>
+                    </div>
+                </div>
+
+                <!-- Current Theme Preview -->
+                <div class="settings-section">
+                    <label>Current Theme</label>
+                    <div class="current-theme-info">
+                        <span id="currentThemeName">Classic Dark</span>
+                        <button id="goToThemes" class="btn-link">Change →</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -374,6 +461,66 @@
         // ====== Init ======
         $(document).ready(async function() {
             await initVersions();
+            loadSettings();
+        });
+
+        // ====== Theme Selection ======
+        $('.theme-card').click(function() {
+            const theme = $(this).data('theme');
+            $('.theme-card').removeClass('selected');
+            $(this).addClass('selected');
+            localStorage.setItem('bibleTheme', theme);
+            $('#currentThemeName').text($(this).find('.theme-name').text());
+        });
+
+        // Highlight currently saved theme on load
+        function loadSettings() {
+            const savedTheme = localStorage.getItem('bibleTheme') || 'classic-dark';
+            $(`.theme-card[data-theme="${savedTheme}"]`).addClass('selected');
+            $('#currentThemeName').text($(`.theme-card[data-theme="${savedTheme}"] .theme-name`).text() || 'Classic Dark');
+
+            const savedSize = localStorage.getItem('bibleFontSize') || '18';
+            $('#fontSizeSlider').val(savedSize);
+            $('#fontSizeValue').text(savedSize + 'px');
+
+            const savedAlign = localStorage.getItem('bibleAlignment') || 'center';
+            $('.btn-align').removeClass('active');
+            $(`.btn-align[data-align="${savedAlign}"]`).addClass('active');
+        }
+
+        // ====== Settings: Font Size ======
+        function updateFontSize(size) {
+            size = Math.max(12, Math.min(40, parseInt(size)));
+            $('#fontSizeSlider').val(size);
+            $('#fontSizeValue').text(size + 'px');
+            localStorage.setItem('bibleFontSize', size.toString());
+        }
+
+        $('#fontSizeSlider').on('input', function() {
+            updateFontSize($(this).val());
+        });
+
+        $('#fontIncrease').click(function() {
+            const current = parseInt($('#fontSizeSlider').val());
+            updateFontSize(current + 2);
+        });
+
+        $('#fontDecrease').click(function() {
+            const current = parseInt($('#fontSizeSlider').val());
+            updateFontSize(current - 2);
+        });
+
+        // ====== Settings: Alignment ======
+        $('.btn-align').click(function() {
+            const align = $(this).data('align');
+            $('.btn-align').removeClass('active');
+            $(this).addClass('active');
+            localStorage.setItem('bibleAlignment', align);
+        });
+
+        // ====== Settings: Go to themes ======
+        $('#goToThemes').click(function() {
+            switchTab('tabTheme');
         });
     </script>
 </body>

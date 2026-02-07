@@ -5,61 +5,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bible Display - OBS Browser Source</title>
     <link rel="stylesheet" href="../common/css/style-source.css">
-    <link rel="stylesheet" href="../common/css/themes/dark/theme.css">
     <script src="../common/js/jquery.js"></script>
-    <script src="../common/js/versets.js"></script>
 </head>
 <body>
     <div class="bible-display-container">
-        <!-- Affichage du verset actuel -->
         <div class="verse-display" id="verseDisplay">
             <div class="verse-content">
-                <h2 class="verse-reference" id="verseReference">Genèse 1:1 (LSG)</h2>
-                <p class="verse-text" id="verseText">Au commencement, Dieu créa les cieux et la terre.</p>
-                <p class="verse-source" id="verseSource"></p>
+                <h2 class="verse-reference" id="verseReference"></h2>
+                <p class="verse-text" id="verseText"></p>
             </div>
         </div>
-
-        <!-- Animation de transition -->
-        <div class="verse-animation" id="verseAnimation"></div>
     </div>
 
     <script>
-        // Cette page se rafraîchit automatiquement en lisant les données depuis le control-panel
-        
-        function updateVerseDisplay() {
-            // Récupérer les données du verset actuel
-            // Les données seront mises à jour par le control-panel
-            
-            const reference = localStorage.getItem('currentVerseReference') || '';
-            const text = localStorage.getItem('currentVerseText') || '';
-            const source = localStorage.getItem('currentVerseSource') || 'Louis Segond';
+        let lastReference = '';
+        let lastText = '';
 
-            if (reference && text) {
-                $('#verseReference').text(reference + ' (' + source.substring(0, 3).toUpperCase() + ')');
-                $('#verseText').text(text);
-                $('#verseSource').text('');
-                
-                // Ajouter une animation
-                $('#verseDisplay').addClass('fade-in');
-                setTimeout(() => {
-                    $('#verseDisplay').removeClass('fade-in');
-                }, 500);
-            }
+        function applySettings() {
+            const fontSize = localStorage.getItem('bibleFontSize') || '18';
+            const alignment = localStorage.getItem('bibleAlignment') || 'center';
+            const theme = localStorage.getItem('bibleTheme') || 'classic-dark';
+
+            // Font size
+            $('#verseText').css('font-size', fontSize + 'px');
+            $('#verseReference').css('font-size', Math.max(14, parseInt(fontSize) + 2) + 'px');
+
+            // Alignment
+            $('#verseDisplay').css('text-align', alignment);
+
+            // Theme
+            $('body').attr('data-theme', theme);
         }
 
-        // Vérifier les mises à jour toutes les 500ms
-        setInterval(updateVerseDisplay, 500);
-        
-        // Appel initial
-        updateVerseDisplay();
+        function updateVerseDisplay() {
+            const reference = localStorage.getItem('currentVerseReference') || '';
+            const text = localStorage.getItem('currentVerseText') || '';
+            const source = localStorage.getItem('currentVerseSource') || '';
 
-        // Écouter les changements de localStorage
+            // Only update if something changed
+            if (reference === lastReference && text === lastText) {
+                // Still apply settings in case they changed
+                applySettings();
+                return;
+            }
+
+            lastReference = reference;
+            lastText = text;
+
+            if (reference && text) {
+                const abbr = source ? ' (' + source.replace(/[^A-Za-z]/g, '').substring(0, 3).toUpperCase() + ')' : '';
+                $('#verseReference').text(reference + abbr);
+                $('#verseText').text(text);
+
+                // Animate only on change
+                $('#verseDisplay').removeClass('fade-in');
+                void document.getElementById('verseDisplay').offsetWidth; // force reflow
+                $('#verseDisplay').addClass('fade-in');
+            }
+
+            applySettings();
+        }
+
+        // Listen for storage events (from control panel)
         window.addEventListener('storage', function(e) {
-            if (e.key === 'currentVerseReference' || e.key === 'currentVerseText') {
+            if (['currentVerseReference', 'currentVerseText', 'currentVerseSource',
+                 'bibleFontSize', 'bibleAlignment', 'bibleTheme'].includes(e.key)) {
                 updateVerseDisplay();
             }
         });
+
+        // Poll as fallback (same-tab localStorage doesn't fire storage event)
+        setInterval(updateVerseDisplay, 1000);
+
+        // Initial
+        updateVerseDisplay();
     </script>
 </body>
 </html>
