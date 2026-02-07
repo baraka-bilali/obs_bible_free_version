@@ -20,6 +20,7 @@
     <script>
         let lastReference = '';
         let lastText = '';
+        let autoHideTimeout = null;
 
         function applySettings() {
             const refFontSize = localStorage.getItem('bibleRefFontSize') || '20';
@@ -27,6 +28,7 @@
             const lineHeight = localStorage.getItem('bibleLineHeight') || '1.6';
             const alignment = localStorage.getItem('bibleAlignment') || 'center';
             const theme = localStorage.getItem('bibleTheme') || 'classic-dark';
+            const opacity = localStorage.getItem('bibleOpacity') || '100';
 
             // Font sizes (independent)
             $('#verseReference').css('font-size', refFontSize + 'px');
@@ -38,8 +40,18 @@
             // Alignment
             $('#verseDisplay').css('text-align', alignment);
 
+            // Opacity
+            $('#verseDisplay').css('opacity', parseFloat(opacity) / 100);
+
             // Theme
             $('body').attr('data-theme', theme);
+        }
+
+        function hideVerse() {
+            $('#verseReference').text('');
+            $('#verseText').text('');
+            lastReference = '';
+            lastText = '';
         }
 
         function updateVerseDisplay() {
@@ -57,6 +69,12 @@
             lastReference = reference;
             lastText = text;
 
+            // Clear any existing auto-hide timer
+            if (autoHideTimeout) {
+                clearTimeout(autoHideTimeout);
+                autoHideTimeout = null;
+            }
+
             if (reference && text) {
                 // Extract abbreviation from parentheses (e.g. "Louis Segond (LSG)" → "LSG")
                 const parenMatch = source.match(/\(([^)]+)\)/);
@@ -64,10 +82,24 @@
                 $('#verseReference').text(reference + abbr);
                 $('#verseText').text(text);
 
-                // Animate only on change
-                $('#verseDisplay').removeClass('fade-in');
-                void document.getElementById('verseDisplay').offsetWidth; // force reflow
-                $('#verseDisplay').addClass('fade-in');
+                // Get transition type
+                const transition = localStorage.getItem('bibleTransition') || 'fade';
+
+                // Remove all transition classes
+                $('#verseDisplay').removeClass('fade-in slide-up slide-down slide-left zoom none');
+                
+                // Force reflow
+                void document.getElementById('verseDisplay').offsetWidth;
+                
+                // Add new transition class
+                $('#verseDisplay').addClass(transition);
+
+                // Auto-hide if enabled
+                const autoHide = localStorage.getItem('bibleAutoHide') === 'true';
+                if (autoHide) {
+                    const timer = parseInt(localStorage.getItem('bibleAutoHideTimer') || '5') * 1000;
+                    autoHideTimeout = setTimeout(hideVerse, timer);
+                }
             }
 
             applySettings();
@@ -76,7 +108,8 @@
         // Listen for storage events (from control panel)
         window.addEventListener('storage', function(e) {
             if (['currentVerseReference', 'currentVerseText', 'currentVerseSource',
-                 'bibleRefFontSize', 'bibleVerseFontSize', 'bibleLineHeight', 'bibleAlignment', 'bibleTheme'].includes(e.key)) {
+                 'bibleRefFontSize', 'bibleVerseFontSize', 'bibleLineHeight', 'bibleAlignment', 'bibleTheme',
+                 'bibleOpacity', 'bibleTransition', 'bibleAutoHide', 'bibleAutoHideTimer'].includes(e.key)) {
                 updateVerseDisplay();
             }
         });

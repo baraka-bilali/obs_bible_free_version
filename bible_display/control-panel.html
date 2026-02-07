@@ -197,6 +197,51 @@
                     </div>
                 </div>
 
+                <!-- Opacity -->
+                <div class="settings-section">
+                    <label>Opacity</label>
+                    <div class="font-size-control">
+                        <button id="opacityDecrease" class="btn-setting" title="Réduire">−</button>
+                        <span id="opacityValue" class="font-size-value">100%</span>
+                        <button id="opacityIncrease" class="btn-setting" title="Agrandir">+</button>
+                    </div>
+                    <input type="range" id="opacitySlider" class="setting-slider" min="10" max="100" value="100">
+                </div>
+
+                <!-- Transition Effect -->
+                <div class="settings-section">
+                    <label>Transition Effect</label>
+                    <div class="transition-select-grid">
+                        <button class="btn-transition active" data-transition="fade">Fade</button>
+                        <button class="btn-transition" data-transition="slide-up">Slide Up</button>
+                        <button class="btn-transition" data-transition="slide-down">Slide Down</button>
+                        <button class="btn-transition" data-transition="zoom">Zoom</button>
+                        <button class="btn-transition" data-transition="slide-left">Slide Left</button>
+                        <button class="btn-transition" data-transition="none">None</button>
+                    </div>
+                </div>
+
+                <!-- Auto-hide -->
+                <div class="settings-section">
+                    <label>Auto-hide Verse</label>
+                    <div class="autohide-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="autoHideToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span class="toggle-label">Hide after display</span>
+                    </div>
+                    <div id="autoHideTimerSection" style="display:none; margin-top: 12px;">
+                        <label style="font-size: 13px; color: #8892b0;">Hide after (seconds)</label>
+                        <div class="font-size-control" style="margin-top: 8px;">
+                            <button id="timerDecrease" class="btn-setting" title="Réduire">−</button>
+                            <span id="timerValue" class="font-size-value">5s</span>
+                            <button id="timerIncrease" class="btn-setting" title="Agrandir">+</button>
+                        </div>
+                        <input type="range" id="timerSlider" class="setting-slider" min="2" max="20" value="5">
+                    </div>
+                </div>
+
                 <!-- Current Theme Preview -->
                 <div class="settings-section">
                     <label>Current Theme</label>
@@ -523,6 +568,22 @@
             const savedAlign = localStorage.getItem('bibleAlignment') || 'center';
             $('.btn-align').removeClass('active');
             $(`.btn-align[data-align="${savedAlign}"]`).addClass('active');
+
+            const savedOpacity = localStorage.getItem('bibleOpacity') || '100';
+            $('#opacitySlider').val(savedOpacity);
+            $('#opacityValue').text(savedOpacity + '%');
+
+            const savedTransition = localStorage.getItem('bibleTransition') || 'fade';
+            $('.btn-transition').removeClass('active');
+            $(`.btn-transition[data-transition="${savedTransition}"]`).addClass('active');
+
+            const savedAutoHide = localStorage.getItem('bibleAutoHide') === 'true';
+            $('#autoHideToggle').prop('checked', savedAutoHide);
+            $('#autoHideTimerSection').toggle(savedAutoHide);
+
+            const savedTimer = localStorage.getItem('bibleAutoHideTimer') || '5';
+            $('#timerSlider').val(savedTimer);
+            $('#timerValue').text(savedTimer + 's');
         }
 
         // ====== Settings: Reference Font Size ======
@@ -598,6 +659,64 @@
             $('.btn-align').removeClass('active');
             $(this).addClass('active');
             localStorage.setItem('bibleAlignment', align);
+        });
+
+        // ====== Settings: Opacity ======
+        function updateOpacity(value) {
+            value = Math.max(10, Math.min(100, parseInt(value)));
+            $('#opacitySlider').val(value);
+            $('#opacityValue').text(value + '%');
+            localStorage.setItem('bibleOpacity', value.toString());
+        }
+
+        $('#opacitySlider').on('input', function() {
+            updateOpacity($(this).val());
+        });
+
+        $('#opacityIncrease').click(function() {
+            const current = parseInt($('#opacitySlider').val());
+            updateOpacity(current + 5);
+        });
+
+        $('#opacityDecrease').click(function() {
+            const current = parseInt($('#opacitySlider').val());
+            updateOpacity(current - 5);
+        });
+
+        // ====== Settings: Transition ======
+        $('.btn-transition').click(function() {
+            const transition = $(this).data('transition');
+            $('.btn-transition').removeClass('active');
+            $(this).addClass('active');
+            localStorage.setItem('bibleTransition', transition);
+        });
+
+        // ====== Settings: Auto-hide ======
+        $('#autoHideToggle').change(function() {
+            const enabled = $(this).is(':checked');
+            localStorage.setItem('bibleAutoHide', enabled.toString());
+            $('#autoHideTimerSection').toggle(enabled);
+        });
+
+        function updateAutoHideTimer(seconds) {
+            seconds = Math.max(2, Math.min(20, parseInt(seconds)));
+            $('#timerSlider').val(seconds);
+            $('#timerValue').text(seconds + 's');
+            localStorage.setItem('bibleAutoHideTimer', seconds.toString());
+        }
+
+        $('#timerSlider').on('input', function() {
+            updateAutoHideTimer($(this).val());
+        });
+
+        $('#timerIncrease').click(function() {
+            const current = parseInt($('#timerSlider').val());
+            updateAutoHideTimer(current + 1);
+        });
+
+        $('#timerDecrease').click(function() {
+            const current = parseInt($('#timerSlider').val());
+            updateAutoHideTimer(current - 1);
         });
 
         // ====== Settings: Go to themes ======

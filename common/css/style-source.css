@@ -68,6 +68,52 @@ body {
     100% { opacity: 1; transform: translateY(0); }
 }
 
+/* ===== Transition Animations ===== */
+/* Slide Up */
+.slide-up {
+    animation: slideUpEffect 0.6s ease-out;
+}
+
+@keyframes slideUpEffect {
+    0% { opacity: 0; transform: translateY(50px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Slide Down */
+.slide-down {
+    animation: slideDownEffect 0.6s ease-out;
+}
+
+@keyframes slideDownEffect {
+    0% { opacity: 0; transform: translateY(-50px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Slide Left */
+.slide-left {
+    animation: slideLeftEffect 0.6s ease-out;
+}
+
+@keyframes slideLeftEffect {
+    0% { opacity: 0; transform: translateX(100px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+/* Zoom */
+.zoom {
+    animation: zoomEffect 0.5s ease-out;
+}
+
+@keyframes zoomEffect {
+    0% { opacity: 0; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* None - no animation */
+.none {
+    /* No animation class */
+}
+
 /* ============================================
    THEMES
    ============================================ */
