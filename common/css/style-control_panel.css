@@ -643,6 +643,22 @@ select.form-control option {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
+    margin-bottom: 20px;
+}
+
+.theme-section-title {
+    color: #ccd6f6;
+    font-size: 14px;
+    font-weight: 700;
+    margin: 20px 0 10px 0;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(26, 58, 92, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.theme-section-title:first-of-type {
+    margin-top: 0;
 }
 
 .theme-card {
@@ -652,6 +668,48 @@ select.form-control option {
     overflow: hidden;
     transition: all 0.2s ease;
     background: #0f3460;
+}
+
+.theme-card-rounded {
+    position: relative;
+}
+
+.theme-card-rounded .theme-preview {
+    position: relative;
+    overflow: hidden;
+}
+
+.theme-card-rounded .theme-preview::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #00ff88, #00bfff);
+    box-shadow: 0 0 6px rgba(0, 255, 136, 0.4);
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+.theme-card-artistic {
+    position: relative;
+}
+
+.theme-card-artistic::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, gold, orange, gold);
+    z-index: 1;
 }
 
 .theme-card:hover {
