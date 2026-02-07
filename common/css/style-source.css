@@ -150,6 +150,10 @@ body {
 }
 
 /* Fade */
+.fade {
+    animation: fadeInEffect 0.5s ease-in-out;
+}
+
 .fade-in {
     animation: fadeInEffect 0.5s ease-in-out;
 }
