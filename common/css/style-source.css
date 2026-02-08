@@ -368,47 +368,19 @@ body[data-theme="matrix-green"] .verse-text {
 
 /* --- Theme: Professional Blue --- */
 body[data-theme="professional-blue"] .verse-display {
-    background: rgba(30, 75, 170, 0.92);
-    border: none;
-    border-top: none;
-    border-radius: 0;
-    box-shadow: none;
-    clip-path: polygon(0 25%, 100% 0%, 100% 100%, 0% 100%);
-    padding: 40px 50px 28px 70px;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-}
-body[data-theme="professional-blue"] .verse-display::before {
-    content: '';
-    position: absolute;
-    left: 18px;
-    bottom: 20px;
-    width: 30px;
-    height: 60px;
-    background: repeating-linear-gradient(
-        -65deg,
-        #ffffff 0px,
-        #ffffff 3px,
-        transparent 3px,
-        transparent 9px
-    );
-    opacity: 0.85;
-    z-index: 2;
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.96) 0%, rgba(59, 130, 246, 0.96) 100%);
+    border: 2px solid #60a5fa;
+    border-radius: 8px;
+    box-shadow: 0 0 12px rgba(96, 165, 250, 0.3), inset 0 0 25px rgba(96, 165, 250, 0.1);
+    backdrop-filter: blur(2px);
 }
 body[data-theme="professional-blue"] .verse-reference {
     color: #ffffff;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 body[data-theme="professional-blue"] .verse-text {
-    color: #ffffff;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
-    font-size: 22px;
-    font-weight: 400;
+    color: #f1f5f9;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
 /* ========================================
