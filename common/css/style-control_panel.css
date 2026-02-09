@@ -336,6 +336,18 @@ select.form-control option {
     color: #ff6b6b;
 }
 
+/* Eye toggle button */
+.toolbar-btn-eye {
+    font-size: 14px;
+}
+
+.toolbar-btn-eye.toolbar-btn-hidden {
+    background: rgba(255, 107, 107, 0.15);
+    border-color: rgba(255, 107, 107, 0.4);
+    color: #ff6b6b;
+    opacity: 0.7;
+}
+
 /* ===== Favorites / List ===== */
 .favorites-container {
     max-height: calc(100vh - 140px);

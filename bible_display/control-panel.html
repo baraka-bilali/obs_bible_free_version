@@ -67,6 +67,7 @@
                         <button id="btnPrevVerse" class="toolbar-btn" data-i18n-title="titlePrevVerse" title="Verset précédent (↑)">&#8593;</button>
                         <button id="btnNextVerse" class="toolbar-btn" data-i18n-title="titleNextVerse" title="Verset suivant (↓)">&#8595;</button>
                         <button id="btnAddToList" class="toolbar-btn toolbar-btn-add" data-i18n-title="titleAddFav" title="Ajouter aux favoris (+)">&#43;</button>
+                        <button id="btnToggleVisibility" class="toolbar-btn toolbar-btn-eye" data-i18n-title="titleToggleVerse" title="Afficher / Masquer le verset">👁️</button>
                     </div>
                 </div>
                 <div id="versesContainer" class="verses-container">
@@ -515,6 +516,7 @@
                 titlePrevVerse: 'Verset précédent (↑)',
                 titleNextVerse: 'Verset suivant (↓)',
                 titleAddFav: 'Ajouter aux favoris (+)',
+                titleToggleVerse: 'Afficher / Masquer le verset',
                 titleDeleteAll: 'Tout supprimer',
                 // Dynamic messages
                 noBookFound: 'Aucun livre trouvé',
@@ -584,6 +586,7 @@
                 titlePrevVerse: 'Previous verse (↑)',
                 titleNextVerse: 'Next verse (↓)',
                 titleAddFav: 'Add to favorites (+)',
+                titleToggleVerse: 'Show / Hide verse',
                 titleDeleteAll: 'Delete all',
                 noBookFound: 'No book found',
                 noBibleFound: '-- No Bible found --',
@@ -865,6 +868,11 @@
                 verseEl.on('click', function() {
                     const wasSelected = $(this).hasClass('selected');
                     
+                    // Reset hidden state on any verse click
+                    verseHidden = false;
+                    hiddenVerseData = null;
+                    $('#btnToggleVisibility').removeClass('toolbar-btn-hidden');
+
                     if (wasSelected) {
                         // Deselect and clear browser-source
                         $(this).removeClass('selected');
@@ -1128,6 +1136,22 @@
             if (verses.length === 0) return;
 
             const currentSelected = $('.verse-item.selected');
+
+            // If a verse with chunks is selected, navigate chunks first
+            if (currentSelected.length > 0) {
+                const chunks = currentSelected.data('chunks');
+                if (chunks && chunks.length > 1) {
+                    const chunkIdx = currentSelected.data('chunk-index') || 0;
+                    if (direction === 'down' && chunkIdx < chunks.length - 1) {
+                        showVerseChunk(currentSelected, chunkIdx + 1);
+                        return;
+                    } else if (direction === 'up' && chunkIdx > 0) {
+                        showVerseChunk(currentSelected, chunkIdx - 1);
+                        return;
+                    }
+                }
+            }
+
             let targetIndex;
 
             if (currentSelected.length === 0) {
@@ -1178,6 +1202,36 @@
         });
         $('#btnNextVerse').click(function() {
             selectVerseByDirection('down');
+        });
+
+        // Toggle verse visibility (eye button)
+        let verseHidden = false;
+        let hiddenVerseData = null;
+
+        $('#btnToggleVisibility').click(function() {
+            if (!verseHidden) {
+                // Hide: save current data and clear browser-source
+                const ref = localStorage.getItem('currentVerseReference') || '';
+                const txt = localStorage.getItem('currentVerseText') || '';
+                const src = localStorage.getItem('currentVerseSource') || '';
+                if (!ref && !txt) return; // nothing to hide
+                hiddenVerseData = { ref, txt, src };
+                localStorage.setItem('currentVerseReference', '');
+                localStorage.setItem('currentVerseText', '');
+                localStorage.setItem('currentVerseSource', '');
+                verseHidden = true;
+                $(this).addClass('toolbar-btn-hidden');
+            } else {
+                // Show: restore saved data
+                if (hiddenVerseData) {
+                    localStorage.setItem('currentVerseReference', hiddenVerseData.ref);
+                    localStorage.setItem('currentVerseText', hiddenVerseData.txt);
+                    localStorage.setItem('currentVerseSource', hiddenVerseData.src);
+                }
+                verseHidden = false;
+                hiddenVerseData = null;
+                $(this).removeClass('toolbar-btn-hidden');
+            }
         });
 
         // ====== Chapter Navigation ======
