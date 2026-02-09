@@ -478,9 +478,19 @@ select.form-control option {
     background-color: rgba(10, 132, 255, 0.08);
 }
 
+.verse-item.highlighted {
+    background-color: rgba(10, 132, 255, 0.10);
+    outline: 1px solid rgba(10, 132, 255, 0.35);
+    outline-offset: -1px;
+}
+
 .verse-item.selected {
     background-color: rgba(10, 132, 255, 0.15);
     border-left: 3px solid #0a84ff;
+}
+
+.verse-item.selected.highlighted {
+    background-color: rgba(10, 132, 255, 0.20);
 }
 
 /* ===== Verse Chunk Navigation ===== */

@@ -893,6 +893,9 @@
                 verseEl.on('click', function() {
                     const wasSelected = $(this).hasClass('selected');
                     
+                    // Clear highlight on any click
+                    $('.verse-item').removeClass('highlighted');
+
                     // Reset hidden state on any verse click
                     verseHidden = false;
                     hiddenVerseData = null;
@@ -1166,9 +1169,12 @@
             if (verses.length === 0) return;
 
             const currentSelected = $('.verse-item.selected');
+            const hasActiveVerse = currentSelected.length > 0;
 
-            // If a verse with chunks is selected, navigate chunks first
-            if (currentSelected.length > 0) {
+            if (hasActiveVerse) {
+                // === Mode LIVE: a verse is displayed → navigate chunks then switch verse directly ===
+
+                // If selected verse has chunks, navigate chunks first
                 const chunks = currentSelected.data('chunks');
                 if (chunks && chunks.length > 1) {
                     const chunkIdx = currentSelected.data('chunk-index') || 0;
@@ -1180,26 +1186,44 @@
                         return;
                     }
                 }
-            }
 
-            let targetIndex;
-
-            if (currentSelected.length === 0) {
-                // Nothing selected: pick first (down) or last (up)
-                targetIndex = direction === 'down' ? 0 : verses.length - 1;
-            } else {
                 const currentIndex = verses.index(currentSelected);
-                targetIndex = direction === 'down' ? currentIndex + 1 : currentIndex - 1;
+                const targetIndex = direction === 'down' ? currentIndex + 1 : currentIndex - 1;
+                if (targetIndex < 0 || targetIndex >= verses.length) return;
+
+                // Clear highlight, directly select and display the next verse
+                $('.verse-item').removeClass('highlighted');
+                $(verses[targetIndex]).trigger('click');
+                verses[targetIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            } else {
+                // === Mode BROWSE: no verse displayed → just move the cursor ===
+                const currentHighlighted = $('.verse-item.highlighted');
+
+                let targetIndex;
+                if (currentHighlighted.length === 0) {
+                    targetIndex = direction === 'down' ? 0 : verses.length - 1;
+                } else {
+                    const currentIndex = verses.index(currentHighlighted);
+                    targetIndex = direction === 'down' ? currentIndex + 1 : currentIndex - 1;
+                }
+
+                if (targetIndex < 0 || targetIndex >= verses.length) return;
+
+                // Move highlight only (no display in browser-source)
+                $('.verse-item').removeClass('highlighted');
+                $(verses[targetIndex]).addClass('highlighted');
+                verses[targetIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
+        }
 
-            if (targetIndex < 0 || targetIndex >= verses.length) return;
+        // Confirm the highlighted verse (send to browser-source)
+        function confirmHighlightedVerse() {
+            const highlighted = $('.verse-item.highlighted');
+            if (highlighted.length === 0) return;
 
-            // Simulate click on the target verse
-            $(verses[targetIndex]).trigger('click');
-
-            // Scroll into view
-            const targetEl = verses[targetIndex];
-            targetEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            // Trigger click on the highlighted verse to select it and send to OBS
+            highlighted.trigger('click');
         }
 
         // Keyboard handler
@@ -1214,6 +1238,9 @@
             } else if (e.key === 'ArrowDown') {
                 e.preventDefault();
                 selectVerseByDirection('down');
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                confirmHighlightedVerse();
             } else if (e.key === 'ArrowLeft') {
                 e.preventDefault();
                 navigateChapter(-1);
