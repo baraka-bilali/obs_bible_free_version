@@ -62,12 +62,12 @@
                     <button id="bibleBackBtn" class="btn-back" title="Retour">&#8592;</button>
                     <h2 id="bibleTitle">Bible</h2>
                     <div class="bible-toolbar">
-                        <button id="btnPrevChapter" class="toolbar-btn" data-i18n-title="titlePrevChapter" title="Chapitre précédent">&#9664;</button>
-                        <button id="btnNextChapter" class="toolbar-btn" data-i18n-title="titleNextChapter" title="Chapitre suivant">&#9654;</button>
-                        <button id="btnPrevVerse" class="toolbar-btn" data-i18n-title="titlePrevVerse" title="Verset précédent (↑)">&#8593;</button>
-                        <button id="btnNextVerse" class="toolbar-btn" data-i18n-title="titleNextVerse" title="Verset suivant (↓)">&#8595;</button>
+                        <button id="btnPrevChapter" class="toolbar-btn" data-i18n-title="titlePrevChapter" title="Chapitre précédent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg></button>
+                        <button id="btnNextChapter" class="toolbar-btn" data-i18n-title="titleNextChapter" title="Chapitre suivant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="6 7 11 12 6 17"/><polyline points="13 7 18 12 13 17"/></svg></button>
+                        <button id="btnPrevVerse" class="toolbar-btn" data-i18n-title="titlePrevVerse" title="Verset précédent (↑)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="18 15 12 9 6 15"/></svg></button>
+                        <button id="btnNextVerse" class="toolbar-btn" data-i18n-title="titleNextVerse" title="Verset suivant (↓)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg></button>
                         <button id="btnAddToList" class="toolbar-btn toolbar-btn-add" data-i18n-title="titleAddFav" title="Ajouter aux favoris (+)">&#43;</button>
-                        <button id="btnToggleVisibility" class="toolbar-btn toolbar-btn-eye" data-i18n-title="titleToggleVerse" title="Afficher / Masquer le verset">👁️</button>
+                        <button id="btnToggleVisibility" class="toolbar-btn toolbar-btn-eye" data-i18n-title="titleToggleVerse" title="Afficher / Masquer le verset"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
                     </div>
                 </div>
                 <div id="versesContainer" class="verses-container">
@@ -84,7 +84,7 @@
             <div class="main-panel bible-panel">
                 <div class="bible-header">
                     <h2 style="flex:1;" data-i18n="listTitle">Favorites</h2>
-                    <button id="btnClearList" class="toolbar-btn toolbar-btn-danger" data-i18n-title="titleDeleteAll" title="Delete all">🗑️</button>
+                    <button id="btnClearList" class="toolbar-btn toolbar-btn-danger" data-i18n-title="titleDeleteAll" title="Delete all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button>
                 </div>
                 <div id="favoritesContainer" class="favorites-container">
                     <p class="empty-msg" id="emptyFavMsg" data-i18n-html="emptyFavorites">No favorites yet. Use the <strong>+</strong> button to add verses.</p>
@@ -441,23 +441,23 @@
     <!-- Bottom Navigation Bar -->
     <div class="bottom-nav">
         <button class="nav-btn active" data-tab="tabSearch">
-            <span class="icon">🔍</span>
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></svg></span>
             <span class="label" data-i18n="navSearch">Search</span>
         </button>
         <button class="nav-btn" data-tab="tabBible">
-            <span class="icon">📖</span>
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="13" y2="11"/></svg></span>
             <span class="label" data-i18n="navBible">Bible</span>
         </button>
         <button class="nav-btn" data-tab="tabList">
-            <span class="icon">☰</span>
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg></span>
             <span class="label" data-i18n="navList">List</span>
         </button>
         <button class="nav-btn" data-tab="tabTheme">
-            <span class="icon">🎨</span>
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M4.93 19.07l1.41-1.41"/><path d="M17.66 6.34l1.41-1.41"/></svg></span>
             <span class="label" data-i18n="navTheme">Theme</span>
         </button>
         <button class="nav-btn" data-tab="tabSettings">
-            <span class="icon">⚙️</span>
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
             <span class="label" data-i18n="navSettings">Settings</span>
         </button>
     </div>
