@@ -75,112 +75,103 @@ body {
 
 /* ===== Fade Animation (only on change) ===== */
 .fade-in {
-    animation: fadeInEffect 0.5s ease-in-out;
+    animation: fadeInEffect 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes fadeInEffect {
-    0% { opacity: 0; transform: translateY(10px); }
+    0% { opacity: 0; transform: translateY(12px); }
     100% { opacity: 1; transform: translateY(0); }
 }
 
 /* ===== Transition Animations ===== */
 /* Slide Up */
 .slide-up {
-    animation: slideUpEffect 0.6s ease-out;
+    animation: slideUpEffect 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes slideUpEffect {
-    0% { opacity: 0; transform: translateY(50px); }
+    0% { opacity: 0; transform: translateY(40px); }
     100% { opacity: 1; transform: translateY(0); }
 }
 
 .slide-up-out {
-    animation: slideUpOutEffect 0.6s ease-in forwards;
+    animation: slideUpOutEffect 0.5s cubic-bezier(0.55, 0, 1, 0.45) forwards;
 }
 
 @keyframes slideUpOutEffect {
     0% { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(-50px); }
+    100% { opacity: 0; transform: translateY(-40px); }
 }
 
 /* Slide Down */
 .slide-down {
-    animation: slideDownEffect 0.6s ease-out;
+    animation: slideDownEffect 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes slideDownEffect {
-    0% { opacity: 0; transform: translateY(-50px); }
+    0% { opacity: 0; transform: translateY(-40px); }
     100% { opacity: 1; transform: translateY(0); }
 }
 
 .slide-down-out {
-    animation: slideDownOutEffect 0.6s ease-in forwards;
+    animation: slideDownOutEffect 0.5s cubic-bezier(0.55, 0, 1, 0.45) forwards;
 }
 
 @keyframes slideDownOutEffect {
     0% { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(50px); }
+    100% { opacity: 0; transform: translateY(40px); }
 }
 
 /* Slide Left */
 .slide-left {
-    animation: slideLeftEffect 0.6s ease-out;
+    animation: slideLeftEffect 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes slideLeftEffect {
-    0% { opacity: 0; transform: translateX(100px); }
+    0% { opacity: 0; transform: translateX(80px); }
     100% { opacity: 1; transform: translateX(0); }
 }
 
 .slide-left-out {
-    animation: slideLeftOutEffect 0.6s ease-in forwards;
+    animation: slideLeftOutEffect 0.5s cubic-bezier(0.55, 0, 1, 0.45) forwards;
 }
 
 @keyframes slideLeftOutEffect {
     0% { opacity: 1; transform: translateX(0); }
-    100% { opacity: 0; transform: translateX(-100px); }
+    100% { opacity: 0; transform: translateX(-80px); }
 }
 
 /* Zoom */
 .zoom {
-    animation: zoomEffect 0.5s ease-out;
+    animation: zoomEffect 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes zoomEffect {
-    0% { opacity: 0; transform: scale(0.8); }
+    0% { opacity: 0; transform: scale(0.85); }
     100% { opacity: 1; transform: scale(1); }
 }
 
 .zoom-out {
-    animation: zoomOutEffect 0.5s ease-in forwards;
+    animation: zoomOutEffect 0.45s cubic-bezier(0.55, 0, 1, 0.45) forwards;
 }
 
 @keyframes zoomOutEffect {
     0% { opacity: 1; transform: scale(1); }
-    100% { opacity: 0; transform: scale(0.8); }
+    100% { opacity: 0; transform: scale(0.85); }
 }
 
 /* Fade */
 .fade {
-    animation: fadeInEffect 0.5s ease-in-out;
-}
-
-.fade-in {
-    animation: fadeInEffect 0.5s ease-in-out;
-}
-
-@keyframes fadeInEffect {
-    0% { opacity: 0; transform: translateY(10px); }
-    100% { opacity: 1; transform: translateY(0); }
+    animation: fadeInEffect 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .fade-out {
-    animation: fadeOutEffect 0.5s ease-in-out forwards;
+    animation: fadeOutEffect 0.45s cubic-bezier(0.55, 0, 1, 0.45) forwards;
 }
 
 @keyframes fadeOutEffect {
     0% { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 0; transform: translateY(-12px); }
 }
 
 /* None - no animation */
@@ -189,7 +180,12 @@ body {
 }
 
 .none-out {
-    opacity: 0;
+    animation: noneOutEffect 0.25s ease-out forwards;
+}
+
+@keyframes noneOutEffect {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
 }
 
 /* ============================================

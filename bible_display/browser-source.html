@@ -90,23 +90,24 @@
         function hideVerse() {
             if (!isDisplayVisible) return;
 
-            // Get transition type for fade-out
+            // Get transition type for exit animation
             const transition = localStorage.getItem('bibleTransition') || 'fade';
             
-            // Add fade-out class based on transition type
-            $('#verseDisplay').removeClass('fade-in slide-up slide-down slide-left zoom none');
+            // Remove all entrance classes, add exit class
+            $('#verseDisplay').removeClass('fade fade-in slide-up slide-down slide-left zoom none');
             $('#verseDisplay').addClass(transition + '-out');
             
-            // Wait for animation to complete before hiding completely
+            // Wait for exit animation to finish, then hide
+            const exitDuration = (transition === 'none') ? 300 : 550;
             setTimeout(function() {
                 $('#verseReference').text('');
                 $('#verseText').text('');
                 $('#verseDisplay').removeClass(transition + '-out');
-                $('#verseDisplay').addClass('hidden'); // Hide the entire block
+                $('#verseDisplay').addClass('hidden');
                 lastReference = '';
                 lastText = '';
                 isDisplayVisible = false;
-            }, 600); // Match animation duration
+            }, exitDuration);
         }
 
         function updateVerseDisplay() {
@@ -153,7 +154,7 @@
                 // Switching between verses = instant update, no animation
                 if (isEntrance) {
                     const transition = localStorage.getItem('bibleTransition') || 'fade';
-                    $('#verseDisplay').removeClass('fade-in slide-up slide-down slide-left zoom none fade-out slide-up-out slide-down-out slide-left-out zoom-out');
+                    $('#verseDisplay').removeClass('fade fade-in slide-up slide-down slide-left zoom none fade-out slide-up-out slide-down-out slide-left-out zoom-out none-out');
                     void document.getElementById('verseDisplay').offsetWidth;
                     $('#verseDisplay').addClass(transition);
                 }
