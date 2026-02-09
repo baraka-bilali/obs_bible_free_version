@@ -42,6 +42,17 @@ body {
     display: none;
 }
 
+.verse-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    background: rgb(30, 30, 50); /* fallback opaque background */
+    border-radius: inherit;
+}
+
 .verse-content {
     position: relative;
     z-index: 1;
@@ -186,8 +197,8 @@ body {
    ============================================ */
 
 /* --- Theme: Classic Dark --- */
-body[data-theme="classic-dark"] .verse-display {
-    background: linear-gradient(135deg, rgba(30, 30, 50, 0.95) 0%, rgba(45, 45, 70, 0.95) 100%);
+body[data-theme="classic-dark"] .verse-bg {
+    background: linear-gradient(135deg, rgb(30, 30, 50) 0%, rgb(45, 45, 70) 100%);
     border-top: 3px solid #0a84ff;
 }
 body[data-theme="classic-dark"] .verse-reference {
@@ -200,8 +211,8 @@ body[data-theme="classic-dark"] .verse-text {
 }
 
 /* --- Theme: Royal Purple --- */
-body[data-theme="royal-purple"] .verse-display {
-    background: linear-gradient(135deg, rgba(48, 16, 74, 0.95) 0%, rgba(72, 28, 110, 0.95) 100%);
+body[data-theme="royal-purple"] .verse-bg {
+    background: linear-gradient(135deg, rgb(48, 16, 74) 0%, rgb(72, 28, 110) 100%);
     border-top: 3px solid #b44dff;
 }
 body[data-theme="royal-purple"] .verse-reference {
@@ -214,8 +225,8 @@ body[data-theme="royal-purple"] .verse-text {
 }
 
 /* --- Theme: Warm Gold --- */
-body[data-theme="warm-gold"] .verse-display {
-    background: linear-gradient(135deg, rgba(50, 35, 10, 0.95) 0%, rgba(75, 55, 20, 0.95) 100%);
+body[data-theme="warm-gold"] .verse-bg {
+    background: linear-gradient(135deg, rgb(50, 35, 10) 0%, rgb(75, 55, 20) 100%);
     border-top: 3px solid #d4a017;
 }
 body[data-theme="warm-gold"] .verse-reference {
@@ -228,8 +239,8 @@ body[data-theme="warm-gold"] .verse-text {
 }
 
 /* --- Theme: Ocean Blue --- */
-body[data-theme="ocean-blue"] .verse-display {
-    background: linear-gradient(135deg, rgba(10, 30, 60, 0.95) 0%, rgba(15, 50, 90, 0.95) 100%);
+body[data-theme="ocean-blue"] .verse-bg {
+    background: linear-gradient(135deg, rgb(10, 30, 60) 0%, rgb(15, 50, 90) 100%);
     border-top: 3px solid #00b4d8;
 }
 body[data-theme="ocean-blue"] .verse-reference {
@@ -242,8 +253,8 @@ body[data-theme="ocean-blue"] .verse-text {
 }
 
 /* --- Theme: Clean White --- */
-body[data-theme="clean-white"] .verse-display {
-    background: linear-gradient(135deg, rgba(245, 245, 245, 0.97) 0%, rgba(255, 255, 255, 0.97) 100%);
+body[data-theme="clean-white"] .verse-bg {
+    background: linear-gradient(135deg, rgb(245, 245, 245) 0%, rgb(255, 255, 255) 100%);
     border-top: 3px solid #333333;
 }
 body[data-theme="clean-white"] .verse-reference {
@@ -256,8 +267,8 @@ body[data-theme="clean-white"] .verse-text {
 }
 
 /* --- Theme: Forest Green --- */
-body[data-theme="forest-green"] .verse-display {
-    background: linear-gradient(135deg, rgba(15, 40, 25, 0.95) 0%, rgba(25, 60, 35, 0.95) 100%);
+body[data-theme="forest-green"] .verse-bg {
+    background: linear-gradient(135deg, rgb(15, 40, 25) 0%, rgb(25, 60, 35) 100%);
     border-top: 3px solid #2ecc71;
 }
 body[data-theme="forest-green"] .verse-reference {
@@ -270,8 +281,8 @@ body[data-theme="forest-green"] .verse-text {
 }
 
 /* --- Theme: Crimson --- */
-body[data-theme="crimson"] .verse-display {
-    background: linear-gradient(135deg, rgba(55, 10, 15, 0.95) 0%, rgba(85, 20, 25, 0.95) 100%);
+body[data-theme="crimson"] .verse-bg {
+    background: linear-gradient(135deg, rgb(55, 10, 15) 0%, rgb(85, 20, 25) 100%);
     border-top: 3px solid #e74c3c;
 }
 body[data-theme="crimson"] .verse-reference {
@@ -284,8 +295,8 @@ body[data-theme="crimson"] .verse-text {
 }
 
 /* --- Theme: Transparent Minimal --- */
-body[data-theme="transparent"] .verse-display {
-    background: rgba(0, 0, 0, 0.55);
+body[data-theme="transparent"] .verse-bg {
+    background: rgba(0, 0, 0, 0.92);
     border-top: none;
     backdrop-filter: blur(6px);
 }
@@ -303,8 +314,8 @@ body[data-theme="transparent"] .verse-text {
    ======================================== */
 
 /* --- Theme: Modern Neon --- */
-body[data-theme="modern-neon"] .verse-display {
-    background: linear-gradient(145deg, rgba(13, 20, 33, 0.95) 0%, rgba(26, 35, 50, 0.95) 100%);
+body[data-theme="modern-neon"] .verse-bg {
+    background: linear-gradient(145deg, rgb(13, 20, 33) 0%, rgb(26, 35, 50) 100%);
     border: 2px solid #00ff88;
     border-radius: 12px;
     box-shadow: 0 0 15px rgba(0, 255, 136, 0.3), inset 0 0 20px rgba(0, 255, 136, 0.05);
@@ -319,8 +330,8 @@ body[data-theme="modern-neon"] .verse-text {
 }
 
 /* --- Theme: Cyber Pink --- */
-body[data-theme="cyber-pink"] .verse-display {
-    background: linear-gradient(145deg, rgba(26, 13, 33, 0.95) 0%, rgba(45, 27, 51, 0.95) 100%);
+body[data-theme="cyber-pink"] .verse-bg {
+    background: linear-gradient(145deg, rgb(26, 13, 33) 0%, rgb(45, 27, 51) 100%);
     border: 2px solid #ff0080;
     border-radius: 12px;
     box-shadow: 0 0 15px rgba(255, 0, 128, 0.3), inset 0 0 20px rgba(255, 0, 128, 0.05);
@@ -335,8 +346,8 @@ body[data-theme="cyber-pink"] .verse-text {
 }
 
 /* --- Theme: Electric Blue --- */
-body[data-theme="electric-blue"] .verse-display {
-    background: linear-gradient(145deg, rgba(10, 22, 40, 0.95) 0%, rgba(30, 58, 95, 0.95) 100%);
+body[data-theme="electric-blue"] .verse-bg {
+    background: linear-gradient(145deg, rgb(10, 22, 40) 0%, rgb(30, 58, 95) 100%);
     border: 2px solid #00bfff;
     border-radius: 12px;
     box-shadow: 0 0 15px rgba(0, 191, 255, 0.3), inset 0 0 20px rgba(0, 191, 255, 0.05);
@@ -351,8 +362,8 @@ body[data-theme="electric-blue"] .verse-text {
 }
 
 /* --- Theme: Matrix Green --- */
-body[data-theme="matrix-green"] .verse-display {
-    background: linear-gradient(145deg, rgba(10, 26, 10, 0.95) 0%, rgba(26, 51, 26, 0.95) 100%);
+body[data-theme="matrix-green"] .verse-bg {
+    background: linear-gradient(145deg, rgb(10, 26, 10) 0%, rgb(26, 51, 26) 100%);
     border: 2px solid #00ff00;
     border-radius: 12px;
     box-shadow: 0 0 15px rgba(0, 255, 0, 0.2), inset 0 0 20px rgba(0, 255, 0, 0.05);
@@ -367,12 +378,11 @@ body[data-theme="matrix-green"] .verse-text {
 }
 
 /* --- Theme: Professional Blue --- */
-body[data-theme="professional-blue"] .verse-display {
-    background: linear-gradient(135deg, rgba(30, 58, 138, 0.96) 0%, rgba(59, 130, 246, 0.96) 100%);
+body[data-theme="professional-blue"] .verse-bg {
+    background: linear-gradient(135deg, rgb(30, 58, 138) 0%, rgb(59, 130, 246) 100%);
     border: 2px solid #60a5fa;
     border-radius: 8px;
     box-shadow: 0 0 12px rgba(96, 165, 250, 0.3), inset 0 0 25px rgba(96, 165, 250, 0.1);
-    backdrop-filter: blur(2px);
 }
 body[data-theme="professional-blue"] .verse-reference {
     color: #ffffff;
@@ -388,16 +398,15 @@ body[data-theme="professional-blue"] .verse-text {
    ======================================== */
 
 /* --- Theme: Stained Glass --- */
-body[data-theme="stained-glass"] .verse-display {
+body[data-theme="stained-glass"] .verse-bg {
     background: linear-gradient(45deg, 
-        rgba(45, 27, 105, 0.95) 0%, 
-        rgba(139, 90, 131, 0.95) 25%, 
-        rgba(212, 175, 55, 0.95) 50%, 
-        rgba(205, 133, 63, 0.95) 75%, 
-        rgba(65, 105, 225, 0.95) 100%);
+        rgb(45, 27, 105) 0%, 
+        rgb(139, 90, 131) 25%, 
+        rgb(212, 175, 55) 50%, 
+        rgb(205, 133, 63) 75%, 
+        rgb(65, 105, 225) 100%);
     border: 3px solid gold;
     border-radius: 8px;
-    position: relative;
     box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
 }
 body[data-theme="stained-glass"] .verse-reference {
@@ -410,14 +419,13 @@ body[data-theme="stained-glass"] .verse-text {
 }
 
 /* --- Theme: Sunset Horizon --- */
-body[data-theme="sunset-horizon"] .verse-display {
+body[data-theme="sunset-horizon"] .verse-bg {
     background: linear-gradient(180deg, 
-        rgba(255, 107, 53, 0.95) 0%, 
-        rgba(247, 147, 30, 0.95) 30%, 
-        rgba(255, 210, 63, 0.95) 60%, 
-        rgba(139, 69, 19, 0.95) 100%);
+        rgb(255, 107, 53) 0%, 
+        rgb(247, 147, 30) 30%, 
+        rgb(255, 210, 63) 60%, 
+        rgb(139, 69, 19) 100%);
     border-radius: 8px;
-    position: relative;
     box-shadow: 0 0 25px rgba(255, 147, 30, 0.4);
 }
 body[data-theme="sunset-horizon"] .verse-reference {
@@ -430,11 +438,11 @@ body[data-theme="sunset-horizon"] .verse-text {
 }
 
 /* --- Theme: Aurora Night --- */
-body[data-theme="aurora-night"] .verse-display {
+body[data-theme="aurora-night"] .verse-bg {
     background: radial-gradient(ellipse at center, 
-        rgba(30, 60, 114, 0.95) 0%, 
-        rgba(42, 82, 152, 0.95) 50%, 
-        rgba(26, 26, 46, 0.95) 100%);
+        rgb(30, 60, 114) 0%, 
+        rgb(42, 82, 152) 50%, 
+        rgb(26, 26, 46) 100%);
     border: 2px solid #00ffaa;
     border-radius: 50% 50% 8px 8px;
     box-shadow: 0 0 30px rgba(0, 255, 170, 0.4);
@@ -449,8 +457,8 @@ body[data-theme="aurora-night"] .verse-text {
 }
 
 /* --- Theme: Vintage Parchment --- */
-body[data-theme="vintage-parchment"] .verse-display {
-    background: linear-gradient(135deg, rgba(244, 228, 188, 0.98) 0%, rgba(212, 175, 55, 0.98) 100%);
+body[data-theme="vintage-parchment"] .verse-bg {
+    background: linear-gradient(135deg, rgb(244, 228, 188) 0%, rgb(212, 175, 55) 100%);
     border: 3px solid #8b4513;
     border-radius: 4px;
     box-shadow: inset 0 0 10px rgba(139, 69, 19, 0.3), 0 0 15px rgba(139, 69, 19, 0.2);

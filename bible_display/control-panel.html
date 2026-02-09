@@ -342,6 +342,21 @@
                     </div>
                 </div>
 
+                <!-- Opacity Target -->
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-title" data-i18n="settingOpacityTarget">Opacity target</span>
+                        <span class="setting-desc" data-i18n="settingOpacityTargetDesc">Choose what the opacity slider affects: the entire block, only the background, or only the text.</span>
+                    </div>
+                    <div class="setting-control">
+                        <select id="opacityTargetSelect" class="setting-select">
+                            <option value="global" data-i18n="opacityGlobal">Everything</option>
+                            <option value="background" data-i18n="opacityBackground">Background</option>
+                            <option value="text" data-i18n="opacityText">Text</option>
+                        </select>
+                    </div>
+                </div>
+
                 <!-- Text Alignment -->
                 <div class="setting-row">
                     <div class="setting-info">
@@ -484,6 +499,11 @@
                 settingMaxLinesDesc: 'Divise les versets en diapositives si trop de lignes. 0 = pas de limite.',
                 settingOpacity: 'Opacité',
                 settingOpacityDesc: 'Contrôle la transparence du bloc d\'affichage.',
+                settingOpacityTarget: 'Cible de l\'opacité',
+                settingOpacityTargetDesc: 'Choisissez ce que le curseur d\'opacité affecte : le bloc entier, seulement le fond, ou seulement le texte.',
+                opacityGlobal: 'Tout le bloc',
+                opacityBackground: 'Fond uniquement',
+                opacityText: 'Texte uniquement',
                 settingAlignment: 'Alignement du texte',
                 settingAlignmentDesc: 'Définit l\'alignement du texte des versets.',
                 alignLeft: 'Gauche',
@@ -556,6 +576,11 @@
                 settingMaxLinesDesc: 'Splits Bible verses into different slides if there are too many lines. Leave at 0 for no limit.',
                 settingOpacity: 'Opacity',
                 settingOpacityDesc: 'Controls the transparency of the verse display block.',
+                settingOpacityTarget: 'Opacity target',
+                settingOpacityTargetDesc: 'Choose what the opacity slider affects: the entire block, only the background, or only the text.',
+                opacityGlobal: 'Everything',
+                opacityBackground: 'Background only',
+                opacityText: 'Text only',
                 settingAlignment: 'Text Alignment',
                 settingAlignmentDesc: 'Sets the text alignment for the verse display.',
                 alignLeft: 'Left',
@@ -1056,6 +1081,7 @@
             $('#lineHeightInput').val(localStorage.getItem('bibleLineHeight') || '1.6');
             $('#maxLinesInput').val(localStorage.getItem('bibleMaxLines') || '0');
             $('#opacityInput').val(localStorage.getItem('bibleOpacity') || '100');
+            $('#opacityTargetSelect').val(localStorage.getItem('bibleOpacityTarget') || 'global');
             $('#alignmentSelect').val(localStorage.getItem('bibleAlignment') || 'center');
             $('#transitionSelect').val(localStorage.getItem('bibleTransition') || 'fade');
 
@@ -1103,6 +1129,10 @@
         // ====== Settings: Select controls ======
         $('#alignmentSelect').on('change', function() {
             localStorage.setItem('bibleAlignment', $(this).val());
+        });
+
+        $('#opacityTargetSelect').on('change', function() {
+            localStorage.setItem('bibleOpacityTarget', $(this).val());
         });
 
         $('#transitionSelect').on('change', function() {
