@@ -1240,7 +1240,19 @@
                 selectVerseByDirection('down');
             } else if (e.key === 'Enter') {
                 e.preventDefault();
-                confirmHighlightedVerse();
+                const highlighted = $('.verse-item.highlighted');
+                if (highlighted.length > 0) {
+                    confirmHighlightedVerse();
+                } else {
+                    const selected = $('.verse-item.selected');
+                    if (selected.length > 0) {
+                        // Deselect the current verse (toggle off focus)
+                        selected.trigger('click');
+                    } else {
+                        // Toggle verse visibility (hide/show)
+                        $('#btnToggleVisibility').trigger('click');
+                    }
+                }
             } else if (e.key === 'ArrowLeft') {
                 e.preventDefault();
                 navigateChapter(-1);
