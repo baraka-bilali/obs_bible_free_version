@@ -63,14 +63,19 @@
                 $('#verseContent').css('opacity', 1);
             }
 
-            // Max lines (text clamp)
+            // Max lines (text clamp + fixed height)
             if (maxLines > 0) {
+                const fontSize = parseFloat(verseFontSize);
+                const lh = parseFloat(lineHeight);
+                const fixedHeight = (fontSize * lh * maxLines);
                 $('#verseText').css({
                     'display': '-webkit-box',
                     '-webkit-line-clamp': maxLines.toString(),
                     '-webkit-box-orient': 'vertical',
                     'overflow': 'hidden',
-                    'text-overflow': 'ellipsis'
+                    'text-overflow': 'ellipsis',
+                    'min-height': fixedHeight + 'px',
+                    'height': fixedHeight + 'px'
                 });
             } else {
                 // Remove clamp (auto/unlimited)
@@ -79,7 +84,9 @@
                     '-webkit-line-clamp': 'unset',
                     '-webkit-box-orient': 'unset',
                     'overflow': 'visible',
-                    'text-overflow': 'clip'
+                    'text-overflow': 'clip',
+                    'min-height': '',
+                    'height': ''
                 });
             }
 
