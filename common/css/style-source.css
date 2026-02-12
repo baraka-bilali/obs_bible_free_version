@@ -468,21 +468,158 @@ body[data-theme="vintage-parchment"] .verse-text {
     text-shadow: 0 1px 1px rgba(244, 228, 188, 0.3);
 }
 
+/* ========================================
+   BROADCAST THEMES
+   ======================================== */
+
+/* --- Theme: Church Broadcast --- */
+body[data-theme="church-broadcast"] .verse-display {
+    text-align: left;
+    padding: 0;
+}
+body[data-theme="church-broadcast"] .verse-bg {
+    background: rgba(12, 12, 22, 0.88);
+    border-top: none;
+    border-radius: 0;
+}
+body[data-theme="church-broadcast"] .verse-content {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+body[data-theme="church-broadcast"] .verse-reference {
+    color: #ffffff;
+    background: rgba(8, 8, 18, 0.95);
+    display: inline-block;
+    align-self: flex-start;
+    padding: 10px 24px 10px 20px;
+    margin: 0;
+    border-left: 5px solid #d4a017;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+}
+body[data-theme="church-broadcast"] .verse-text {
+    color: #f0f0f0;
+    padding: 16px 28px 20px 25px;
+    margin: 0;
+    border-left: 5px solid #d4a017;
+    font-size: 18px;
+    line-height: 1.7;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+}
+
+/* --- Theme: Church Broadcast Gold --- */
+body[data-theme="church-broadcast-gold"] .verse-display {
+    text-align: left;
+    padding: 0;
+}
+body[data-theme="church-broadcast-gold"] .verse-bg {
+    background: linear-gradient(180deg, rgba(20, 18, 10, 0.92) 0%, rgba(35, 30, 15, 0.90) 100%);
+    border-top: none;
+    border-radius: 0;
+}
+body[data-theme="church-broadcast-gold"] .verse-content {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+body[data-theme="church-broadcast-gold"] .verse-reference {
+    color: #ffd700;
+    background: rgba(10, 8, 4, 0.95);
+    display: inline-block;
+    align-self: flex-start;
+    padding: 10px 24px 10px 20px;
+    margin: 0;
+    border-left: 5px solid #ffd700;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+}
+body[data-theme="church-broadcast-gold"] .verse-text {
+    color: #f5f0e0;
+    padding: 16px 28px 20px 25px;
+    margin: 0;
+    border-left: 5px solid #ffd700;
+    font-size: 18px;
+    line-height: 1.7;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+}
+
+/* --- Theme: Church Broadcast Blue --- */
+body[data-theme="church-broadcast-blue"] .verse-display {
+    text-align: left;
+    padding: 0;
+}
+body[data-theme="church-broadcast-blue"] .verse-bg {
+    background: linear-gradient(180deg, rgba(8, 18, 38, 0.92) 0%, rgba(15, 30, 60, 0.90) 100%);
+    border-top: none;
+    border-radius: 0;
+}
+body[data-theme="church-broadcast-blue"] .verse-content {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+body[data-theme="church-broadcast-blue"] .verse-reference {
+    color: #ffffff;
+    background: rgba(5, 12, 30, 0.95);
+    display: inline-block;
+    align-self: flex-start;
+    padding: 10px 24px 10px 20px;
+    margin: 0;
+    border-left: 5px solid #2196F3;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+}
+body[data-theme="church-broadcast-blue"] .verse-text {
+    color: #e8f0ff;
+    padding: 16px 28px 20px 25px;
+    margin: 0;
+    border-left: 5px solid #2196F3;
+    font-size: 18px;
+    line-height: 1.7;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 1200px) {
     .verse-display { padding: 24px 30px; }
     .verse-reference { font-size: 18px; }
     .verse-text { font-size: 16px; }
+    /* Broadcast themes responsive overrides */
+    body[data-theme="church-broadcast"] .verse-display,
+    body[data-theme="church-broadcast-gold"] .verse-display,
+    body[data-theme="church-broadcast-blue"] .verse-display {
+        padding: 0;
+    }
 }
 
 @media (max-width: 768px) {
     .verse-display { padding: 20px; }
     .verse-reference { font-size: 16px; }
     .verse-text { font-size: 15px; }
+    body[data-theme="church-broadcast"] .verse-display,
+    body[data-theme="church-broadcast-gold"] .verse-display,
+    body[data-theme="church-broadcast-blue"] .verse-display {
+        padding: 0;
+    }
 }
 
 @media (max-width: 480px) {
     .verse-display { padding: 15px; }
     .verse-reference { font-size: 14px; }
     .verse-text { font-size: 14px; }
+    body[data-theme="church-broadcast"] .verse-display,
+    body[data-theme="church-broadcast-gold"] .verse-display,
+    body[data-theme="church-broadcast-blue"] .verse-display {
+        padding: 0;
+    }
 }

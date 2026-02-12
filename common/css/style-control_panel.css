@@ -748,6 +748,28 @@ select.form-control option {
     z-index: 1;
 }
 
+.theme-card-broadcast {
+    position: relative;
+}
+
+.theme-card-broadcast .theme-preview {
+    align-items: flex-start;
+    gap: 0;
+    padding: 0;
+}
+
+.theme-card-broadcast::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 3px;
+    background: #d4a017;
+    z-index: 1;
+    border-radius: 2px 0 0 2px;
+}
+
 .theme-card:hover {
     border-color: #0a84ff;
     transform: translateY(-2px);
