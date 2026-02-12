@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="bible-display-container">
-        <div class="verse-display" id="verseDisplay">
+        <div class="verse-display hidden" id="verseDisplay">
             <div class="verse-bg" id="verseBg"></div>
             <div class="verse-content" id="verseContent">
                 <h2 class="verse-reference" id="verseReference"></h2>
@@ -184,8 +184,15 @@
         // Poll as fallback (same-tab localStorage doesn't fire storage event)
         setInterval(updateVerseDisplay, 1000);
 
-        // Initial
-        updateVerseDisplay();
+        // Initial: clear any leftover verse from a previous session
+        // so the display stays hidden until the user explicitly shows a verse
+        localStorage.removeItem('currentVerseReference');
+        localStorage.removeItem('currentVerseText');
+        localStorage.removeItem('currentVerseSource');
+        lastReference = '';
+        lastText = '';
+        isDisplayVisible = false;
+        applySettings();
     </script>
 </body>
 </html>
