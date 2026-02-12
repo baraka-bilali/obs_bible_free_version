@@ -191,21 +191,26 @@ function getBooks() {
     return bibleBookNames;
 }
 
+// Normalize a string: lowercase + strip accents (é→e, ï→i, etc.)
+function stripAccents(str) {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
 // Recherche avec autocomplétion (searches localized names)
 function searchBooks(query) {
     if (!query) return [];
 
-    const lowerQuery = query.toLowerCase().trim();
+    const lowerQuery = stripAccents(query.trim());
 
-    // Search in localized names
+    // Search in localized names (accent-insensitive)
     let results = bibleBookNames.filter(book =>
-        book.toLowerCase().startsWith(lowerQuery)
+        stripAccents(book).startsWith(lowerQuery)
     );
 
-    // If no startsWith match, try includes
+    // If no startsWith match, try includes (accent-insensitive)
     if (results.length === 0) {
         results = bibleBookNames.filter(book =>
-            book.toLowerCase().includes(lowerQuery)
+            stripAccents(book).includes(lowerQuery)
         );
     }
 
@@ -215,8 +220,8 @@ function searchBooks(query) {
         const num = numMatch[1];
         const rest = numMatch[2];
         const numberedResults = bibleBookNames.filter(book => {
-            const lower = book.toLowerCase();
-            return lower.startsWith(num) && lower.includes(rest);
+            const normalized = stripAccents(book);
+            return normalized.startsWith(num) && normalized.includes(rest);
         });
         for (const r of numberedResults) {
             if (!results.includes(r)) {
@@ -257,26 +262,26 @@ function parseReference(reference) {
 function findBook(bookQuery) {
     if (!bookQuery) return null;
 
-    const lower = bookQuery.toLowerCase().trim();
+    const lower = stripAccents(bookQuery.trim());
 
-    // 1. Try exact match on localized names -> reverse to English key
-    const exactLocalized = bibleBookNames.find(b => b.toLowerCase() === lower);
+    // 1. Try exact match on localized names -> reverse to English key (accent-insensitive)
+    const exactLocalized = bibleBookNames.find(b => stripAccents(b) === lower);
     if (exactLocalized) {
         return getEnglishBookName(exactLocalized) || exactLocalized;
     }
 
-    // 2. Try exact match on English keys
-    const exactEng = bibleBooks.find(b => b.toLowerCase() === lower);
+    // 2. Try exact match on English keys (accent-insensitive)
+    const exactEng = bibleBooks.find(b => stripAccents(b) === lower);
     if (exactEng) return exactEng;
 
-    // 3. Try startsWith on localized names
-    const startsLocalized = bibleBookNames.find(b => b.toLowerCase().startsWith(lower));
+    // 3. Try startsWith on localized names (accent-insensitive)
+    const startsLocalized = bibleBookNames.find(b => stripAccents(b).startsWith(lower));
     if (startsLocalized) {
         return getEnglishBookName(startsLocalized) || startsLocalized;
     }
 
-    // 4. Try startsWith on English keys
-    const startsEng = bibleBooks.find(b => b.toLowerCase().startsWith(lower));
+    // 4. Try startsWith on English keys (accent-insensitive)
+    const startsEng = bibleBooks.find(b => stripAccents(b).startsWith(lower));
     if (startsEng) return startsEng;
 
     return null;

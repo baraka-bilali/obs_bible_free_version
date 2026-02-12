@@ -766,8 +766,8 @@
                 return;
             }
 
-            // Check if the input exactly matches a book (user selected from list)
-            const exactBook = bibleBookNames.find(b => b.toLowerCase() === input.toLowerCase());
+            // Check if the input exactly matches a book (user selected from list, accent-insensitive)
+            const exactBook = bibleBookNames.find(b => stripAccents(b) === stripAccents(input));
             if (exactBook) {
                 selectedBook = exactBook;
                 hideAutocomplete();
