@@ -67,15 +67,24 @@
             if (maxLines > 0) {
                 const fontSize = parseFloat(verseFontSize);
                 const lh = parseFloat(lineHeight);
-                const fixedHeight = (fontSize * lh * maxLines);
+                const textHeight = (fontSize * lh * maxLines);
+
+                // Get actual padding of .verse-text to include in total height
+                const verseTextEl = document.getElementById('verseText');
+                const computedStyle = window.getComputedStyle(verseTextEl);
+                const paddingTop = parseFloat(computedStyle.paddingTop) || 0;
+                const paddingBottom = parseFloat(computedStyle.paddingBottom) || 0;
+                const totalHeight = textHeight + paddingTop + paddingBottom;
+
                 $('#verseText').css({
                     'display': '-webkit-box',
                     '-webkit-line-clamp': maxLines.toString(),
                     '-webkit-box-orient': 'vertical',
                     'overflow': 'hidden',
                     'text-overflow': 'ellipsis',
-                    'min-height': fixedHeight + 'px',
-                    'height': fixedHeight + 'px'
+                    'min-height': totalHeight + 'px',
+                    'height': totalHeight + 'px',
+                    'box-sizing': 'border-box'
                 });
             } else {
                 // Remove clamp (auto/unlimited)
@@ -86,7 +95,8 @@
                     'overflow': 'visible',
                     'text-overflow': 'clip',
                     'min-height': '',
-                    'height': ''
+                    'height': '',
+                    'box-sizing': ''
                 });
             }
 

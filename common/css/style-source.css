@@ -36,6 +36,7 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
+    overflow: hidden;
 }
 
 .verse-display.hidden {
@@ -484,14 +485,11 @@ body[data-theme="church-broadcast"] .verse-bg {
 }
 body[data-theme="church-broadcast"] .verse-content {
     padding: 0;
-    display: flex;
-    flex-direction: column;
 }
 body[data-theme="church-broadcast"] .verse-reference {
     color: #ffffff;
     background: rgba(8, 8, 18, 0.95);
     display: inline-block;
-    align-self: flex-start;
     padding: 10px 24px 10px 20px;
     margin: 0;
     border-left: 5px solid #d4a017;
@@ -523,14 +521,11 @@ body[data-theme="church-broadcast-gold"] .verse-bg {
 }
 body[data-theme="church-broadcast-gold"] .verse-content {
     padding: 0;
-    display: flex;
-    flex-direction: column;
 }
 body[data-theme="church-broadcast-gold"] .verse-reference {
     color: #ffd700;
     background: rgba(10, 8, 4, 0.95);
     display: inline-block;
-    align-self: flex-start;
     padding: 10px 24px 10px 20px;
     margin: 0;
     border-left: 5px solid #ffd700;
@@ -562,14 +557,11 @@ body[data-theme="church-broadcast-blue"] .verse-bg {
 }
 body[data-theme="church-broadcast-blue"] .verse-content {
     padding: 0;
-    display: flex;
-    flex-direction: column;
 }
 body[data-theme="church-broadcast-blue"] .verse-reference {
     color: #ffffff;
     background: rgba(5, 12, 30, 0.95);
     display: inline-block;
-    align-self: flex-start;
     padding: 10px 24px 10px 20px;
     margin: 0;
     border-left: 5px solid #2196F3;
