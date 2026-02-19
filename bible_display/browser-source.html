@@ -102,6 +102,14 @@
 
             // Theme
             $('body').attr('data-theme', theme);
+
+            // Bold
+            const bold = localStorage.getItem('bibleBold') === 'true';
+            $('#verseText').css('font-weight', bold ? '700' : '');
+
+            // Capitalization
+            const capitalization = localStorage.getItem('bibleCapitalization') || 'none';
+            $('#verseText').css('text-transform', capitalization !== 'none' ? capitalization : '');
         }
 
         function hideVerse() {
@@ -193,7 +201,8 @@
         window.addEventListener('storage', function(e) {
             if (['currentVerseReference', 'currentVerseText', 'currentVerseSource',
                  'bibleRefFontSize', 'bibleVerseFontSize', 'bibleLineHeight', 'bibleAlignment', 'bibleTheme',
-                 'bibleOpacity', 'bibleOpacityTarget', 'bibleMaxLines', 'bibleTransition', 'bibleAutoHide', 'bibleAutoHideTimer'].includes(e.key)) {
+                 'bibleOpacity', 'bibleOpacityTarget', 'bibleMaxLines', 'bibleTransition', 'bibleAutoHide', 'bibleAutoHideTimer',
+                 'bibleBold', 'bibleCapitalization'].includes(e.key)) {
                 updateVerseDisplay();
             }
         });

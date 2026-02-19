@@ -425,6 +425,34 @@
                     </div>
                 </div>
 
+                <!-- Text Bold -->
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-title" data-i18n="settingBold">Texte en gras</span>
+                        <span class="setting-desc" data-i18n="settingBoldDesc">Affiche le texte des versets en gras.</span>
+                    </div>
+                    <div class="setting-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="boldToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Capitalization -->
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-title" data-i18n="settingCapitalization">Capitalisation</span>
+                        <span class="setting-desc" data-i18n="settingCapitalizationDesc">Transforme le texte des versets en majuscules ou minuscules.</span>
+                    </div>
+                    <div class="setting-control">
+                        <select id="capitalizationSelect" class="setting-select">
+                            <option value="none" data-i18n="capNone">Normal</option>
+                            <option value="uppercase" data-i18n="capUpper">MAJUSCULES</option>
+                        </select>
+                    </div>
+                </div>
+
                 <!-- Transition Effect -->
                 <div class="setting-row">
                     <div class="setting-info">
@@ -562,6 +590,12 @@
                 alignLeft: 'Gauche',
                 alignCenter: 'Centre',
                 alignRight: 'Droite',
+                settingBold: 'Texte en gras',
+                settingBoldDesc: 'Affiche le texte des versets en gras.',
+                settingCapitalization: 'Capitalisation',
+                settingCapitalizationDesc: 'Transforme le texte en majuscules ou minuscules.',
+                capNone: 'Normal',
+                capUpper: 'MAJUSCULES',
                 settingTransition: 'Effet de transition',
                 settingTransitionDesc: 'Animation utilisée pour afficher et masquer les versets.',
                 transFade: 'Fondu',
@@ -639,6 +673,12 @@
                 alignLeft: 'Left',
                 alignCenter: 'Center',
                 alignRight: 'Right',
+                settingBold: 'Bold Text',
+                settingBoldDesc: 'Display verse text in bold.',
+                settingCapitalization: 'Capitalization',
+                settingCapitalizationDesc: 'Transform verse text to uppercase or lowercase.',
+                capNone: 'Normal',
+                capUpper: 'UPPERCASE',
                 settingTransition: 'Transition Effect',
                 settingTransitionDesc: 'Animation used when displaying and hiding verses.',
                 transFade: 'Fade',
@@ -1140,6 +1180,8 @@
             $('#opacityTargetSelect').val(localStorage.getItem('bibleOpacityTarget') || 'global');
             $('#alignmentSelect').val(localStorage.getItem('bibleAlignment') || 'center');
             $('#transitionSelect').val(localStorage.getItem('bibleTransition') || 'fade');
+            $('#boldToggle').prop('checked', localStorage.getItem('bibleBold') === 'true');
+            $('#capitalizationSelect').val(localStorage.getItem('bibleCapitalization') || 'none');
 
             const savedAutoHide = localStorage.getItem('bibleAutoHide') === 'true';
             $('#autoHideToggle').prop('checked', savedAutoHide);
@@ -1185,6 +1227,14 @@
         // ====== Settings: Select controls ======
         $('#alignmentSelect').on('change', function() {
             localStorage.setItem('bibleAlignment', $(this).val());
+        });
+
+        $('#capitalizationSelect').on('change', function() {
+            localStorage.setItem('bibleCapitalization', $(this).val());
+        });
+
+        $('#boldToggle').change(function() {
+            localStorage.setItem('bibleBold', $(this).is(':checked').toString());
         });
 
         $('#opacityTargetSelect').on('change', function() {
