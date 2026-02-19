@@ -472,253 +472,121 @@ body[data-theme="vintage-parchment"] .verse-text {
    BROADCAST THEMES
    ======================================== */
 
-/* ========================================
-   BROADCAST THEMES — Layout unifié :
-   badge référence en haut à gauche,
-   texte verset centré sur toute la largeur.
-   ======================================== */
-
-/* Mixin layout partagé (broadcast) */
-body[data-theme="church-broadcast"] .verse-display,
-body[data-theme="church-broadcast-gold"] .verse-display,
-body[data-theme="church-broadcast-blue"] .verse-display,
-body[data-theme="dark-cinema"] .verse-display {
+/* --- Theme: Church Broadcast --- */
+body[data-theme="church-broadcast"] .verse-display {
     text-align: left;
     padding: 0;
 }
-
-body[data-theme="church-broadcast"] .verse-content,
-body[data-theme="church-broadcast-gold"] .verse-content,
-body[data-theme="church-broadcast-blue"] .verse-content,
-body[data-theme="dark-cinema"] .verse-content {
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-body[data-theme="church-broadcast"] .verse-bg,
-body[data-theme="church-broadcast-gold"] .verse-bg,
-body[data-theme="church-broadcast-blue"] .verse-bg,
-body[data-theme="dark-cinema"] .verse-bg {
+body[data-theme="church-broadcast"] .verse-bg {
+    background: rgba(12, 12, 22, 0.88);
     border-top: none;
     border-radius: 0;
 }
-
-body[data-theme="church-broadcast"] .verse-reference,
-body[data-theme="church-broadcast-gold"] .verse-reference,
-body[data-theme="church-broadcast-blue"] .verse-reference,
-body[data-theme="dark-cinema"] .verse-reference {
-    display: inline-block;
-    align-self: flex-start;
-    padding: 8px 18px;
-    margin: 0;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    text-shadow: none;
-    white-space: nowrap;
-}
-
-body[data-theme="church-broadcast"] .verse-text,
-body[data-theme="church-broadcast-gold"] .verse-text,
-body[data-theme="church-broadcast-blue"] .verse-text,
-body[data-theme="dark-cinema"] .verse-text {
-    width: 100%;
-    padding: 14px 32px 20px 32px;
-    margin: 0;
-    font-size: 18px;
-    line-height: 1.7;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
-}
-
-/* --- Theme: Church Broadcast --- */
-body[data-theme="church-broadcast"] .verse-bg {
-    background: rgba(12, 12, 20, 0.93);
+body[data-theme="church-broadcast"] .verse-content {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
 }
 body[data-theme="church-broadcast"] .verse-reference {
     color: #ffffff;
-    background: rgba(6, 6, 12, 1);
-    border-bottom: 2px solid #d4a017;
+    background: rgba(8, 8, 18, 0.95);
+    display: inline-block;
+    align-self: flex-start;
+    padding: 10px 24px 10px 20px;
+    margin: 0;
+    border-left: 5px solid #d4a017;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
 }
 body[data-theme="church-broadcast"] .verse-text {
     color: #f0f0f0;
+    padding: 16px 28px 20px 25px;
+    margin: 0;
+    border-left: 5px solid #d4a017;
+    font-size: 18px;
+    line-height: 1.7;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
 }
 
 /* --- Theme: Church Broadcast Gold --- */
+body[data-theme="church-broadcast-gold"] .verse-display {
+    text-align: left;
+    padding: 0;
+}
 body[data-theme="church-broadcast-gold"] .verse-bg {
-    background: linear-gradient(180deg, rgba(16, 14, 8, 0.96) 0%, rgba(26, 22, 10, 0.94) 100%);
+    background: linear-gradient(180deg, rgba(20, 18, 10, 0.92) 0%, rgba(35, 30, 15, 0.90) 100%);
+    border-top: none;
+    border-radius: 0;
+}
+body[data-theme="church-broadcast-gold"] .verse-content {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
 }
 body[data-theme="church-broadcast-gold"] .verse-reference {
     color: #ffd700;
-    background: rgba(8, 6, 2, 1);
-    border-bottom: 2px solid #ffd700;
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.35);
+    background: rgba(10, 8, 4, 0.95);
+    display: inline-block;
+    align-self: flex-start;
+    padding: 10px 24px 10px 20px;
+    margin: 0;
+    border-left: 5px solid #ffd700;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
 }
 body[data-theme="church-broadcast-gold"] .verse-text {
     color: #f5f0e0;
+    padding: 16px 28px 20px 25px;
+    margin: 0;
+    border-left: 5px solid #ffd700;
+    font-size: 18px;
+    line-height: 1.7;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
 }
 
 /* --- Theme: Church Broadcast Blue --- */
+body[data-theme="church-broadcast-blue"] .verse-display {
+    text-align: left;
+    padding: 0;
+}
 body[data-theme="church-broadcast-blue"] .verse-bg {
-    background: linear-gradient(180deg, rgba(8, 18, 38, 0.95) 0%, rgba(12, 26, 52, 0.95) 100%);
+    background: linear-gradient(180deg, rgba(8, 18, 38, 0.92) 0%, rgba(15, 30, 60, 0.90) 100%);
+    border-top: none;
+    border-radius: 0;
+}
+body[data-theme="church-broadcast-blue"] .verse-content {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
 }
 body[data-theme="church-broadcast-blue"] .verse-reference {
     color: #ffffff;
-    background: rgba(4, 10, 24, 1);
-    border-bottom: 2px solid #2196F3;
+    background: rgba(5, 12, 30, 0.95);
+    display: inline-block;
+    align-self: flex-start;
+    padding: 10px 24px 10px 20px;
+    margin: 0;
+    border-left: 5px solid #2196F3;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
 }
 body[data-theme="church-broadcast-blue"] .verse-text {
     color: #e8f0ff;
-}
-
-/* --- Theme: Dark Cinema --- */
-/* Layout exact de l'image : badge réf. haut-gauche, texte centré, fond noir pur */
-body[data-theme="dark-cinema"] .verse-bg {
-    background: rgba(13, 13, 20, 0.97);
-}
-body[data-theme="dark-cinema"] .verse-reference {
-    color: #ffffff;
-    background: rgba(7, 7, 13, 1);
-    /* Pas d'accent couleur : neutre cinéma */
-    border-bottom: none;
-    font-size: 12px;
-    letter-spacing: 1.8px;
-}
-body[data-theme="dark-cinema"] .verse-text {
-    color: #ffffff;
-    font-weight: 400;
-}
-
-/* ========================================
-   THEME: ABSTRACT BLUE
-   Bannière aquarelle bleue en bas,
-   badge référence flottant centré en haut.
-   ======================================== */
-
-body[data-theme="abstract-blue"] .verse-display {
-    padding: 0;
-    overflow: visible; /* permet au badge de dépasser vers le haut */
-}
-
-body[data-theme="abstract-blue"] .verse-bg {
-    /* Aquarelle / marbré : empilement de blobs colorés floutés */
-    background-color: #0a1a2e;
-    background-image:
-        radial-gradient(ellipse at 8%  60%, rgba(0, 110, 160, 0.70) 0%, transparent 42%),
-        radial-gradient(ellipse at 40% 85%, rgba(0,  70, 120, 0.55) 0%, transparent 38%),
-        radial-gradient(ellipse at 72% 40%, rgba(0,  90, 145, 0.60) 0%, transparent 42%),
-        radial-gradient(ellipse at 90% 75%, rgba(5,  50, 100, 0.55) 0%, transparent 35%),
-        radial-gradient(ellipse at 25% 20%, rgba(0, 130, 170, 0.40) 0%, transparent 32%),
-        radial-gradient(ellipse at 60% 10%, rgba(0,  60, 110, 0.45) 0%, transparent 30%),
-        linear-gradient(175deg, rgba(8, 24, 44, 0.88) 0%, rgba(4, 16, 34, 0.92) 100%);
-    border-top: none;
-    border-radius: 0;
-}
-
-body[data-theme="abstract-blue"] .verse-content {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 28px 48px 30px 48px;
-    overflow: visible;
-}
-
-body[data-theme="abstract-blue"] .verse-reference {
-    /* Flottant centré au bord supérieur de la bannière */
-    position: absolute;
-    top: -18px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #0d1f3c;
-    color: #ffffff;
-    padding: 6px 24px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    white-space: nowrap;
-    z-index: 20;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
-    text-shadow: none;
-}
-
-body[data-theme="abstract-blue"] .verse-text {
-    color: #ffffff;
-    font-weight: 800;
-    font-size: 24px;
-    line-height: 1.55;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
-    margin-top: 18px; /* espace sous le badge flottant */
-    padding: 0;
-    letter-spacing: 0.5px;
-}
-
-/* ========================================
-   THEME: ABSTRACT PAINT
-   Fond peinture abstraite (rouge/vert/olive/jaune)
-   Badge référence bordeaux opaque, aligné à gauche
-   ======================================== */
-
-body[data-theme="abstract-paint"] .verse-display {
-    padding: 0;
-    overflow: visible;
-}
-
-body[data-theme="abstract-paint"] .verse-bg {
-    /* Texture peinture abstraite : rouges, verts olive, jaune, noir */
-    background-color: #1a0a04;
-    background-image:
-        radial-gradient(ellipse at 5%  55%, rgba(140, 20,  10, 0.90) 0%, transparent 38%),
-        radial-gradient(ellipse at 30% 80%, rgba(80,  100,  5, 0.75) 0%, transparent 35%),
-        radial-gradient(ellipse at 55% 40%, rgba(160, 80,   0, 0.60) 0%, transparent 32%),
-        radial-gradient(ellipse at 75% 70%, rgba(60,  80,  10, 0.80) 0%, transparent 38%),
-        radial-gradient(ellipse at 90% 30%, rgba(120, 15,   5, 0.70) 0%, transparent 35%),
-        radial-gradient(ellipse at 20% 15%, rgba(180, 120,  0, 0.45) 0%, transparent 28%),
-        radial-gradient(ellipse at 65% 90%, rgba(40,  60,   5, 0.70) 0%, transparent 30%),
-        linear-gradient(160deg, rgba(20, 5, 2, 0.60) 0%, rgba(10, 18, 4, 0.70) 100%);
-    border-top: none;
-    border-radius: 0;
-}
-
-body[data-theme="abstract-paint"] .verse-content {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 28px 36px 26px 36px;
-    overflow: visible;
-}
-
-body[data-theme="abstract-paint"] .verse-reference {
-    /* Badge bordeaux opaque, aligné à gauche, légèrement flottant */
-    position: absolute;
-    top: -16px;
-    left: 36px;
-    background: #6b0e0e;
-    color: #ffffff;
-    padding: 5px 18px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    white-space: nowrap;
-    z-index: 20;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
-    text-shadow: none;
-}
-
-body[data-theme="abstract-paint"] .verse-text {
-    color: #ffffff;
-    font-weight: 400;
+    padding: 16px 28px 20px 25px;
+    margin: 0;
+    border-left: 5px solid #2196F3;
     font-size: 18px;
-    line-height: 1.65;
-    width: 100%;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.70);
-    margin-top: 20px;
-    padding: 0;
+    line-height: 1.7;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
 }
 
 /* ===== Responsive ===== */
@@ -729,10 +597,7 @@ body[data-theme="abstract-paint"] .verse-text {
     /* Broadcast themes responsive overrides */
     body[data-theme="church-broadcast"] .verse-display,
     body[data-theme="church-broadcast-gold"] .verse-display,
-    body[data-theme="church-broadcast-blue"] .verse-display,
-    body[data-theme="dark-cinema"] .verse-display,
-    body[data-theme="abstract-blue"] .verse-display,
-    body[data-theme="abstract-paint"] .verse-display {
+    body[data-theme="church-broadcast-blue"] .verse-display {
         padding: 0;
     }
 }
@@ -743,10 +608,7 @@ body[data-theme="abstract-paint"] .verse-text {
     .verse-text { font-size: 15px; }
     body[data-theme="church-broadcast"] .verse-display,
     body[data-theme="church-broadcast-gold"] .verse-display,
-    body[data-theme="church-broadcast-blue"] .verse-display,
-    body[data-theme="dark-cinema"] .verse-display,
-    body[data-theme="abstract-blue"] .verse-display,
-    body[data-theme="abstract-paint"] .verse-display {
+    body[data-theme="church-broadcast-blue"] .verse-display {
         padding: 0;
     }
 }
@@ -757,78 +619,7 @@ body[data-theme="abstract-paint"] .verse-text {
     .verse-text { font-size: 14px; }
     body[data-theme="church-broadcast"] .verse-display,
     body[data-theme="church-broadcast-gold"] .verse-display,
-    body[data-theme="church-broadcast-blue"] .verse-display,
-    body[data-theme="dark-cinema"] .verse-display {
+    body[data-theme="church-broadcast-blue"] .verse-display {
         padding: 0;
     }
-}
-
-/* ========================================
-   THEME: ELEGANT QUOTE
-   Fond transparent, guillemet décoratif,
-   barre orange à gauche, référence
-   en italique small-caps en dessous.
-   ======================================== */
-
-body[data-theme="elegant-quote"] .verse-display {
-    padding: 28px 64px 20px 64px;
-    overflow: visible;
-    bottom: 0;
-}
-
-body[data-theme="elegant-quote"] .verse-bg {
-    /* Totalement transparent : le fond OBS passe à travers */
-    background: transparent;
-    border: none;
-    border-radius: 0;
-    box-shadow: none;
-}
-
-/* Grand guillemet décoratif en haut à gauche */
-body[data-theme="elegant-quote"] .verse-display::before {
-    content: '\201C';
-    position: absolute;
-    top: -10px;
-    left: 24px;
-    font-size: 110px;
-    color: rgba(160, 140, 120, 0.22);
-    font-family: Georgia, 'Times New Roman', serif;
-    line-height: 1;
-    z-index: 0;
-    pointer-events: none;
-}
-
-body[data-theme="elegant-quote"] .verse-content {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    position: relative;
-    z-index: 1;
-    width: 100%;
-}
-
-body[data-theme="elegant-quote"] .verse-text {
-    order: 1;
-    color: #ffffff;
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 1.65;
-    border-left: 11px solid #e07020;
-    padding-left: 22px;
-    margin: 0;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
-}
-
-body[data-theme="elegant-quote"] .verse-reference {
-    order: 2;
-    color: #ffffff;
-    font-size: 13px;
-    font-weight: 500;
-    font-style: italic;
-    font-variant: small-caps;
-    letter-spacing: 1.5px;
-    text-transform: none;
-    margin-top: 14px;
-    padding-left: 33px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
