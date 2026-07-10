@@ -250,10 +250,10 @@
                     </div>
                     <!-- Elegant Quote -->
                     <div class="theme-card theme-card-artistic" data-theme="elegant-quote">
-                        <div class="theme-preview" style="background:#e8e4de;border-radius:4px;padding:6px 8px;position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;overflow:visible;">
-                            <span style="position:absolute;top:-4px;left:4px;font-size:28px;color:rgba(150,130,110,0.25);font-family:Georgia,serif;line-height:1;">&ldquo;</span>
-                            <span style="color:#1a1a1a;font-size:8px;font-weight:400;border-left:4px solid #e07020;padding-left:6px;display:block;">Car Dieu a tant aimé...</span>
-                            <span style="color:#2a2a2a;font-size:7px;font-style:italic;font-variant:small-caps;margin-top:4px;padding-left:10px;display:block;">- Jean 3:16 (LSG)</span>
+                        <div class="theme-preview" style="background:linear-gradient(180deg,rgba(0,0,0,0.55) 0%,rgba(0,0,0,0.8) 100%);border-radius:4px;padding:6px 8px;position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;overflow:visible;">
+                            <span style="position:absolute;top:-4px;left:4px;font-size:28px;color:rgba(255,255,255,0.25);font-family:Georgia,serif;line-height:1;">&ldquo;</span>
+                            <span style="color:#ffffff;font-size:8px;font-weight:700;border-left:4px solid #e07020;padding-left:6px;display:block;">Car Dieu a tant aimé...</span>
+                            <span style="color:#eeeeee;font-size:7px;font-style:italic;font-variant:small-caps;margin-top:4px;padding-left:10px;display:block;">- Jean 3:16 (LSG)</span>
                         </div>
                         <span class="theme-name">Elegant Quote</span>
                     </div>
@@ -374,7 +374,7 @@
                 <div class="setting-row">
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingMaxLines">Maximum number of lines</span>
-                        <span class="setting-desc" data-i18n="settingMaxLinesDesc">Splits Bible verses into different slides if there are too many lines. Leave at 0 for no limit.</span>
+                        <span class="setting-desc" data-i18n="settingMaxLinesDesc">Automatically shrinks text to fit within this many lines. Also splits very long verses into slides. Leave at 0 for no limit.</span>
                     </div>
                     <div class="setting-control">
                         <div class="spin-control">
@@ -384,6 +384,20 @@
                                 <button class="spin-down" id="maxLinesDecrease">▼</button>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Split long verses -->
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-title" data-i18n="settingSplitVerses">Split long verses</span>
+                        <span class="setting-desc" data-i18n="settingSplitVersesDesc">On: long verses are split into navigable slides. Off: the whole verse stays on one slide and the font shrinks slightly to fit the line limit.</span>
+                    </div>
+                    <div class="setting-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="splitVersesToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
                     </div>
                 </div>
 
@@ -586,7 +600,9 @@
                 settingLineSpacing: 'Interligne',
                 settingLineSpacingDesc: 'Contrôle la hauteur de ligne du texte.',
                 settingMaxLines: 'Nombre max. de lignes',
-                settingMaxLinesDesc: 'Divise les versets en diapositives si trop de lignes. 0 = pas de limite.',
+                settingMaxLinesDesc: 'Réduit automatiquement la taille du texte pour tenir dans ce nombre de lignes. 0 = pas de limite.',
+                settingSplitVerses: 'Découper les versets longs',
+                settingSplitVersesDesc: 'Activé : les versets longs sont découpés en diapositives navigables. Désactivé : le verset entier reste sur une seule diapositive et la police se réduit légèrement pour tenir dans le nombre de lignes.',
                 settingOpacity: 'Opacité',
                 settingOpacityDesc: 'Contrôle la transparence du bloc d\'affichage.',
                 settingOpacityTarget: 'Cible de l\'opacité',
@@ -669,7 +685,9 @@
                 settingLineSpacing: 'Line Spacing',
                 settingLineSpacingDesc: 'Controls the line height of the verse text.',
                 settingMaxLines: 'Maximum number of lines',
-                settingMaxLinesDesc: 'Splits Bible verses into different slides if there are too many lines. Leave at 0 for no limit.',
+                settingMaxLinesDesc: 'Automatically shrinks text to fit within this many lines. Leave at 0 for no limit.',
+                settingSplitVerses: 'Split long verses',
+                settingSplitVersesDesc: 'On: long verses are split into navigable slides. Off: the whole verse stays on one slide and the font shrinks slightly to fit the line limit.',
                 settingOpacity: 'Opacity',
                 settingOpacityDesc: 'Controls the transparency of the verse display block.',
                 settingOpacityTarget: 'Opacity target',
@@ -1023,9 +1041,10 @@
 
                         $(this).addClass('selected');
 
-                        // Check max lines and split if needed
+                        // Check max lines and split if needed (only when splitting is enabled)
                         const maxLines = parseInt(localStorage.getItem('bibleMaxLines') || '0');
-                        if (maxLines > 0) {
+                        const splitEnabled = localStorage.getItem('bibleSplitVerses') === 'true';
+                        if (maxLines > 0 && splitEnabled) {
                             const chunks = splitTextIntoChunks(v.text, maxLines);
                             if (chunks.length > 1) {
                                 // Store data for navigation
@@ -1185,6 +1204,7 @@
             $('#verseFontSizeInput').val(localStorage.getItem('bibleVerseFontSize') || '18');
             $('#lineHeightInput').val(localStorage.getItem('bibleLineHeight') || '1.6');
             $('#maxLinesInput').val(localStorage.getItem('bibleMaxLines') || '0');
+            $('#splitVersesToggle').prop('checked', localStorage.getItem('bibleSplitVerses') === 'true');
             $('#opacityInput').val(localStorage.getItem('bibleOpacity') || '100');
             $('#opacityTargetSelect').val(localStorage.getItem('bibleOpacityTarget') || 'global');
             $('#alignmentSelect').val(localStorage.getItem('bibleAlignment') || 'center');
@@ -1244,6 +1264,10 @@
 
         $('#boldToggle').change(function() {
             localStorage.setItem('bibleBold', $(this).is(':checked').toString());
+        });
+
+        $('#splitVersesToggle').change(function() {
+            localStorage.setItem('bibleSplitVerses', $(this).is(':checked').toString());
         });
 
         $('#opacityTargetSelect').on('change', function() {

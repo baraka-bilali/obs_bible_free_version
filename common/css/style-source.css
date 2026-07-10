@@ -28,7 +28,7 @@ body {
 
 /* ===== Base Verse Display ===== */
 .verse-display {
-    padding: 28px 36px;
+    padding: 22px 28px;
     max-width: 100%;
     width: 100%;
     text-align: center;
@@ -526,7 +526,7 @@ body[data-theme="church-broadcast-gold"] .verse-text,
 body[data-theme="church-broadcast-blue"] .verse-text,
 body[data-theme="dark-cinema"] .verse-text {
     width: 100%;
-    padding: 14px 32px 20px 32px;
+    padding: 10px 22px 14px 22px;
     margin: 0;
     font-size: 18px;
     line-height: 1.7;
@@ -771,30 +771,31 @@ body[data-theme="abstract-paint"] .verse-text {
    ======================================== */
 
 body[data-theme="elegant-quote"] .verse-display {
-    padding: 28px 64px 20px 64px;
+    padding: 0;
     overflow: visible;
     bottom: 0;
 }
 
 body[data-theme="elegant-quote"] .verse-bg {
-    /* Totalement transparent : le fond OBS passe à travers */
+    /* Le voile sombre est porté par .verse-content (voir plus bas) afin qu'il
+       épouse toujours exactement le texte, même pour les versets très longs. */
     background: transparent;
     border: none;
     border-radius: 0;
     box-shadow: none;
 }
 
-/* Grand guillemet décoratif en haut à gauche */
+/* Grand guillemet décoratif en haut à gauche (filigrane clair sur le voile) */
 body[data-theme="elegant-quote"] .verse-display::before {
     content: '\201C';
     position: absolute;
-    top: -10px;
-    left: 24px;
-    font-size: 110px;
-    color: rgba(160, 140, 120, 0.22);
+    top: -4px;
+    left: 18px;
+    font-size: 96px;
+    color: rgba(255, 255, 255, 0.12);
     font-family: Georgia, 'Times New Roman', serif;
     line-height: 1;
-    z-index: 0;
+    z-index: 2;
     pointer-events: none;
 }
 
@@ -805,6 +806,11 @@ body[data-theme="elegant-quote"] .verse-content {
     position: relative;
     z-index: 1;
     width: 100%;
+    box-sizing: border-box;
+    /* Voile noir semi-transparent — la hauteur totale est verrouillée en JS
+       pour garder la même dimension quel que soit le verset. */
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.66) 0%, rgba(0, 0, 0, 0.8) 100%);
+    padding: 22px 30px 18px 30px;
 }
 
 body[data-theme="elegant-quote"] .verse-text {
@@ -814,7 +820,9 @@ body[data-theme="elegant-quote"] .verse-text {
     font-weight: 700;
     line-height: 1.65;
     border-left: 11px solid #e07020;
-    padding-left: 22px;
+    padding-left: 18px;
+    width: 100%;
+    box-sizing: border-box;
     margin: 0;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
@@ -823,12 +831,12 @@ body[data-theme="elegant-quote"] .verse-reference {
     order: 2;
     color: #ffffff;
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 600;
     font-style: italic;
     font-variant: small-caps;
     letter-spacing: 1.5px;
     text-transform: none;
-    margin-top: 14px;
-    padding-left: 33px;
+    margin-top: 12px;
+    padding-left: 29px;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
