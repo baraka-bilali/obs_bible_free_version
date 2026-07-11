@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OBS Bible Free Version - Control Panel</title>
-    <link rel="stylesheet" href="../common/css/style-control_panel.css?v=2">
+    <link rel="stylesheet" href="../common/css/style-control_panel.css?v=4">
     <link rel="stylesheet" href="../common/css/cp-icons.css">
     <link rel="stylesheet" href="../common/css/themes/dark/theme.css">
     <script src="../common/js/jquery.js"></script>
+    <script src="../common/js/bible-fonts.js"></script>
     <script src="../common/js/jscolor.js"></script>
     <!-- Bible data (pre-generated JS files, works with file:// protocol) -->
     <script src="../bible-versions/js/versions-index.js"></script>
@@ -353,6 +354,28 @@
                     </div>
                 </div>
 
+                <!-- Reference Font Family -->
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-title" data-i18n="settingRefFontFamily">Reference font</span>
+                        <span class="setting-desc" data-i18n="settingRefFontFamilyDesc">Font used for the verse reference (e.g. Genesis 1:1).</span>
+                    </div>
+                    <div class="setting-control">
+                        <select id="refFontFamilySelect" class="setting-select setting-select-font"></select>
+                    </div>
+                </div>
+
+                <!-- Verse Font Family -->
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-title" data-i18n="settingVerseFontFamily">Verse font</span>
+                        <span class="setting-desc" data-i18n="settingVerseFontFamilyDesc">Font used for the Bible verse text.</span>
+                    </div>
+                    <div class="setting-control">
+                        <select id="verseFontFamilySelect" class="setting-select setting-select-font"></select>
+                    </div>
+                </div>
+
                 <!-- Line Spacing -->
                 <div class="setting-row">
                     <div class="setting-info">
@@ -493,17 +516,101 @@
                     </div>
                 </div>
 
-                <!-- Text Bold -->
+                <!-- Verse text style -->
                 <div class="setting-row">
                     <div class="setting-info">
-                        <span class="setting-title" data-i18n="settingBold">Texte en gras</span>
-                        <span class="setting-desc" data-i18n="settingBoldDesc">Affiche le texte des versets en gras.</span>
+                        <span class="setting-title" data-i18n="settingVerseWeight">Verse weight</span>
+                        <span class="setting-desc" data-i18n="settingVerseWeightDesc">Boldness of the verse text.</span>
                     </div>
                     <div class="setting-control">
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="boldToggle">
-                            <span class="toggle-slider"></span>
+                        <select id="verseWeightSelect" class="setting-select">
+                            <option value="" data-i18n="styleTheme">Theme (default)</option>
+                            <option value="400" data-i18n="styleNormal">Normal</option>
+                            <option value="500" data-i18n="styleMedium">Medium</option>
+                            <option value="600" data-i18n="styleSemiBold">Semi-bold</option>
+                            <option value="700" data-i18n="styleBold">Bold</option>
+                            <option value="800" data-i18n="styleExtraBold">Extra-bold</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-title" data-i18n="settingVerseStyle">Verse style</span>
+                        <span class="setting-desc" data-i18n="settingVerseStyleDesc">Italic and underline for the verse text.</span>
+                    </div>
+                    <div class="setting-control style-toggles">
+                        <label class="style-toggle" title="Italic">
+                            <input type="checkbox" id="verseItalicToggle">
+                            <span data-i18n="styleItalic">Italic</span>
                         </label>
+                        <label class="style-toggle" title="Underline">
+                            <input type="checkbox" id="verseUnderlineToggle">
+                            <span data-i18n="styleUnderline">Underline</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-title" data-i18n="settingVerseLetterSpacing">Verse letter spacing</span>
+                        <span class="setting-desc" data-i18n="settingVerseLetterSpacingDesc">Space between letters of the verse text.</span>
+                    </div>
+                    <div class="setting-control">
+                        <div class="spin-control">
+                            <input type="number" id="verseLetterSpacingInput" class="spin-input" value="0" min="0" max="5" step="0.5">
+                            <div class="spin-buttons">
+                                <button class="spin-up" id="verseLetterSpacingIncrease">▲</button>
+                                <button class="spin-down" id="verseLetterSpacingDecrease">▼</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reference text style -->
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-title" data-i18n="settingRefWeight">Reference weight</span>
+                        <span class="setting-desc" data-i18n="settingRefWeightDesc">Boldness of the verse reference.</span>
+                    </div>
+                    <div class="setting-control">
+                        <select id="refWeightSelect" class="setting-select">
+                            <option value="" data-i18n="styleTheme">Theme (default)</option>
+                            <option value="400" data-i18n="styleNormal">Normal</option>
+                            <option value="500" data-i18n="styleMedium">Medium</option>
+                            <option value="600" data-i18n="styleSemiBold">Semi-bold</option>
+                            <option value="700" data-i18n="styleBold">Bold</option>
+                            <option value="800" data-i18n="styleExtraBold">Extra-bold</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-title" data-i18n="settingRefStyle">Reference style</span>
+                        <span class="setting-desc" data-i18n="settingRefStyleDesc">Italic style for the verse reference.</span>
+                    </div>
+                    <div class="setting-control style-toggles">
+                        <label class="style-toggle">
+                            <input type="checkbox" id="refItalicToggle">
+                            <span data-i18n="styleItalic">Italic</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <span class="setting-title" data-i18n="settingRefLetterSpacing">Reference letter spacing</span>
+                        <span class="setting-desc" data-i18n="settingRefLetterSpacingDesc">Space between letters of the reference.</span>
+                    </div>
+                    <div class="setting-control">
+                        <div class="spin-control">
+                            <input type="number" id="refLetterSpacingInput" class="spin-input" value="0" min="0" max="5" step="0.5">
+                            <div class="spin-buttons">
+                                <button class="spin-up" id="refLetterSpacingIncrease">▲</button>
+                                <button class="spin-down" id="refLetterSpacingDecrease">▼</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -517,6 +624,8 @@
                         <select id="capitalizationSelect" class="setting-select">
                             <option value="none" data-i18n="capNone">Normal</option>
                             <option value="uppercase" data-i18n="capUpper">MAJUSCULES</option>
+                            <option value="lowercase" data-i18n="capLower">minuscules</option>
+                            <option value="capitalize" data-i18n="capCapitalize">Première Lettre</option>
                         </select>
                     </div>
                 </div>
@@ -642,6 +751,28 @@
                 settingRefFontSizeDesc: 'Taille de la police pour la référence du verset.',
                 settingVerseFontSize: 'Taille police verset',
                 settingVerseFontSizeDesc: 'Taille de la police pour le texte des versets.',
+                settingRefFontFamily: 'Police de la référence',
+                settingRefFontFamilyDesc: 'Police utilisée pour la référence du verset (ex. Genèse 1:1).',
+                settingVerseFontFamily: 'Police du verset',
+                settingVerseFontFamilyDesc: 'Police utilisée pour le texte biblique.',
+                fontTheme: 'Thème (défaut)',
+                fontSegoe: 'Segoe UI',
+                fontArial: 'Arial',
+                fontVerdana: 'Verdana',
+                fontTahoma: 'Tahoma',
+                fontTrebuchet: 'Trebuchet MS',
+                fontGeorgia: 'Georgia',
+                fontTimes: 'Times New Roman',
+                fontOpenSans: 'Open Sans',
+                fontRoboto: 'Roboto',
+                fontLato: 'Lato',
+                fontMontserrat: 'Montserrat',
+                fontSourceSans: 'Source Sans 3',
+                fontOswald: 'Oswald',
+                fontMerriweather: 'Merriweather',
+                fontPlayfair: 'Playfair Display',
+                fontCormorant: 'Cormorant Garamond',
+                fontCourier: 'Courier New',
                 settingLineSpacing: 'Interligne',
                 settingLineSpacingDesc: 'Contrôle la hauteur de ligne du texte.',
                 settingMaxLines: 'Nombre max. de lignes',
@@ -678,10 +809,32 @@
                 alignRight: 'Droite',
                 settingBold: 'Texte en gras',
                 settingBoldDesc: 'Affiche le texte des versets en gras.',
+                settingVerseWeight: 'Graisse du verset',
+                settingVerseWeightDesc: 'Épaisseur de la police du texte biblique.',
+                settingVerseStyle: 'Style du verset',
+                settingVerseStyleDesc: 'Italique et souligné pour le texte du verset.',
+                settingVerseLetterSpacing: 'Espacement verset',
+                settingVerseLetterSpacingDesc: 'Espacement entre les lettres du verset.',
+                settingRefWeight: 'Graisse de la référence',
+                settingRefWeightDesc: 'Épaisseur de la police de la référence.',
+                settingRefStyle: 'Style de la référence',
+                settingRefStyleDesc: 'Italique pour la référence du verset.',
+                settingRefLetterSpacing: 'Espacement référence',
+                settingRefLetterSpacingDesc: 'Espacement entre les lettres de la référence.',
+                styleTheme: 'Thème (défaut)',
+                styleNormal: 'Normal',
+                styleMedium: 'Moyen',
+                styleSemiBold: 'Semi-gras',
+                styleBold: 'Gras',
+                styleExtraBold: 'Extra-gras',
+                styleItalic: 'Italique',
+                styleUnderline: 'Souligné',
                 settingCapitalization: 'Capitalisation',
                 settingCapitalizationDesc: 'Transforme le texte en majuscules ou minuscules.',
                 capNone: 'Normal',
                 capUpper: 'MAJUSCULES',
+                capLower: 'minuscules',
+                capCapitalize: 'Première lettre',
                 settingTransition: 'Effet de transition',
                 settingTransitionDesc: 'Animation utilisée pour afficher et masquer les versets.',
                 transFade: 'Fondu',
@@ -743,6 +896,28 @@
                 settingRefFontSizeDesc: 'Scales the font size of the verse reference display.',
                 settingVerseFontSize: 'Verse Font Size',
                 settingVerseFontSizeDesc: 'Scales the font size of displayed Bible verses.',
+                settingRefFontFamily: 'Reference font',
+                settingRefFontFamilyDesc: 'Font used for the verse reference (e.g. Genesis 1:1).',
+                settingVerseFontFamily: 'Verse font',
+                settingVerseFontFamilyDesc: 'Font used for the Bible verse text.',
+                fontTheme: 'Theme (default)',
+                fontSegoe: 'Segoe UI',
+                fontArial: 'Arial',
+                fontVerdana: 'Verdana',
+                fontTahoma: 'Tahoma',
+                fontTrebuchet: 'Trebuchet MS',
+                fontGeorgia: 'Georgia',
+                fontTimes: 'Times New Roman',
+                fontOpenSans: 'Open Sans',
+                fontRoboto: 'Roboto',
+                fontLato: 'Lato',
+                fontMontserrat: 'Montserrat',
+                fontSourceSans: 'Source Sans 3',
+                fontOswald: 'Oswald',
+                fontMerriweather: 'Merriweather',
+                fontPlayfair: 'Playfair Display',
+                fontCormorant: 'Cormorant Garamond',
+                fontCourier: 'Courier New',
                 settingLineSpacing: 'Line Spacing',
                 settingLineSpacingDesc: 'Controls the line height of the verse text.',
                 settingMaxLines: 'Maximum number of lines',
@@ -779,10 +954,32 @@
                 alignRight: 'Right',
                 settingBold: 'Bold Text',
                 settingBoldDesc: 'Display verse text in bold.',
+                settingVerseWeight: 'Verse weight',
+                settingVerseWeightDesc: 'Boldness of the verse text.',
+                settingVerseStyle: 'Verse style',
+                settingVerseStyleDesc: 'Italic and underline for the verse text.',
+                settingVerseLetterSpacing: 'Verse letter spacing',
+                settingVerseLetterSpacingDesc: 'Space between letters of the verse text.',
+                settingRefWeight: 'Reference weight',
+                settingRefWeightDesc: 'Boldness of the verse reference.',
+                settingRefStyle: 'Reference style',
+                settingRefStyleDesc: 'Italic style for the verse reference.',
+                settingRefLetterSpacing: 'Reference letter spacing',
+                settingRefLetterSpacingDesc: 'Space between letters of the reference.',
+                styleTheme: 'Theme (default)',
+                styleNormal: 'Normal',
+                styleMedium: 'Medium',
+                styleSemiBold: 'Semi-bold',
+                styleBold: 'Bold',
+                styleExtraBold: 'Extra-bold',
+                styleItalic: 'Italic',
+                styleUnderline: 'Underline',
                 settingCapitalization: 'Capitalization',
                 settingCapitalizationDesc: 'Transform verse text to uppercase or lowercase.',
                 capNone: 'Normal',
                 capUpper: 'UPPERCASE',
+                capLower: 'lowercase',
+                capCapitalize: 'Capitalize',
                 settingTransition: 'Transition Effect',
                 settingTransitionDesc: 'Animation used when displaying and hiding verses.',
                 transFade: 'Fade',
@@ -855,6 +1052,41 @@
             });
             // Update html lang attribute
             $('html').attr('lang', currentLang);
+            refreshFontSelectLabels();
+        }
+
+        function populateFontSelect(selectId, storageKey) {
+            const $sel = $('#' + selectId);
+            const saved = localStorage.getItem(storageKey) || 'theme';
+            $sel.empty();
+            Object.keys(BIBLE_FONT_FAMILIES).forEach(function(key) {
+                const entry = BIBLE_FONT_FAMILIES[key];
+                const label = t(entry.labelKey);
+                const style = entry.stack ? 'font-family:' + entry.stack + ';' : '';
+                $sel.append(
+                    $('<option></option>')
+                        .val(key)
+                        .attr('data-i18n', entry.labelKey)
+                        .attr('style', style)
+                        .text(label)
+                );
+            });
+            $sel.val(saved);
+        }
+
+        function refreshFontSelectLabels() {
+            ['refFontFamilySelect', 'verseFontFamilySelect'].forEach(function(selectId) {
+                const $sel = $('#' + selectId);
+                $sel.find('option').each(function() {
+                    const key = $(this).data('i18n');
+                    if (key) $(this).text(t(key));
+                });
+            });
+        }
+
+        function initFontFamilySettings() {
+            populateFontSelect('refFontFamilySelect', 'bibleRefFontFamily');
+            populateFontSelect('verseFontFamilySelect', 'bibleVerseFontFamily');
         }
 
         // ====== State ======
@@ -1274,6 +1506,7 @@
             currentLang = localStorage.getItem('bibleLanguage') || 'fr';
             $('#languageSelect').val(currentLang);
             applyLanguage();
+            initFontFamilySettings();
 
             const savedTheme = localStorage.getItem('bibleTheme') || 'classic-dark';
             $(`.theme-card[data-theme="${savedTheme}"]`).addClass('selected');
@@ -1292,7 +1525,18 @@
             updatePanelColorPreview();
             $('#alignmentSelect').val(localStorage.getItem('bibleAlignment') || 'center');
             $('#transitionSelect').val(localStorage.getItem('bibleTransition') || 'fade');
-            $('#boldToggle').prop('checked', localStorage.getItem('bibleBold') === 'true');
+            // Text styles (migrate legacy bibleBold toggle)
+            let verseWeight = localStorage.getItem('bibleVerseFontWeight');
+            if (verseWeight === null && localStorage.getItem('bibleBold') === 'true') {
+                verseWeight = '700';
+            }
+            $('#verseWeightSelect').val(verseWeight || '');
+            $('#verseItalicToggle').prop('checked', localStorage.getItem('bibleVerseItalic') === 'true');
+            $('#verseUnderlineToggle').prop('checked', localStorage.getItem('bibleVerseUnderline') === 'true');
+            $('#verseLetterSpacingInput').val(localStorage.getItem('bibleVerseLetterSpacing') || '0');
+            $('#refWeightSelect').val(localStorage.getItem('bibleRefFontWeight') || '');
+            $('#refItalicToggle').prop('checked', localStorage.getItem('bibleRefItalic') === 'true');
+            $('#refLetterSpacingInput').val(localStorage.getItem('bibleRefLetterSpacing') || '0');
             $('#capitalizationSelect').val(localStorage.getItem('bibleCapitalization') || 'none');
 
             const savedAutoHide = localStorage.getItem('bibleAutoHide') === 'true';
@@ -1378,6 +1622,8 @@
         bindSpinControl('lineHeightInput', 'lineHeightIncrease', 'lineHeightDecrease', 'bibleLineHeight', 0.1, 1.0, 3.0, true);
         bindSpinControl('maxLinesInput', 'maxLinesIncrease', 'maxLinesDecrease', 'bibleMaxLines', 1, 0, 10, false);
         bindSpinControl('opacityInput', 'opacityIncrease', 'opacityDecrease', 'bibleOpacity', 5, 10, 100, false);
+        bindSpinControl('verseLetterSpacingInput', 'verseLetterSpacingIncrease', 'verseLetterSpacingDecrease', 'bibleVerseLetterSpacing', 0.5, 0, 5, true);
+        bindSpinControl('refLetterSpacingInput', 'refLetterSpacingIncrease', 'refLetterSpacingDecrease', 'bibleRefLetterSpacing', 0.5, 0, 5, true);
         bindSpinControl('timerInput', 'timerIncrease', 'timerDecrease', 'bibleAutoHideTimer', 1, 2, 20, false);
 
         // ====== Settings: Select controls ======
@@ -1386,13 +1632,43 @@
             notifySettingsChanged();
         });
 
-        $('#capitalizationSelect').on('change', function() {
-            localStorage.setItem('bibleCapitalization', $(this).val());
+        $('#refFontFamilySelect').on('change', function() {
+            localStorage.setItem('bibleRefFontFamily', $(this).val());
             notifySettingsChanged();
         });
 
-        $('#boldToggle').change(function() {
-            localStorage.setItem('bibleBold', $(this).is(':checked').toString());
+        $('#verseFontFamilySelect').on('change', function() {
+            localStorage.setItem('bibleVerseFontFamily', $(this).val());
+            notifySettingsChanged();
+        });
+
+        $('#verseWeightSelect').on('change', function() {
+            localStorage.setItem('bibleVerseFontWeight', $(this).val());
+            notifySettingsChanged();
+        });
+
+        $('#verseItalicToggle').change(function() {
+            localStorage.setItem('bibleVerseItalic', $(this).is(':checked').toString());
+            notifySettingsChanged();
+        });
+
+        $('#verseUnderlineToggle').change(function() {
+            localStorage.setItem('bibleVerseUnderline', $(this).is(':checked').toString());
+            notifySettingsChanged();
+        });
+
+        $('#refWeightSelect').on('change', function() {
+            localStorage.setItem('bibleRefFontWeight', $(this).val());
+            notifySettingsChanged();
+        });
+
+        $('#refItalicToggle').change(function() {
+            localStorage.setItem('bibleRefItalic', $(this).is(':checked').toString());
+            notifySettingsChanged();
+        });
+
+        $('#capitalizationSelect').on('change', function() {
+            localStorage.setItem('bibleCapitalization', $(this).val());
             notifySettingsChanged();
         });
 

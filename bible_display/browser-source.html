@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bible Display - OBS Browser Source</title>
     <link rel="stylesheet" href="../common/css/style-source.css?v=4">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lato:wght@400;700&family=Merriweather:wght@400;700&family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Oswald:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="../common/js/jquery.js"></script>
+    <script src="../common/js/bible-fonts.js"></script>
 </head>
 <body>
     <div class="bible-display-container">
@@ -232,6 +236,14 @@
             $('#verseReference').css('font-size', Math.round(parseFloat(refFontSize) * refScale) + 'px');
             $('#verseText').css('font-size', verseFontSize + 'px');
 
+            // Font families
+            const refFontFamily = localStorage.getItem('bibleRefFontFamily') || 'theme';
+            const verseFontFamily = localStorage.getItem('bibleVerseFontFamily') || 'theme';
+            const refStack = getBibleFontStack(refFontFamily);
+            const verseStack = getBibleFontStack(verseFontFamily);
+            $('#verseReference').css('font-family', refStack || '');
+            $('#verseText').css('font-family', verseStack || '');
+
             // Line spacing
             $('#verseText').css('line-height', lineHeight);
 
@@ -287,11 +299,32 @@
             // Panel background color (preset or custom)
             applyPanelBackground(theme);
 
-            // Bold
-            const bold = localStorage.getItem('bibleBold') === 'true';
-            $('#verseText').css('font-weight', bold ? '700' : '');
+            // Text styles — verse
+            let verseWeight = localStorage.getItem('bibleVerseFontWeight');
+            if (verseWeight === null && localStorage.getItem('bibleBold') === 'true') {
+                verseWeight = '700';
+            }
+            const verseItalic = localStorage.getItem('bibleVerseItalic') === 'true';
+            const verseUnderline = localStorage.getItem('bibleVerseUnderline') === 'true';
+            const verseLetterSpacing = parseFloat(localStorage.getItem('bibleVerseLetterSpacing') || '0');
+            $('#verseText').css({
+                'font-weight': verseWeight || '',
+                'font-style': verseItalic ? 'italic' : '',
+                'text-decoration': verseUnderline ? 'underline' : '',
+                'letter-spacing': verseLetterSpacing > 0 ? verseLetterSpacing + 'px' : ''
+            });
 
-            // Capitalization
+            // Text styles — reference
+            const refWeight = localStorage.getItem('bibleRefFontWeight') || '';
+            const refItalic = localStorage.getItem('bibleRefItalic') === 'true';
+            const refLetterSpacing = parseFloat(localStorage.getItem('bibleRefLetterSpacing') || '0');
+            $('#verseReference').css({
+                'font-weight': refWeight || '',
+                'font-style': refItalic ? 'italic' : '',
+                'letter-spacing': refLetterSpacing > 0 ? refLetterSpacing + 'px' : ''
+            });
+
+            // Capitalization (verse only)
             const capitalization = localStorage.getItem('bibleCapitalization') || 'none';
             $('#verseText').css('text-transform', capitalization !== 'none' ? capitalization : '');
 
@@ -387,9 +420,10 @@
         // Listen for storage events (from control panel)
         window.addEventListener('storage', function(e) {
             if (['currentVerseReference', 'currentVerseText', 'currentVerseSource',
-                 'bibleRefFontSize', 'bibleVerseFontSize', 'bibleLineHeight', 'bibleAlignment', 'bibleTheme',
+                 'bibleRefFontSize', 'bibleVerseFontSize', 'bibleRefFontFamily', 'bibleVerseFontFamily', 'bibleLineHeight', 'bibleAlignment', 'bibleTheme',
                  'bibleOpacity', 'bibleOpacityTarget', 'biblePanelBg', 'biblePanelCustomColor', 'bibleSettingsTick', 'bibleMaxLines', 'bibleSplitVerses', 'bibleTransition', 'bibleAutoHide', 'bibleAutoHideTimer',
-                 'bibleBold', 'bibleCapitalization'].includes(e.key)) {
+                 'bibleBold', 'bibleVerseFontWeight', 'bibleVerseItalic', 'bibleVerseUnderline', 'bibleVerseLetterSpacing',
+                 'bibleRefFontWeight', 'bibleRefItalic', 'bibleRefLetterSpacing', 'bibleCapitalization'].includes(e.key)) {
                 updateVerseDisplay();
             }
         });
