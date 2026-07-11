@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bible Display - OBS Browser Source</title>
-    <link rel="stylesheet" href="../common/css/style-source.css?v=4">
+    <link rel="stylesheet" href="../common/css/style-source.css?v=6">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lato:wght@400;700&family=Merriweather:wght@400;700&family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Oswald:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
@@ -12,17 +12,45 @@
     <script src="../common/js/bible-fonts.js"></script>
 </head>
 <body>
-    <div class="bible-display-container">
-        <div class="verse-display hidden" id="verseDisplay">
-            <div class="verse-bg" id="verseBg"></div>
-            <div class="verse-content" id="verseContent">
-                <h2 class="verse-reference" id="verseReference"></h2>
-                <p class="verse-text" id="verseText"></p>
+    <div id="obsCanvas">
+        <div class="bible-display-container">
+            <div class="verse-display hidden" id="verseDisplay">
+                <div class="verse-bg" id="verseBg"></div>
+                <div class="verse-content" id="verseContent">
+                    <h2 class="verse-reference" id="verseReference"></h2>
+                    <p class="verse-text" id="verseText"></p>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
+        const OBS_DESIGN_WIDTH = 1920;
+        const OBS_DESIGN_HEIGHT = 1080;
+
+        function updateObsCanvasScale() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            const canvas = document.getElementById('obsCanvas');
+
+            // Uniform scale (never stretch text). Width drives the scale so the
+            // overlay fills the browser source horizontally at any 16:9 size.
+            const scale = w / OBS_DESIGN_WIDTH;
+            canvas.style.transform = 'scale(' + scale + ')';
+
+            // If the source is not 16:9, fit entirely without deformation.
+            const scaledH = OBS_DESIGN_HEIGHT * scale;
+            if (scaledH > h + 1) {
+                const fitScale = h / OBS_DESIGN_HEIGHT;
+                canvas.style.transform = 'scale(' + fitScale + ')';
+            }
+        }
+
+        window.addEventListener('resize', function() {
+            updateObsCanvasScale();
+            applySettings();
+        });
+        updateObsCanvasScale();
         let lastReference = '';
         let lastText = '';
         let autoHideTimeout = null;
@@ -163,7 +191,7 @@
             if (isElegantQuote) {
                 const refFontSize = parseInt(localStorage.getItem('bibleRefFontSize') || '20', 10);
                 const refBlock = Math.round(refFontSize * 1.3) + 12;
-                const contentMinHeight = 22 + 18 + reservedHeight + refBlock;
+                const contentMinHeight = 10 + 14 + reservedHeight + refBlock;
                 $('#verseContent').css('min-height', contentMinHeight + 'px');
             }
         }
@@ -190,7 +218,6 @@
         function applyPanelBackground(theme) {
             const panelBg = localStorage.getItem('biblePanelBg') || 'theme';
             const customColor = localStorage.getItem('biblePanelCustomColor') || '#000000';
-            const isElegantQuote = (theme === 'elegant-quote');
 
             // Clear inline overrides so theme CSS can apply when using theme default.
             $('#verseBg, #verseContent').css({
@@ -214,12 +241,7 @@
                 return;
             }
 
-            // Elegant Quote paints the panel on .verse-content; other themes use .verse-bg.
-            if (isElegantQuote) {
-                $('#verseContent').css('background', background);
-            } else {
-                $('#verseBg').css('background', background);
-            }
+            $('#verseBg').css('background', background);
         }
 
         function applySettings() {
@@ -272,7 +294,7 @@
 
             // Opacity (3 modes)
             const opVal = parseFloat(opacity) / 100;
-            const panelBgLayer = (theme === 'elegant-quote') ? '#verseContent' : '#verseBg';
+            const panelBgLayer = '#verseBg';
             if (opacityTarget === 'background') {
                 $('#verseDisplay').css('opacity', 1);
                 $(panelBgLayer).css('opacity', opVal);

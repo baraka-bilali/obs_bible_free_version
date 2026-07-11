@@ -89,7 +89,8 @@ obs_bible_free_version/
 3. **Ajouter la source navigateur dans OBS** :
    - Ajouter une source `Navigateur` dans votre scène
    - Cocher `Fichier local` et sélectionner `bible_display/browser-source.html`
-   - Largeur recommandée : `1920` — Hauteur : `200`
+   - **Largeur : `1920` — Hauteur : `1080`** (ou `1280` × `720`, même ratio 16:9)
+   - Dans OBS, redimensionnez la source en gardant le **ratio 16:9** (maintenez **Shift** en étirant) pour éviter toute déformation du texte
 
 4. **Ouvrir le panneau de contrôle** :
    - Ouvrir `bible_display/control-panel.html` dans votre navigateur
@@ -312,7 +313,8 @@ A complete system to display Bible verses in real-time in **OBS Studio**, with a
 3. **Add the browser source in OBS**:
    - Add a `Browser` source to your scene
    - Check `Local File` and select `bible_display/browser-source.html`
-   - Recommended width: `1920` — Height: `200`
+   - Recommended width: `1920` — Height: `1080` (or `1280` × `720`, same 16:9 ratio)
+   - In OBS, resize the source while keeping **16:9 aspect ratio** (hold **Shift** when dragging) to avoid text distortion
 
 4. **Open the control panel**:
    - Open `bible_display/control-panel.html` in your browser

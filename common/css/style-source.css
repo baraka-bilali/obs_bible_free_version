@@ -9,30 +9,46 @@
     box-sizing: border-box;
 }
 
+html, body {
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    overflow: hidden;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: transparent;
     color: #ffffff;
     line-height: 1.8;
-    overflow: hidden;
+}
+
+/* Fixed 16:9 design canvas — scaled uniformly in JS (no text deformation) */
+#obsCanvas {
+    width: 1920px;
+    height: 1080px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transform-origin: bottom left;
 }
 
 .bible-display-container {
-    width: 100%;
-    height: 100vh;
+    width: 1920px;
+    height: 1080px;
     display: flex;
     align-items: flex-end;
-    justify-content: center;
+    justify-content: stretch;
     position: relative;
 }
 
 /* ===== Base Verse Display ===== */
 .verse-display {
-    padding: 22px 28px;
+    padding: 14px 20px;
     max-width: 100%;
     width: 100%;
     text-align: center;
-    position: fixed;
+    position: relative;
     bottom: 0;
     left: 0;
     right: 0;
@@ -722,23 +738,8 @@ body[data-theme="abstract-paint"] .verse-text {
 }
 
 /* ===== Responsive ===== */
-@media (max-width: 1200px) {
-    .verse-display { padding: 24px 30px; }
-    .verse-reference { font-size: 18px; }
-    .verse-text { font-size: 16px; }
-    /* Broadcast themes responsive overrides */
-    body[data-theme="church-broadcast"] .verse-display,
-    body[data-theme="church-broadcast-gold"] .verse-display,
-    body[data-theme="church-broadcast-blue"] .verse-display,
-    body[data-theme="dark-cinema"] .verse-display,
-    body[data-theme="abstract-blue"] .verse-display,
-    body[data-theme="abstract-paint"] .verse-display {
-        padding: 0;
-    }
-}
-
 @media (max-width: 768px) {
-    .verse-display { padding: 20px; }
+    .verse-display { padding: 12px 16px; }
     .verse-reference { font-size: 16px; }
     .verse-text { font-size: 15px; }
     body[data-theme="church-broadcast"] .verse-display,
@@ -774,12 +775,14 @@ body[data-theme="elegant-quote"] .verse-display {
     padding: 0;
     overflow: visible;
     bottom: 0;
+    width: 100%;
+    left: 0;
+    right: 0;
 }
 
 body[data-theme="elegant-quote"] .verse-bg {
-    /* Le voile sombre est porté par .verse-content (voir plus bas) afin qu'il
-       épouse toujours exactement le texte, même pour les versets très longs. */
-    background: transparent;
+    /* Voile pleine largeur sur toute la zone d'affichage */
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.66) 0%, rgba(0, 0, 0, 0.8) 100%);
     border: none;
     border-radius: 0;
     box-shadow: none;
@@ -807,10 +810,9 @@ body[data-theme="elegant-quote"] .verse-content {
     z-index: 1;
     width: 100%;
     box-sizing: border-box;
-    /* Voile noir semi-transparent — la hauteur totale est verrouillée en JS
-       pour garder la même dimension quel que soit le verset. */
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.66) 0%, rgba(0, 0, 0, 0.8) 100%);
-    padding: 22px 30px 18px 30px;
+    background: transparent;
+    /* Padding réduit en haut pour un rendu pleine largeur type broadcast */
+    padding: 10px 24px 14px 24px;
 }
 
 body[data-theme="elegant-quote"] .verse-text {
