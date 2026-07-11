@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OBS Bible Free Version - Control Panel</title>
-    <link rel="stylesheet" href="../common/css/style-control_panel.css?v=4">
+    <link rel="stylesheet" href="../common/css/style-control_panel.css?v=5">
     <link rel="stylesheet" href="../common/css/cp-icons.css">
     <link rel="stylesheet" href="../common/css/themes/dark/theme.css">
     <script src="../common/js/jquery.js"></script>
@@ -1281,7 +1281,40 @@
             }
         }
 
+        // Toggle verse visibility (eye button + Enter)
+        let verseHidden = false;
+        let hiddenVerseData = null;
+
+        function hideVerseDisplay() {
+            const ref = localStorage.getItem('currentVerseReference') || '';
+            const txt = localStorage.getItem('currentVerseText') || '';
+            const src = localStorage.getItem('currentVerseSource') || '';
+            if (!ref && !txt) return false;
+            hiddenVerseData = { ref, txt, src };
+            localStorage.setItem('currentVerseReference', '');
+            localStorage.setItem('currentVerseText', '');
+            localStorage.setItem('currentVerseSource', '');
+            verseHidden = true;
+            $('#btnToggleVisibility').addClass('toolbar-btn-hidden');
+            return true;
+        }
+
+        function restoreVerseDisplay() {
+            if (!hiddenVerseData) return false;
+            localStorage.setItem('currentVerseReference', hiddenVerseData.ref);
+            localStorage.setItem('currentVerseText', hiddenVerseData.txt);
+            localStorage.setItem('currentVerseSource', hiddenVerseData.src);
+            verseHidden = false;
+            hiddenVerseData = null;
+            $('#btnToggleVisibility').removeClass('toolbar-btn-hidden');
+            return true;
+        }
+
         function displayVerses(verses, title, bookKeyParam, chapterParam) {
+            verseHidden = false;
+            hiddenVerseData = null;
+            $('#btnToggleVisibility').removeClass('toolbar-btn-hidden');
+
             const container = $('#versesContainer');
             container.empty();
 
@@ -1801,13 +1834,14 @@
                 const highlighted = $('.verse-item.highlighted');
                 if (highlighted.length > 0) {
                     confirmHighlightedVerse();
+                } else if (verseHidden && hiddenVerseData) {
+                    restoreVerseDisplay();
                 } else {
-                    const selected = $('.verse-item.selected');
-                    if (selected.length > 0) {
-                        // Deselect the current verse (toggle off focus)
-                        selected.trigger('click');
+                    const ref = localStorage.getItem('currentVerseReference') || '';
+                    const txt = localStorage.getItem('currentVerseText') || '';
+                    if (ref || txt) {
+                        hideVerseDisplay();
                     } else {
-                        // Toggle verse visibility (hide/show)
                         $('#btnToggleVisibility').trigger('click');
                     }
                 }
@@ -1831,33 +1865,11 @@
             selectVerseByDirection('down');
         });
 
-        // Toggle verse visibility (eye button)
-        let verseHidden = false;
-        let hiddenVerseData = null;
-
         $('#btnToggleVisibility').click(function() {
             if (!verseHidden) {
-                // Hide: save current data and clear browser-source
-                const ref = localStorage.getItem('currentVerseReference') || '';
-                const txt = localStorage.getItem('currentVerseText') || '';
-                const src = localStorage.getItem('currentVerseSource') || '';
-                if (!ref && !txt) return; // nothing to hide
-                hiddenVerseData = { ref, txt, src };
-                localStorage.setItem('currentVerseReference', '');
-                localStorage.setItem('currentVerseText', '');
-                localStorage.setItem('currentVerseSource', '');
-                verseHidden = true;
-                $(this).addClass('toolbar-btn-hidden');
+                hideVerseDisplay();
             } else {
-                // Show: restore saved data
-                if (hiddenVerseData) {
-                    localStorage.setItem('currentVerseReference', hiddenVerseData.ref);
-                    localStorage.setItem('currentVerseText', hiddenVerseData.txt);
-                    localStorage.setItem('currentVerseSource', hiddenVerseData.src);
-                }
-                verseHidden = false;
-                hiddenVerseData = null;
-                $(this).removeClass('toolbar-btn-hidden');
+                restoreVerseDisplay();
             }
         });
 
