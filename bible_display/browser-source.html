@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bible Display - OBS Browser Source</title>
-    <link rel="stylesheet" href="../common/css/style-source.css?v=13">
+    <link rel="stylesheet" href="../common/css/style-source.css?v=14">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lato:wght@400;700&family=Merriweather:wght@400;700&family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Oswald:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
@@ -201,11 +201,15 @@
                 css['display'] = 'flex';
                 css['flex-direction'] = 'column';
                 css['justify-content'] = 'center';
+                css['align-items'] = 'stretch';
             } else {
-                // Block layout so text-align (left/center/right) uses the full width.
-                // Flex on <p> shrink-wraps the text and breaks horizontal alignment.
+                // Full-width flex: keeps text-align (L/C/R) and vertically
+                // centers the verse inside the reserved banner height.
                 verseTextEl.style.lineHeight = lineHeight;
-                css['display'] = 'block';
+                css['display'] = 'flex';
+                css['flex-direction'] = 'column';
+                css['justify-content'] = 'center';
+                css['align-items'] = 'stretch';
                 css['overflow'] = 'hidden';
             }
 
