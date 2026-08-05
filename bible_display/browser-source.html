@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bible Display - OBS Browser Source</title>
-    <link rel="stylesheet" href="../common/css/style-source.css?v=11">
+    <link rel="stylesheet" href="../common/css/style-source.css?v=13">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lato:wght@400;700&family=Merriweather:wght@400;700&family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Oswald:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
@@ -235,6 +235,30 @@
             });
         }
 
+        // Ruby Blue: gradient bandeau starts under the reference tab
+        // so the white badge sits entirely above the panel, glued to its top.
+        function syncRubyBluePanelBg() {
+            const theme = localStorage.getItem('bibleTheme') || 'transparent';
+            const bg = document.getElementById('verseBg');
+            if (!bg) return;
+
+            if (theme !== 'ruby-blue') {
+                bg.style.top = '';
+                return;
+            }
+
+            const ref = document.getElementById('verseReference');
+            const content = document.getElementById('verseContent');
+            if (!ref || !ref.textContent.trim()) {
+                bg.style.top = '0';
+                return;
+            }
+
+            // content.offsetTop → display; ref.offsetTop → content (positioned)
+            const top = (content ? content.offsetTop : 0) + ref.offsetTop + ref.offsetHeight;
+            bg.style.top = Math.max(0, top) + 'px';
+        }
+
         function applySettings() {
             const refFontSize = localStorage.getItem('bibleRefFontSize') || '20';
             const verseFontSize = localStorage.getItem('bibleVerseFontSize') || '18';
@@ -287,15 +311,18 @@
                 });
                 $('#verseText').css('text-align', '');
             } else if (theme === 'frosted-glass' || theme === 'ruby-blue') {
-                // Same layout model: badge top-left, verse text follows alignment
+                // Same layout model: badge above panel (CSS), verse text follows alignment
                 $('#verseDisplay').css('text-align', 'left');
                 $('#verseContent').css('align-items', 'stretch');
                 $('#verseReference').css({
                     'align-self': 'flex-start',
                     'padding-left': '',
                     'padding-right': '',
-                    'margin-left': theme === 'frosted-glass' ? '10px' : '0',
-                    'margin-right': ''
+                    // Let theme CSS control margins (overlap / flush left)
+                    'margin-left': theme === 'frosted-glass' ? '10px' : '',
+                    'margin-right': '',
+                    'margin-top': '',
+                    'margin-bottom': ''
                 });
                 $('#verseText').css('text-align', alignment);
             } else {
@@ -370,6 +397,9 @@
 
             // Shrink verse text to fit within the configured line limit
             fitVerseTextToMaxLines();
+            // After layout: place ruby-blue bandeau under the reference tab
+            syncRubyBluePanelBg();
+            requestAnimationFrame(syncRubyBluePanelBg);
         }
 
         function hideVerse() {
