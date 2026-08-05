@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OBS Bible Free Version - Control Panel</title>
-    <link rel="stylesheet" href="../common/css/style-control_panel.css?v=8">
+    <link rel="stylesheet" href="../common/css/style-control_panel.css?v=9">
     <link rel="stylesheet" href="../common/css/cp-icons.css">
     <link rel="stylesheet" href="../common/css/themes/dark/theme.css">
     <script src="../common/js/jquery.js"></script>
@@ -302,12 +302,21 @@
 
     <!-- ===== SETTINGS TAB ===== -->
     <div class="tab-content" id="tabSettings" style="display:none;">
-        <div class="container">
+        <div class="container settings-container">
             <div class="main-panel settings-panel">
-                <h1 data-i18n="settingsTitle">Settings</h1>
+                <header class="settings-hero">
+                    <div class="settings-hero-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                    <div class="settings-hero-text">
+                        <h1 data-i18n="settingsTitle">Settings</h1>
+                        <p class="settings-hero-sub" data-i18n="settingsHeroSub">Customize the display and this control panel.</p>
+                    </div>
+                </header>
 
-                <!-- Language -->
+                <section class="settings-group">
+                    <h2 class="settings-group-title"><span class="settings-group-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><span data-i18n="settingsGroupGeneral">General</span></h2>
+                    <div class="settings-card">
                 <div class="setting-row">
+                    <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingLanguage">Language</span>
                         <span class="setting-desc" data-i18n="settingLanguageDesc">Interface language for the control panel.</span>
@@ -319,43 +328,42 @@
                         </select>
                     </div>
                 </div>
+                    </div>
+                </section>
 
-                <!-- Reference Font Size -->
+                <section class="settings-group">
+                    <h2 class="settings-group-title"><span class="settings-group-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></span><span data-i18n="settingsGroupTypography">Typography</span></h2>
+                    <div class="settings-card">
                 <div class="setting-row">
+                    <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></div>
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingRefFontSize">Reference Font Size</span>
                         <span class="setting-desc" data-i18n="settingRefFontSizeDesc">Scales the font size of the verse reference display.</span>
                     </div>
                     <div class="setting-control">
                         <div class="spin-control">
+                            <button type="button" class="spin-btn spin-down" id="refFontDecrease" aria-label="-"><svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
                             <input type="number" id="refFontSizeInput" class="spin-input" value="20" min="10" max="48">
-                            <div class="spin-buttons">
-                                <button class="spin-up" id="refFontIncrease">▲</button>
-                                <button class="spin-down" id="refFontDecrease">▼</button>
-                            </div>
+                            <button type="button" class="spin-btn spin-up" id="refFontIncrease" aria-label="+"><svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
                         </div>
                     </div>
                 </div>
-
-                <!-- Verse Font Size -->
                 <div class="setting-row">
+                    <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></div>
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingVerseFontSize">Verse Font Size</span>
                         <span class="setting-desc" data-i18n="settingVerseFontSizeDesc">Scales the font size of displayed Bible verses.</span>
                     </div>
                     <div class="setting-control">
                         <div class="spin-control">
+                            <button type="button" class="spin-btn spin-down" id="verseFontDecrease" aria-label="-"><svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
                             <input type="number" id="verseFontSizeInput" class="spin-input" value="18" min="10" max="48">
-                            <div class="spin-buttons">
-                                <button class="spin-up" id="verseFontIncrease">▲</button>
-                                <button class="spin-down" id="verseFontDecrease">▼</button>
-                            </div>
+                            <button type="button" class="spin-btn spin-up" id="verseFontIncrease" aria-label="+"><svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
                         </div>
                     </div>
                 </div>
-
-                <!-- Reference Font Family -->
                 <div class="setting-row">
+                    <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4h7"/><path d="M4 12h5.5"/><path d="M13 20l3.5-16H20l3.5 16"/><path d="M14.5 14h6"/></svg></div>
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingRefFontFamily">Reference font</span>
                         <span class="setting-desc" data-i18n="settingRefFontFamilyDesc">Font used for the verse reference (e.g. Genesis 1:1).</span>
@@ -364,9 +372,8 @@
                         <select id="refFontFamilySelect" class="setting-select setting-select-font"></select>
                     </div>
                 </div>
-
-                <!-- Verse Font Family -->
                 <div class="setting-row">
+                    <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4h7"/><path d="M4 12h5.5"/><path d="M13 20l3.5-16H20l3.5 16"/><path d="M14.5 14h6"/></svg></div>
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingVerseFontFamily">Verse font</span>
                         <span class="setting-desc" data-i18n="settingVerseFontFamilyDesc">Font used for the Bible verse text.</span>
@@ -375,46 +382,45 @@
                         <select id="verseFontFamilySelect" class="setting-select setting-select-font"></select>
                     </div>
                 </div>
-
-                <!-- Line Spacing -->
                 <div class="setting-row">
+                    <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg></div>
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingLineSpacing">Line Spacing</span>
                         <span class="setting-desc" data-i18n="settingLineSpacingDesc">Controls the line height of the verse text.</span>
                     </div>
                     <div class="setting-control">
                         <div class="spin-control">
+                            <button type="button" class="spin-btn spin-down" id="lineHeightDecrease" aria-label="-"><svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
                             <input type="number" id="lineHeightInput" class="spin-input" value="1.6" min="1.0" max="3.0" step="0.1">
-                            <div class="spin-buttons">
-                                <button class="spin-up" id="lineHeightIncrease">▲</button>
-                                <button class="spin-down" id="lineHeightDecrease">▼</button>
-                            </div>
+                            <button type="button" class="spin-btn spin-up" id="lineHeightIncrease" aria-label="+"><svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
                         </div>
                     </div>
                 </div>
-
-                <!-- Maximum number of lines -->
                 <div class="setting-row">
+                    <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="7" y1="16" x2="12" y2="16"/></svg></div>
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingMaxLines">Maximum number of lines</span>
-                        <span class="setting-desc" data-i18n="settingMaxLinesDesc">Automatically shrinks text to fit within this many lines. Also splits very long verses into slides. Leave at 0 for no limit.</span>
+                        <span class="setting-desc" data-i18n="settingMaxLinesDesc">Automatically shrinks text to fit within this many lines. Leave at 0 for no limit.</span>
                     </div>
                     <div class="setting-control">
                         <div class="spin-control">
+                            <button type="button" class="spin-btn spin-down" id="maxLinesDecrease" aria-label="-"><svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
                             <input type="number" id="maxLinesInput" class="spin-input" value="0" min="0" max="10">
-                            <div class="spin-buttons">
-                                <button class="spin-up" id="maxLinesIncrease">▲</button>
-                                <button class="spin-down" id="maxLinesDecrease">▼</button>
-                            </div>
+                            <button type="button" class="spin-btn spin-up" id="maxLinesIncrease" aria-label="+"><svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
                         </div>
                     </div>
                 </div>
+                    </div>
+                </section>
 
-                <!-- Split long verses -->
+                <section class="settings-group">
+                    <h2 class="settings-group-title"><span class="settings-group-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor" opacity="0.35"/></svg></span><span data-i18n="settingsGroupDisplay">Display</span></h2>
+                    <div class="settings-card">
                 <div class="setting-row">
+                    <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg></div>
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingSplitVerses">Split long verses</span>
-                        <span class="setting-desc" data-i18n="settingSplitVersesDesc">On: long verses are split into navigable slides. Off: the whole verse stays on one slide and the font shrinks slightly to fit the line limit.</span>
+                        <span class="setting-desc" data-i18n="settingSplitVersesDesc">On: long verses are split into navigable slides. Off: the whole verse stays on one slide.</span>
                     </div>
                     <div class="setting-control">
                         <label class="toggle-switch">
@@ -423,29 +429,25 @@
                         </label>
                     </div>
                 </div>
-
-                <!-- Opacity -->
                 <div class="setting-row">
+                    <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor" opacity="0.35"/></svg></div>
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingOpacity">Opacity</span>
                         <span class="setting-desc" data-i18n="settingOpacityDesc">Controls the transparency of the verse display block.</span>
                     </div>
                     <div class="setting-control">
                         <div class="spin-control">
+                            <button type="button" class="spin-btn spin-down" id="opacityDecrease" aria-label="-"><svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
                             <input type="number" id="opacityInput" class="spin-input" value="100" min="10" max="100" step="5">
-                            <div class="spin-buttons">
-                                <button class="spin-up" id="opacityIncrease">▲</button>
-                                <button class="spin-down" id="opacityDecrease">▼</button>
-                            </div>
+                            <button type="button" class="spin-btn spin-up" id="opacityIncrease" aria-label="+"><svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
                         </div>
                     </div>
                 </div>
-
-                <!-- Opacity Target -->
                 <div class="setting-row">
+                    <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/></svg></div>
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingOpacityTarget">Opacity target</span>
-                        <span class="setting-desc" data-i18n="settingOpacityTargetDesc">Choose what the opacity slider affects: the entire block, only the background, or only the text.</span>
+                        <span class="setting-desc" data-i18n="settingOpacityTargetDesc">Choose what the opacity affects: entire block, background, or text.</span>
                     </div>
                     <div class="setting-control">
                         <select id="opacityTargetSelect" class="setting-select">
@@ -455,24 +457,39 @@
                         </select>
                     </div>
                 </div>
-
-                <!-- Text Alignment -->
                 <div class="setting-row">
+                    <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="6" y1="18" x2="18" y2="18"/></svg></div>
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingAlignment">Text Alignment</span>
                         <span class="setting-desc" data-i18n="settingAlignmentDesc">Sets the text alignment for the verse display.</span>
                     </div>
                     <div class="setting-control">
-                        <select id="alignmentSelect" class="setting-select">
+                        <div class="seg-control" id="alignmentSeg" role="group">
+                            <button type="button" class="seg-btn" data-align="left" title="Left" data-i18n-title="alignLeft" aria-label="Left">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="14" y2="12"/><line x1="4" y1="18" x2="18" y2="18"/></svg>
+                            </button>
+                            <button type="button" class="seg-btn active" data-align="center" title="Center" data-i18n-title="alignCenter" aria-label="Center">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="5" y1="18" x2="19" y2="18"/></svg>
+                            </button>
+                            <button type="button" class="seg-btn" data-align="right" title="Right" data-i18n-title="alignRight" aria-label="Right">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="10" y1="12" x2="20" y2="12"/><line x1="6" y1="18" x2="20" y2="18"/></svg>
+                            </button>
+                        </div>
+                        <select id="alignmentSelect" class="setting-select" hidden aria-hidden="true">
                             <option value="left" data-i18n="alignLeft">Left</option>
                             <option value="center" selected data-i18n="alignCenter">Center</option>
                             <option value="right" data-i18n="alignRight">Right</option>
                         </select>
                     </div>
                 </div>
+                    </div>
+                </section>
 
-                <!-- Verse text style -->
+                <section class="settings-group">
+                    <h2 class="settings-group-title"><span class="settings-group-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg></span><span data-i18n="settingsGroupStyle">Text style</span></h2>
+                    <div class="settings-card">
                 <div class="setting-row">
+                    <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h8a4 4 0 0 1 0 8H6z"/><path d="M6 12h9a4 4 0 0 1 0 8H6z"/></svg></div>
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingVerseWeight">Verse weight</span>
                         <span class="setting-desc" data-i18n="settingVerseWeightDesc">Boldness of the verse text.</span>
@@ -488,42 +505,41 @@
                         </select>
                     </div>
                 </div>
-
                 <div class="setting-row">
+                    <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg></div>
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingVerseStyle">Verse style</span>
                         <span class="setting-desc" data-i18n="settingVerseStyleDesc">Italic and underline for the verse text.</span>
                     </div>
-                    <div class="setting-control style-toggles">
-                        <label class="style-toggle" title="Italic">
-                            <input type="checkbox" id="verseItalicToggle">
-                            <span data-i18n="styleItalic">Italic</span>
-                        </label>
-                        <label class="style-toggle" title="Underline">
-                            <input type="checkbox" id="verseUnderlineToggle">
-                            <span data-i18n="styleUnderline">Underline</span>
-                        </label>
+                    <div class="setting-control">
+                        <div class="style-toggles">
+                            <label class="icon-toggle" title="Italic" data-i18n-title="styleItalic">
+                                <input type="checkbox" id="verseItalicToggle">
+                                <span class="icon-toggle-face"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg></span>
+                            </label>
+                            <label class="icon-toggle" title="Underline" data-i18n-title="styleUnderline">
+                                <input type="checkbox" id="verseUnderlineToggle">
+                                <span class="icon-toggle-face"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 4v6a6 6 0 0 0 12 0V4"/><line x1="4" y1="20" x2="20" y2="20"/></svg></span>
+                            </label>
+                        </div>
                     </div>
                 </div>
-
                 <div class="setting-row">
+                    <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h6"/><path d="M7 4v16"/><path d="M14 7V4h6"/><path d="M17 4v16"/></svg></div>
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingVerseLetterSpacing">Verse letter spacing</span>
                         <span class="setting-desc" data-i18n="settingVerseLetterSpacingDesc">Space between letters of the verse text.</span>
                     </div>
                     <div class="setting-control">
                         <div class="spin-control">
+                            <button type="button" class="spin-btn spin-down" id="verseLetterSpacingDecrease" aria-label="-"><svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
                             <input type="number" id="verseLetterSpacingInput" class="spin-input" value="0" min="0" max="5" step="0.5">
-                            <div class="spin-buttons">
-                                <button class="spin-up" id="verseLetterSpacingIncrease">▲</button>
-                                <button class="spin-down" id="verseLetterSpacingDecrease">▼</button>
-                            </div>
+                            <button type="button" class="spin-btn spin-up" id="verseLetterSpacingIncrease" aria-label="+"><svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
                         </div>
                     </div>
                 </div>
-
-                <!-- Reference text style -->
                 <div class="setting-row">
+                    <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h8a4 4 0 0 1 0 8H6z"/><path d="M6 12h9a4 4 0 0 1 0 8H6z"/></svg></div>
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingRefWeight">Reference weight</span>
                         <span class="setting-desc" data-i18n="settingRefWeightDesc">Boldness of the verse reference.</span>
@@ -539,54 +555,58 @@
                         </select>
                     </div>
                 </div>
-
                 <div class="setting-row">
+                    <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg></div>
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingRefStyle">Reference style</span>
                         <span class="setting-desc" data-i18n="settingRefStyleDesc">Italic style for the verse reference.</span>
                     </div>
-                    <div class="setting-control style-toggles">
-                        <label class="style-toggle">
-                            <input type="checkbox" id="refItalicToggle">
-                            <span data-i18n="styleItalic">Italic</span>
-                        </label>
+                    <div class="setting-control">
+                        <div class="style-toggles">
+                            <label class="icon-toggle" title="Italic" data-i18n-title="styleItalic">
+                                <input type="checkbox" id="refItalicToggle">
+                                <span class="icon-toggle-face"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg></span>
+                            </label>
+                        </div>
                     </div>
                 </div>
-
                 <div class="setting-row">
+                    <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h6"/><path d="M7 4v16"/><path d="M14 7V4h6"/><path d="M17 4v16"/></svg></div>
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingRefLetterSpacing">Reference letter spacing</span>
                         <span class="setting-desc" data-i18n="settingRefLetterSpacingDesc">Space between letters of the reference.</span>
                     </div>
                     <div class="setting-control">
                         <div class="spin-control">
+                            <button type="button" class="spin-btn spin-down" id="refLetterSpacingDecrease" aria-label="-"><svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
                             <input type="number" id="refLetterSpacingInput" class="spin-input" value="0" min="0" max="5" step="0.5">
-                            <div class="spin-buttons">
-                                <button class="spin-up" id="refLetterSpacingIncrease">▲</button>
-                                <button class="spin-down" id="refLetterSpacingDecrease">▼</button>
-                            </div>
+                            <button type="button" class="spin-btn spin-up" id="refLetterSpacingIncrease" aria-label="+"><svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
                         </div>
                     </div>
                 </div>
-
-                <!-- Capitalization -->
                 <div class="setting-row">
+                    <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h4"/><path d="M5 20V8"/><path d="M3 8h4"/><path d="M13 20V8h3a4 4 0 0 1 0 8h-3"/><path d="M16 20h5"/></svg></div>
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingCapitalization">Capitalisation</span>
-                        <span class="setting-desc" data-i18n="settingCapitalizationDesc">Transforme le texte des versets en majuscules ou minuscules.</span>
+                        <span class="setting-desc" data-i18n="settingCapitalizationDesc">Transform verse text to uppercase or lowercase.</span>
                     </div>
                     <div class="setting-control">
                         <select id="capitalizationSelect" class="setting-select">
                             <option value="none" data-i18n="capNone">Normal</option>
-                            <option value="uppercase" data-i18n="capUpper">MAJUSCULES</option>
-                            <option value="lowercase" data-i18n="capLower">minuscules</option>
-                            <option value="capitalize" data-i18n="capCapitalize">Première Lettre</option>
+                            <option value="uppercase" data-i18n="capUpper">UPPERCASE</option>
+                            <option value="lowercase" data-i18n="capLower">lowercase</option>
+                            <option value="capitalize" data-i18n="capCapitalize">Capitalize</option>
                         </select>
                     </div>
                 </div>
+                    </div>
+                </section>
 
-                <!-- Transition Effect -->
+                <section class="settings-group">
+                    <h2 class="settings-group-title"><span class="settings-group-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></span><span data-i18n="settingsGroupBehavior">Behavior</span></h2>
+                    <div class="settings-card">
                 <div class="setting-row">
+                    <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></div>
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingTransition">Transition Effect</span>
                         <span class="setting-desc" data-i18n="settingTransitionDesc">Animation used when displaying and hiding verses.</span>
@@ -602,9 +622,8 @@
                         </select>
                     </div>
                 </div>
-
-                <!-- Auto-hide -->
                 <div class="setting-row">
+                    <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingAutoHide">Auto-hide Verse</span>
                         <span class="setting-desc" data-i18n="settingAutoHideDesc">Automatically hides the verse after a set duration.</span>
@@ -616,26 +635,28 @@
                         </label>
                     </div>
                 </div>
-
-                <!-- Auto-hide Timer -->
                 <div class="setting-row" id="autoHideTimerSection" style="display:none;">
+                    <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingAutoHideDelay">Auto-hide Delay</span>
                         <span class="setting-desc" data-i18n="settingAutoHideDelayDesc">Number of seconds before the verse disappears.</span>
                     </div>
                     <div class="setting-control">
                         <div class="spin-control">
+                            <button type="button" class="spin-btn spin-down" id="timerDecrease" aria-label="-"><svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
                             <input type="number" id="timerInput" class="spin-input" value="5" min="2" max="20">
-                            <div class="spin-buttons">
-                                <button class="spin-up" id="timerIncrease">▲</button>
-                                <button class="spin-down" id="timerDecrease">▼</button>
-                            </div>
+                            <button type="button" class="spin-btn spin-up" id="timerIncrease" aria-label="+"><svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
                         </div>
                     </div>
                 </div>
+                    </div>
+                </section>
 
-                <!-- Current Theme -->
+                <section class="settings-group">
+                    <h2 class="settings-group-title"><span class="settings-group-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M4.93 19.07l1.41-1.41"/><path d="M17.66 6.34l1.41-1.41"/></svg></span><span data-i18n="settingsGroupAppearance">Appearance</span></h2>
+                    <div class="settings-card">
                 <div class="setting-row">
+                    <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M4.93 19.07l1.41-1.41"/><path d="M17.66 6.34l1.41-1.41"/></svg></div>
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingTheme">Current Theme</span>
                         <span class="setting-desc" data-i18n="settingThemeDesc">Visual style applied to the browser source display.</span>
@@ -643,16 +664,20 @@
                     <div class="setting-control">
                         <div class="theme-select-row">
                             <span id="currentThemeName" class="current-theme-label">Classic Dark</span>
-                            <button id="goToThemes" class="btn-link" data-i18n="btnChange">Change →</button>
+                            <button type="button" id="goToThemes" class="btn-chip">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M12 2v2"/><path d="M12 20v2"/><circle cx="12" cy="12" r="4"/><path d="m4.9 4.9 1.4 1.4"/><path d="m17.7 17.7 1.4 1.4"/><path d="M2 12h2"/><path d="M20 12h2"/></svg>
+                                <span data-i18n="btnChange">Change</span>
+                            </button>
                         </div>
                     </div>
                 </div>
-
-                <!-- Control panel color -->
                 <div class="setting-row setting-row-stack">
-                    <div class="setting-info">
-                        <span class="setting-title" data-i18n="settingCpColor">Control panel color</span>
-                        <span class="setting-desc" data-i18n="settingCpColorDesc">Choose the color of this control panel interface. Colors stay dark so text remains readable.</span>
+                    <div class="setting-row-top">
+                        <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2"/><circle cx="17.5" cy="10.5" r="2"/><circle cx="8.5" cy="7.5" r="2"/><circle cx="6.5" cy="12.5" r="2"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.7-.1 2.5-.3a2.5 2.5 0 0 0 1.6-3.8 2.5 2.5 0 0 1-.2-2.7 2.5 2.5 0 0 1 2.7-.2A2.5 2.5 0 0 0 22 12C22 6.5 17.5 2 12 2z"/></svg></div>
+                        <div class="setting-info">
+                            <span class="setting-title" data-i18n="settingCpColor">Control panel color</span>
+                            <span class="setting-desc" data-i18n="settingCpColorDesc">Choose the color of this control panel interface.</span>
+                        </div>
                     </div>
                     <div class="cp-color-swatches" id="cpColorSwatches" role="listbox">
                         <button type="button" class="cp-color-swatch active" data-cp-color="obs" style="background:#272727;" title="OBS Dark" data-i18n-title="cpColorObs" role="option" aria-selected="true"><span class="cp-swatch-check">✓</span></button>
@@ -667,6 +692,8 @@
                         <button type="button" class="cp-color-swatch" data-cp-color="warm" style="background:#78350f;" title="Warm" data-i18n-title="cpColorWarm" role="option" aria-selected="false"><span class="cp-swatch-check">✓</span></button>
                     </div>
                 </div>
+                    </div>
+                </section>
             </div>
         </div>
     </div>
@@ -720,6 +747,13 @@
                 themeSectionArtistic: 'Thèmes artistiques',
                 // Settings tab
                 settingsTitle: 'Paramètres',
+                settingsHeroSub: 'Personnalisez l\'affichage et ce panneau de contrôle.',
+                settingsGroupGeneral: 'Général',
+                settingsGroupTypography: 'Typographie',
+                settingsGroupDisplay: 'Affichage',
+                settingsGroupStyle: 'Style du texte',
+                settingsGroupBehavior: 'Comportement',
+                settingsGroupAppearance: 'Apparence',
                 settingLanguage: 'Langue',
                 settingLanguageDesc: 'Langue de l\'interface du panneau de contrôle.',
                 settingRefFontSize: 'Taille police référence',
@@ -808,7 +842,7 @@
                 settingAutoHideDelayDesc: 'Nombre de secondes avant disparition du verset.',
                 settingTheme: 'Thème actuel',
                 settingThemeDesc: 'Style visuel appliqué à la source navigateur.',
-                btnChange: 'Changer →',
+                btnChange: 'Changer',
                 settingCpColor: 'Couleur du panneau',
                 settingCpColorDesc: 'Choisissez la couleur de cette interface de contrôle. Les teintes restent sombres pour garder le texte lisible.',
                 cpColorObs: 'OBS sombre',
@@ -861,6 +895,13 @@
                 themeSectionModern: 'Modern Themes',
                 themeSectionArtistic: 'Artistic Themes',
                 settingsTitle: 'Settings',
+                settingsHeroSub: 'Customize the display and this control panel.',
+                settingsGroupGeneral: 'General',
+                settingsGroupTypography: 'Typography',
+                settingsGroupDisplay: 'Display',
+                settingsGroupStyle: 'Text style',
+                settingsGroupBehavior: 'Behavior',
+                settingsGroupAppearance: 'Appearance',
                 settingLanguage: 'Language',
                 settingLanguageDesc: 'Interface language for the control panel.',
                 settingRefFontSize: 'Reference Font Size',
@@ -949,7 +990,7 @@
                 settingAutoHideDelayDesc: 'Number of seconds before the verse disappears.',
                 settingTheme: 'Current Theme',
                 settingThemeDesc: 'Visual style applied to the browser source display.',
-                btnChange: 'Change →',
+                btnChange: 'Change',
                 settingCpColor: 'Control panel color',
                 settingCpColorDesc: 'Choose the color of this control panel interface. Colors stay dark so text remains readable.',
                 cpColorObs: 'OBS Dark',
@@ -1519,6 +1560,7 @@
             $('#opacityInput').val(localStorage.getItem('bibleOpacity') || '100');
             $('#opacityTargetSelect').val(localStorage.getItem('bibleOpacityTarget') || 'global');
             $('#alignmentSelect').val(localStorage.getItem('bibleAlignment') || 'center');
+            syncAlignmentSeg();
             $('#transitionSelect').val(localStorage.getItem('bibleTransition') || 'fade');
             // Text styles (migrate legacy bibleBold toggle)
             let verseWeight = localStorage.getItem('bibleVerseFontWeight');
@@ -1662,7 +1704,20 @@
         // ====== Settings: Select controls ======
         $('#alignmentSelect').on('change', function() {
             localStorage.setItem('bibleAlignment', $(this).val());
+            syncAlignmentSeg();
             notifySettingsChanged();
+        });
+
+        function syncAlignmentSeg() {
+            const val = $('#alignmentSelect').val() || 'center';
+            $('#alignmentSeg .seg-btn').each(function() {
+                $(this).toggleClass('active', $(this).data('align') === val);
+            });
+        }
+
+        $('#alignmentSeg').on('click', '.seg-btn', function() {
+            const val = $(this).data('align');
+            $('#alignmentSelect').val(val).trigger('change');
         });
 
         $('#refFontFamilySelect').on('change', function() {
