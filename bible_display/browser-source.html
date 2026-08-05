@@ -57,8 +57,6 @@
         let isDisplayVisible = false; // Track whether the block is currently showing
 
         // When verses are split into slides, only a light shrink is needed.
-        // When the whole verse stays on one slide, prefer the chosen font size
-        // and stretch the banner instead of shrinking the text.
         const MIN_READABLE_FONT_SPLIT = 14;
 
         function getMinReadableFontSize(baseFontSize, splitEnabled) {
@@ -412,13 +410,6 @@
                 }
 
                 isDisplayVisible = true;
-
-                // Auto-hide if enabled
-                const autoHide = localStorage.getItem('bibleAutoHide') === 'true';
-                if (autoHide) {
-                    const timer = parseInt(localStorage.getItem('bibleAutoHideTimer') || '5') * 1000;
-                    autoHideTimeout = setTimeout(hideVerse, timer);
-                }
             }
 
             applySettings();

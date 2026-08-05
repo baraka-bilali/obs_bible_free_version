@@ -1289,15 +1289,46 @@
             }
         }
 
-        // Toggle verse visibility (eye button + Enter)
+        // Toggle verse visibility (eye button + Enter + auto-hide)
         let verseHidden = false;
         let hiddenVerseData = null;
+        let autoHideTimeout = null;
+
+        function clearAutoHideTimer() {
+            if (autoHideTimeout) {
+                clearTimeout(autoHideTimeout);
+                autoHideTimeout = null;
+            }
+        }
+
+        /** Start/restart auto-hide: when the delay elapses, hide like the eye button (stays off until shown again). */
+        function scheduleAutoHide() {
+            clearAutoHideTimer();
+            if (localStorage.getItem('bibleAutoHide') !== 'true') return;
+            const ref = localStorage.getItem('currentVerseReference') || '';
+            const txt = localStorage.getItem('currentVerseText') || '';
+            if (!ref && !txt) return;
+
+            const timer = parseInt(localStorage.getItem('bibleAutoHideTimer') || '5', 10) * 1000;
+            autoHideTimeout = setTimeout(function() {
+                autoHideTimeout = null;
+                hideVerseDisplay();
+            }, timer);
+        }
 
         function hideVerseDisplay() {
+            clearAutoHideTimer();
             const ref = localStorage.getItem('currentVerseReference') || '';
             const txt = localStorage.getItem('currentVerseText') || '';
             const src = localStorage.getItem('currentVerseSource') || '';
-            if (!ref && !txt) return false;
+            if (!ref && !txt) {
+                // Already cleared — still mark as hidden if we have saved data
+                if (hiddenVerseData) {
+                    verseHidden = true;
+                    $('#btnToggleVisibility').addClass('toolbar-btn-hidden');
+                }
+                return false;
+            }
             hiddenVerseData = { ref, txt, src };
             localStorage.setItem('currentVerseReference', '');
             localStorage.setItem('currentVerseText', '');
@@ -1315,10 +1346,12 @@
             verseHidden = false;
             hiddenVerseData = null;
             $('#btnToggleVisibility').removeClass('toolbar-btn-hidden');
+            scheduleAutoHide();
             return true;
         }
 
         function displayVerses(verses, title, bookKeyParam, chapterParam) {
+            clearAutoHideTimer();
             verseHidden = false;
             hiddenVerseData = null;
             $('#btnToggleVisibility').removeClass('toolbar-btn-hidden');
@@ -1367,6 +1400,7 @@
                     $('.verse-item').removeClass('highlighted');
 
                     // Reset hidden state on any verse click
+                    clearAutoHideTimer();
                     verseHidden = false;
                     hiddenVerseData = null;
                     $('#btnToggleVisibility').removeClass('toolbar-btn-hidden');
@@ -1414,6 +1448,7 @@
                         localStorage.setItem('currentVerseReference', v.reference || `${title}`);
                         localStorage.setItem('currentVerseText', v.text);
                         localStorage.setItem('currentVerseSource', versionName);
+                        scheduleAutoHide();
                     }
                 });
 
@@ -1498,6 +1533,7 @@
             localStorage.setItem('currentVerseReference', ref + suffix);
             localStorage.setItem('currentVerseText', chunks[chunkIdx]);
             localStorage.setItem('currentVerseSource', versionName);
+            scheduleAutoHide();
         }
 
         function showBibleError(msg) {
@@ -1700,6 +1736,9 @@
         bindSpinControl('verseLetterSpacingInput', 'verseLetterSpacingIncrease', 'verseLetterSpacingDecrease', 'bibleVerseLetterSpacing', 0.5, 0, 5, true);
         bindSpinControl('refLetterSpacingInput', 'refLetterSpacingIncrease', 'refLetterSpacingDecrease', 'bibleRefLetterSpacing', 0.5, 0, 5, true);
         bindSpinControl('timerInput', 'timerIncrease', 'timerDecrease', 'bibleAutoHideTimer', 1, 2, 20, false);
+        // Restart auto-hide countdown when the delay changes
+        $('#timerInput').on('change', function() { scheduleAutoHide(); });
+        $('#timerIncrease, #timerDecrease').on('click', function() { scheduleAutoHide(); });
 
         // ====== Settings: Select controls ======
         $('#alignmentSelect').on('change', function() {
@@ -1787,6 +1826,11 @@
             const enabled = $(this).is(':checked');
             localStorage.setItem('bibleAutoHide', enabled.toString());
             $('#autoHideTimerSection').toggle(enabled);
+            if (enabled) {
+                scheduleAutoHide();
+            } else {
+                clearAutoHideTimer();
+            }
         });
 
         // ====== Settings: Go to themes ======
@@ -2008,9 +2052,14 @@
                 item.find('.fav-content').on('click', function() {
                     $('.fav-item').removeClass('fav-active');
                     item.addClass('fav-active');
+                    clearAutoHideTimer();
+                    verseHidden = false;
+                    hiddenVerseData = null;
+                    $('#btnToggleVisibility').removeClass('toolbar-btn-hidden');
                     localStorage.setItem('currentVerseReference', fav.reference);
                     localStorage.setItem('currentVerseText', fav.text);
                     localStorage.setItem('currentVerseSource', fav.version);
+                    scheduleAutoHide();
                 });
 
                 // Remove button
