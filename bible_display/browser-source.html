@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bible Display - OBS Browser Source</title>
-    <link rel="stylesheet" href="../common/css/style-source.css?v=14">
+    <link rel="stylesheet" href="../common/css/style-source.css?v=15">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lato:wght@400;700&family=Merriweather:wght@400;700&family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Oswald:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
@@ -239,14 +239,27 @@
             });
         }
 
-        // Ruby Blue: gradient bandeau starts under the reference tab
-        // so the white badge sits entirely above the panel, glued to its top.
-        function syncRubyBluePanelBg() {
+        // Themes where the reference tab sits entirely ABOVE the panel
+        // (bandeau bg starts under the badge — same model as Ruby Blue).
+        const TABBED_REF_THEMES = [
+            'ruby-blue',
+            'church-broadcast',
+            'church-broadcast-gold',
+            'church-broadcast-blue',
+            'dark-cinema'
+        ];
+
+        function isTabbedRefTheme(theme) {
+            return TABBED_REF_THEMES.indexOf(theme) !== -1;
+        }
+
+        // Place panel background under the reference tab for tabbed themes.
+        function syncTabbedPanelBg() {
             const theme = localStorage.getItem('bibleTheme') || 'transparent';
             const bg = document.getElementById('verseBg');
             if (!bg) return;
 
-            if (theme !== 'ruby-blue') {
+            if (!isTabbedRefTheme(theme)) {
                 bg.style.top = '';
                 return;
             }
@@ -314,15 +327,14 @@
                     'margin-right': ''
                 });
                 $('#verseText').css('text-align', '');
-            } else if (theme === 'frosted-glass' || theme === 'ruby-blue') {
-                // Same layout model: badge above panel (CSS), verse text follows alignment
+            } else if (theme === 'frosted-glass' || isTabbedRefTheme(theme)) {
+                // Badge stays top-left (above panel for tabbed themes); verse follows alignment
                 $('#verseDisplay').css('text-align', 'left');
                 $('#verseContent').css('align-items', 'stretch');
                 $('#verseReference').css({
                     'align-self': 'flex-start',
                     'padding-left': '',
                     'padding-right': '',
-                    // Let theme CSS control margins (overlap / flush left)
                     'margin-left': theme === 'frosted-glass' ? '10px' : '',
                     'margin-right': '',
                     'margin-top': '',
@@ -402,8 +414,9 @@
             // Shrink verse text to fit within the configured line limit
             fitVerseTextToMaxLines();
             // After layout: place ruby-blue bandeau under the reference tab
-            syncRubyBluePanelBg();
-            requestAnimationFrame(syncRubyBluePanelBg);
+            // After layout: place tabbed-theme bandeau under the reference tab
+            syncTabbedPanelBg();
+            requestAnimationFrame(syncTabbedPanelBg);
         }
 
         function hideVerse() {
