@@ -57,18 +57,17 @@
         let isDisplayVisible = false; // Track whether the block is currently showing
 
         // When verses are split into slides, only a light shrink is needed.
-        // When the whole verse is kept in one slide, allow a bit more shrink
-        // (but still readable) so the full text fits within the line limit.
+        // When the whole verse stays on one slide, prefer the chosen font size
+        // and stretch the banner instead of shrinking the text.
         const MIN_READABLE_FONT_SPLIT = 14;
-        const MIN_READABLE_FONT_WHOLE = 12;
 
         function getMinReadableFontSize(baseFontSize, splitEnabled) {
             if (splitEnabled) {
                 // Light shrink only: never below 85% of chosen size, floor 14px
                 return Math.max(MIN_READABLE_FONT_SPLIT, Math.round(baseFontSize * 0.85));
             }
-            // Whole verse: allow moderate shrink, floor 12px / 65% of chosen size
-            return Math.max(MIN_READABLE_FONT_WHOLE, Math.round(baseFontSize * 0.65));
+            // Whole-verse mode: do not shrink — banner stretches instead.
+            return baseFontSize;
         }
 
         function getVerseLineCount(element) {
@@ -109,8 +108,9 @@
             const splitEnabled = localStorage.getItem('bibleSplitVerses') === 'true';
             const verseTextEl = document.getElementById('verseText');
             const minFontSize = getMinReadableFontSize(baseFontSize, splitEnabled);
+            const configuredLH = parseFloat(lineHeight) || 1.6;
 
-            // Elegant Quote always uses a fixed block height (default 3 lines).
+            // Elegant Quote always uses a reserved block height (default 3 lines).
             const isElegantQuote = (theme === 'elegant-quote');
             const maxLines = isElegantQuote
                 ? (maxLinesSetting > 0 ? maxLinesSetting : 3)
@@ -119,24 +119,30 @@
             resetVerseTextLayout();
             $('#verseContent').css('min-height', '');
             verseTextEl.style.lineHeight = lineHeight;
+            verseTextEl.style.setProperty('font-size', baseFontSize + 'px', 'important');
 
-            if ((!isElegantQuote && maxLines <= 0) || !verseTextEl.textContent.trim()) {
-                verseTextEl.style.fontSize = baseFontSize + 'px';
+            if (!verseTextEl.textContent.trim()) {
                 return;
             }
 
-            // Find the largest readable font size that keeps the verse within maxLines.
-            verseTextEl.style.fontSize = baseFontSize + 'px';
-            let bestFit = baseFontSize;
+            // No line limit (non elegant): use chosen size, natural banner height.
+            if (!isElegantQuote && maxLines <= 0) {
+                return;
+            }
 
-            if (getVerseLineCount(verseTextEl) > maxLines) {
+            let bestFit = baseFontSize;
+            let actualLines = getVerseLineCount(verseTextEl);
+
+            // Split mode only: gently shrink so each slide fits maxLines.
+            // Whole-verse mode: keep the chosen size and stretch the banner.
+            if (splitEnabled && actualLines > maxLines) {
                 let low = minFontSize;
                 let high = baseFontSize - 1;
                 bestFit = minFontSize;
 
                 while (low <= high) {
                     const mid = Math.floor((low + high) / 2);
-                    verseTextEl.style.fontSize = mid + 'px';
+                    verseTextEl.style.setProperty('font-size', mid + 'px', 'important');
                     const lines = getVerseLineCount(verseTextEl);
 
                     if (lines <= maxLines) {
@@ -146,13 +152,18 @@
                         high = mid - 1;
                     }
                 }
+
+                verseTextEl.style.setProperty('font-size', bestFit + 'px', 'important');
+                actualLines = getVerseLineCount(verseTextEl);
             }
 
-            verseTextEl.style.fontSize = bestFit + 'px';
-
-            const configuredLH = parseFloat(lineHeight);
-            const reservedHeight = baseFontSize * configuredLH * maxLines;
-            const stillTooLong = getVerseLineCount(verseTextEl) > maxLines;
+            // Banner height follows the chosen font size and grows with content.
+            // With a max-lines setting, keep at least that many lines of height
+            // for short verses, and stretch further when the verse needs more.
+            const linesForBanner = splitEnabled
+                ? maxLines
+                : Math.max(actualLines, maxLines > 0 ? maxLines : 1);
+            const reservedHeight = Math.ceil(baseFontSize * configuredLH * linesForBanner);
 
             const css = {
                 'height': reservedHeight + 'px',
@@ -161,38 +172,41 @@
                 'overflow': 'hidden'
             };
 
-            if (stillTooLong) {
+            const stillTooLong = getVerseLineCount(verseTextEl) > linesForBanner;
+
+            if (stillTooLong && splitEnabled) {
                 css['display'] = '-webkit-box';
                 css['-webkit-line-clamp'] = maxLines.toString();
                 css['-webkit-box-orient'] = 'vertical';
                 css['text-overflow'] = 'ellipsis';
             } else if (isElegantQuote) {
-                // Fixed block: keep natural line spacing, center text inside the
-                // orange bar area so the bar always spans the same height.
                 verseTextEl.style.lineHeight = lineHeight;
                 css['display'] = 'flex';
                 css['flex-direction'] = 'column';
                 css['justify-content'] = 'center';
             } else {
-                const MAX_FILL_LINE_HEIGHT = 2.0;
-                let fillLH = configuredLH * (baseFontSize / bestFit);
-                fillLH = Math.max(configuredLH, Math.min(MAX_FILL_LINE_HEIGHT, fillLH));
-                verseTextEl.style.lineHeight = fillLH;
-
+                // Keep natural line-height so large fonts stay visually large.
+                verseTextEl.style.lineHeight = lineHeight;
                 css['display'] = 'flex';
                 css['flex-direction'] = 'column';
-                css['justify-content'] = 'center';
+                css['justify-content'] = actualLines < linesForBanner ? 'center' : 'flex-start';
+                css['overflow'] = 'visible';
             }
 
             $('#verseText').css(css);
 
-            // Elegant Quote: lock the whole overlay to a constant height
-            // (padding + text area + reference line).
+            // Elegant Quote: lock overlay height (padding + text + reference).
             if (isElegantQuote) {
                 const refFontSize = parseInt(localStorage.getItem('bibleRefFontSize') || '20', 10);
                 const refBlock = Math.round(refFontSize * 1.3) + 12;
                 const contentMinHeight = 10 + 14 + reservedHeight + refBlock;
                 $('#verseContent').css('min-height', contentMinHeight + 'px');
+            } else {
+                // Let the whole banner stretch with large fonts / long verses.
+                const refEl = document.getElementById('verseReference');
+                const refH = refEl ? refEl.offsetHeight : 0;
+                const contentPad = 8;
+                $('#verseContent').css('min-height', (reservedHeight + refH + contentPad) + 'px');
             }
         }
 
@@ -215,9 +229,19 @@
             const opacityTarget = localStorage.getItem('bibleOpacityTarget') || 'global';
 
             // Font sizes (independent). Some themes get a small size boost.
+            // Use setProperty so theme CSS cannot override the chosen size.
             const refScale = (theme === 'elegant-quote') ? 1.3 : 1;
-            $('#verseReference').css('font-size', Math.round(parseFloat(refFontSize) * refScale) + 'px');
-            $('#verseText').css('font-size', verseFontSize + 'px');
+            const verseScale = (theme === 'elegant-quote') ? 1.12 : 1;
+            document.getElementById('verseReference').style.setProperty(
+                'font-size',
+                Math.round(parseFloat(refFontSize) * refScale) + 'px',
+                'important'
+            );
+            document.getElementById('verseText').style.setProperty(
+                'font-size',
+                Math.round(parseFloat(verseFontSize) * verseScale) + 'px',
+                'important'
+            );
 
             // Font families
             const refFontFamily = localStorage.getItem('bibleRefFontFamily') || 'theme';
