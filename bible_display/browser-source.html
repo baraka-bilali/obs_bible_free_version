@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bible Display - OBS Browser Source</title>
-    <link rel="stylesheet" href="../common/css/style-source.css?v=8">
+    <link rel="stylesheet" href="../common/css/style-source.css?v=11">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lato:wght@400;700&family=Merriweather:wght@400;700&family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Oswald:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
@@ -87,11 +87,19 @@
                 '-webkit-box-orient': 'unset',
                 'flex-direction': '',
                 'justify-content': '',
-                'overflow': 'visible',
-                'text-overflow': 'clip',
+                'align-items': '',
+                'overflow': '',
+                'text-overflow': '',
                 'min-height': '',
                 'height': '',
-                'box-sizing': ''
+                'width': '',
+                'max-width': '',
+                'min-width': '',
+                'box-sizing': '',
+                'margin-left': '',
+                'margin-right': '',
+                'padding-left': '',
+                'padding-right': ''
             });
         }
 
@@ -162,10 +170,22 @@
                 : Math.max(actualLines, maxLines > 0 ? maxLines : 1);
             const reservedHeight = Math.ceil(baseFontSize * configuredLH * linesForBanner);
 
+            // border-box so horizontal padding stays inside the banner width
+            // (content-box was pushing text in on the left and past the right edge).
+            const computed = window.getComputedStyle(verseTextEl);
+            const padT = parseFloat(computed.paddingTop) || 0;
+            const padB = parseFloat(computed.paddingBottom) || 0;
+            const totalHeight = reservedHeight + padT + padB;
+
             const css = {
-                'height': reservedHeight + 'px',
-                'min-height': reservedHeight + 'px',
-                'box-sizing': 'content-box',
+                'width': '100%',
+                'max-width': '100%',
+                'min-width': '0',
+                'box-sizing': 'border-box',
+                'margin-left': '0',
+                'margin-right': '0',
+                'height': totalHeight + 'px',
+                'min-height': totalHeight + 'px',
                 'overflow': 'hidden'
             };
 
@@ -182,12 +202,11 @@
                 css['flex-direction'] = 'column';
                 css['justify-content'] = 'center';
             } else {
-                // Keep natural line-height so large fonts stay visually large.
+                // Block layout so text-align (left/center/right) uses the full width.
+                // Flex on <p> shrink-wraps the text and breaks horizontal alignment.
                 verseTextEl.style.lineHeight = lineHeight;
-                css['display'] = 'flex';
-                css['flex-direction'] = 'column';
-                css['justify-content'] = actualLines < linesForBanner ? 'center' : 'flex-start';
-                css['overflow'] = 'visible';
+                css['display'] = 'block';
+                css['overflow'] = 'hidden';
             }
 
             $('#verseText').css(css);
@@ -268,14 +287,14 @@
                 });
                 $('#verseText').css('text-align', '');
             } else if (theme === 'frosted-glass' || theme === 'ruby-blue') {
-                // Badge/pill stays top-left; verse text follows alignment setting
+                // Same layout model: badge top-left, verse text follows alignment
                 $('#verseDisplay').css('text-align', 'left');
-                $('#verseContent').css('align-items', 'flex-start');
+                $('#verseContent').css('align-items', 'stretch');
                 $('#verseReference').css({
                     'align-self': 'flex-start',
                     'padding-left': '',
                     'padding-right': '',
-                    'margin-left': theme === 'frosted-glass' ? '10px' : '',
+                    'margin-left': theme === 'frosted-glass' ? '10px' : '0',
                     'margin-right': ''
                 });
                 $('#verseText').css('text-align', alignment);
