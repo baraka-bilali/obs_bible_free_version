@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bible Display - OBS Browser Source</title>
-    <link rel="stylesheet" href="../common/css/style-source.css?v=7">
+    <link rel="stylesheet" href="../common/css/style-source.css?v=8">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lato:wght@400;700&family=Merriweather:wght@400;700&family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Oswald:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
@@ -267,15 +267,15 @@
                     'margin-right': ''
                 });
                 $('#verseText').css('text-align', '');
-            } else if (theme === 'transparent') {
-                // Glass pill: reference stays top-left; verse text follows alignment setting
+            } else if (theme === 'frosted-glass' || theme === 'ruby-blue') {
+                // Badge/pill stays top-left; verse text follows alignment setting
                 $('#verseDisplay').css('text-align', 'left');
                 $('#verseContent').css('align-items', 'flex-start');
                 $('#verseReference').css({
                     'align-self': 'flex-start',
                     'padding-left': '',
                     'padding-right': '',
-                    'margin-left': '10px',
+                    'margin-left': theme === 'frosted-glass' ? '10px' : '',
                     'margin-right': ''
                 });
                 $('#verseText').css('text-align', alignment);

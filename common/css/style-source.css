@@ -306,16 +306,87 @@ body[data-theme="crimson"] .verse-text {
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
-/* --- Theme: Transparent (Glass Pill) ---
-   Modern glassmorphism banner + overlapping blue reference pill
-   ======================================== */
-body[data-theme="transparent"] .verse-display {
+/* --- Theme: Transparent Minimal --- */
+body[data-theme="transparent"] .verse-bg {
+    background: rgba(0, 0, 0, 0.92);
+    border-top: none;
+    backdrop-filter: blur(6px);
+}
+body[data-theme="transparent"] .verse-reference {
+    color: #ffffff;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+body[data-theme="transparent"] .verse-text {
+    color: #f0f0f0;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+/* --- Theme: Ruby Blue (white ref badge + red→blue banner) --- */
+body[data-theme="ruby-blue"] .verse-display {
+    padding: 0;
+    overflow: visible;
+    text-align: left;
+}
+
+body[data-theme="ruby-blue"] .verse-bg {
+    background: linear-gradient(90deg, #9b1b2e 0%, #6b1f4a 35%, #2a2d7a 70%, #1a237e 100%);
+    border: none;
+    border-radius: 0;
+    border-top: none;
+    box-shadow: none;
+}
+
+body[data-theme="ruby-blue"] .verse-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0;
+}
+
+body[data-theme="ruby-blue"] .verse-reference {
+    display: inline-block;
+    align-self: flex-start;
+    order: 0;
+    margin: 0;
+    padding: 10px 18px;
+    background: #ffffff;
+    color: #1a237e;
+    border-radius: 0;
+    font-weight: 700;
+    font-style: normal;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: none;
+    white-space: nowrap;
+    line-height: 1.3;
+    box-shadow: none;
+}
+
+body[data-theme="ruby-blue"] .verse-text {
+    order: 1;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 14px 28px 18px 28px;
+    color: #ffffff;
+    font-weight: 500;
+    text-shadow: none;
+    text-align: left;
+    line-height: 1.55;
+}
+
+/* --- Theme: Frosted Glass (blue pill + glass banner) --- */
+body[data-theme="frosted-glass"] .verse-display {
     padding: 22px 28px 18px 28px;
     overflow: visible;
     text-align: left;
 }
 
-body[data-theme="transparent"] .verse-bg {
+body[data-theme="frosted-glass"] .verse-bg {
     background: rgba(210, 220, 230, 0.78);
     backdrop-filter: blur(16px) saturate(1.15);
     -webkit-backdrop-filter: blur(16px) saturate(1.15);
@@ -327,7 +398,7 @@ body[data-theme="transparent"] .verse-bg {
         inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
-body[data-theme="transparent"] .verse-content {
+body[data-theme="frosted-glass"] .verse-content {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -338,7 +409,7 @@ body[data-theme="transparent"] .verse-content {
     padding: 0 6px 2px;
 }
 
-body[data-theme="transparent"] .verse-reference {
+body[data-theme="frosted-glass"] .verse-reference {
     display: inline-flex;
     align-items: center;
     align-self: flex-start;
@@ -359,7 +430,7 @@ body[data-theme="transparent"] .verse-reference {
     box-shadow: 0 6px 18px rgba(30, 79, 196, 0.38);
 }
 
-body[data-theme="transparent"] .verse-text {
+body[data-theme="frosted-glass"] .verse-text {
     order: 1;
     width: 100%;
     box-sizing: border-box;
