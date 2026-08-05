@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <!-- Bread loaf -->
+  <ellipse cx="38" cy="78" rx="28" ry="16" fill="#E8C48A"/>
+  <ellipse cx="38" cy="72" rx="26" ry="14" fill="#F0D4A8"/>
+  <path d="M18 70 Q28 58 38 70 Q48 58 58 70" stroke="#C9955A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M22 76 Q30 68 38 76 Q46 68 54 76" stroke="#C9955A" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Chalice stem & base -->
+  <path d="M78 70 L78 88 Q78 96 90 98 L90 102 L66 102 L66 98 Q78 96 78 88 Z" fill="#C9A227"/>
+  <ellipse cx="78" cy="102" rx="18" ry="5" fill="#B8860B"/>
+  <!-- Chalice bowl -->
+  <path d="M58 42 Q58 70 78 70 Q98 70 98 42 Z" fill="#D4AF37"/>
+  <path d="M62 44 Q62 66 78 66 Q94 66 94 44 Z" fill="#E8C547"/>
+  <!-- Wine -->
+  <path d="M64 52 Q64 64 78 64 Q92 64 92 52 Q78 56 64 52 Z" fill="#8B1A1A"/>
+  <ellipse cx="78" cy="52" rx="14" ry="4" fill="#A32222"/>
+  <!-- Rim highlight -->
+  <ellipse cx="78" cy="42" rx="20" ry="5" fill="#F0D878"/>
+  <ellipse cx="78" cy="42" rx="16" ry="3.5" fill="#D4AF37"/>
+</svg>

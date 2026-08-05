@@ -454,6 +454,150 @@ body[data-theme="frosted-glass"] .verse-text {
     line-height: 1.55;
 }
 
+/* --- Theme: Solid (opaque purple panel, ref bottom-right) --- */
+body[data-theme="solid"] .verse-display {
+    padding: 32px 40px 28px 40px;
+    overflow: visible;
+    text-align: left;
+}
+
+body[data-theme="solid"] .verse-bg {
+    background: linear-gradient(90deg, #3d1a5c 0%, #5a2a7a 55%, #6b3488 100%);
+    border: none;
+    border-radius: 0;
+    border-bottom: 2px solid rgba(220, 180, 255, 0.45);
+    box-shadow: none;
+}
+
+body[data-theme="solid"] .verse-content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0;
+    min-height: 140px;
+    gap: 28px;
+}
+
+body[data-theme="solid"] .verse-text {
+    order: 1;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    color: #ffffff;
+    font-weight: 500;
+    font-family: 'Segoe UI', 'Open Sans', sans-serif;
+    text-shadow: none;
+    line-height: 1.55;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+body[data-theme="solid"] .verse-reference {
+    order: 2;
+    display: block;
+    align-self: flex-end;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    color: #ffffff;
+    border: none;
+    border-radius: 0;
+    font-weight: 700;
+    font-style: normal;
+    font-family: 'Segoe UI', 'Open Sans', sans-serif;
+    letter-spacing: 0.3px;
+    text-transform: none;
+    text-shadow: none;
+    white-space: nowrap;
+    line-height: 1.3;
+    box-shadow: none;
+}
+
+/* --- Theme: Bread and Wine (icon strip + maroon panel, ref tab top-right) --- */
+body[data-theme="bread-and-wine"] .verse-display {
+    padding: 0;
+    overflow: visible;
+    text-align: left;
+}
+
+body[data-theme="bread-and-wine"] .verse-bg {
+    border: none;
+    border-radius: 0;
+    border-top: none;
+    box-shadow: none;
+    /* Cream strip left + maroon body; icon centered in cream strip */
+    background-color: #9b3d3a;
+    background-image:
+        url("../img/bread-wine-icon.svg"),
+        linear-gradient(90deg, #f5efeb 0 120px, #9b3d3a 120px 100%);
+    background-size: 72px auto, 100% 100%;
+    background-position: 24px center, 0 0;
+    background-repeat: no-repeat, no-repeat;
+    /* top set in JS under the reference tab */
+    top: 0;
+}
+
+body[data-theme="bread-and-wine"] .verse-content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 0 0 120px;
+}
+
+body[data-theme="bread-and-wine"] .verse-reference {
+    display: inline-block;
+    align-self: flex-end;
+    order: 0;
+    margin: 0;
+    padding: 9px 22px;
+    background: #ffffff;
+    color: #9b3d3a;
+    border-radius: 18px 18px 0 18px;
+    font-weight: 600;
+    font-style: normal;
+    font-family: Georgia, 'Cormorant Garamond', 'Times New Roman', serif;
+    letter-spacing: 0.2px;
+    text-transform: none;
+    text-shadow: none;
+    white-space: nowrap;
+    line-height: 1.3;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    position: relative;
+    z-index: 2;
+}
+
+body[data-theme="bread-and-wine"] .verse-text {
+    order: 1;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 22px 40px 24px 28px;
+    color: #ffffff;
+    font-weight: 400;
+    font-style: italic;
+    font-family: Georgia, 'Cormorant Garamond', 'Times New Roman', serif;
+    text-shadow: none;
+    line-height: 1.55;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+}
+
 /* ========================================
    MODERN THEMES
    ======================================== */

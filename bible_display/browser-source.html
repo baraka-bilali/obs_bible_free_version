@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bible Display - OBS Browser Source</title>
-    <link rel="stylesheet" href="../common/css/style-source.css?v=15">
+    <link rel="stylesheet" href="../common/css/style-source.css?v=16">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lato:wght@400;700&family=Merriweather:wght@400;700&family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Oswald:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
@@ -203,12 +203,12 @@
                 css['justify-content'] = 'center';
                 css['align-items'] = 'stretch';
             } else {
-                // Full-width flex: keeps text-align (L/C/R) and vertically
-                // centers the verse inside the reserved banner height.
+                // Full-width flex: keeps text-align (L/C/R). Vertically center
+                // except Solid theme (verse stays top, reference bottom-right).
                 verseTextEl.style.lineHeight = lineHeight;
                 css['display'] = 'flex';
                 css['flex-direction'] = 'column';
-                css['justify-content'] = 'center';
+                css['justify-content'] = (theme === 'solid') ? 'flex-start' : 'center';
                 css['align-items'] = 'stretch';
                 css['overflow'] = 'hidden';
             }
@@ -243,6 +243,7 @@
         // (bandeau bg starts under the badge — same model as Ruby Blue).
         const TABBED_REF_THEMES = [
             'ruby-blue',
+            'bread-and-wine',
             'church-broadcast',
             'church-broadcast-gold',
             'church-broadcast-blue',
@@ -328,11 +329,11 @@
                 });
                 $('#verseText').css('text-align', '');
             } else if (theme === 'frosted-glass' || isTabbedRefTheme(theme)) {
-                // Badge stays top-left (above panel for tabbed themes); verse follows alignment
+                // Badge above panel (or frosted pill); verse follows alignment
                 $('#verseDisplay').css('text-align', 'left');
                 $('#verseContent').css('align-items', 'stretch');
                 $('#verseReference').css({
-                    'align-self': 'flex-start',
+                    'align-self': theme === 'bread-and-wine' ? 'flex-end' : 'flex-start',
                     'padding-left': '',
                     'padding-right': '',
                     'margin-left': theme === 'frosted-glass' ? '10px' : '',
@@ -341,8 +342,28 @@
                     'margin-bottom': ''
                 });
                 $('#verseText').css('text-align', alignment);
+            } else if (theme === 'solid') {
+                // Verse follows alignment; reference stays bottom-right (CSS)
+                $('#verseDisplay').css('text-align', 'left');
+                $('#verseContent').css({
+                    'align-items': 'stretch',
+                    'display': 'flex',
+                    'flex-direction': 'column'
+                });
+                $('#verseReference').css({
+                    'align-self': 'flex-end',
+                    'padding-left': '',
+                    'padding-right': '',
+                    'margin-left': '',
+                    'margin-right': ''
+                });
+                $('#verseText').css('text-align', alignment);
             } else {
-                $('#verseContent').css('align-items', '');
+                $('#verseContent').css({
+                    'align-items': '',
+                    'display': '',
+                    'flex-direction': ''
+                });
                 $('#verseReference').css({
                     'align-self': '',
                     'padding-left': '',
