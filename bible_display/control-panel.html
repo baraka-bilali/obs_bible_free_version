@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OBS Bible Free Version - Control Panel</title>
-    <link rel="stylesheet" href="../common/css/style-control_panel.css?v=5">
+    <link rel="stylesheet" href="../common/css/style-control_panel.css?v=8">
     <link rel="stylesheet" href="../common/css/cp-icons.css">
     <link rel="stylesheet" href="../common/css/themes/dark/theme.css">
     <script src="../common/js/jquery.js"></script>
@@ -456,51 +456,6 @@
                     </div>
                 </div>
 
-                <!-- Panel background color -->
-                <div class="setting-row">
-                    <div class="setting-info">
-                        <span class="setting-title" data-i18n="settingPanelColor">Panel background color</span>
-                        <span class="setting-desc" data-i18n="settingPanelColorDesc">Choose a preset or a custom color for the verse display panel background.</span>
-                    </div>
-                    <div class="setting-control">
-                        <select id="panelColorSelect" class="setting-select">
-                            <option value="theme" data-i18n="panelColorTheme">Theme (default)</option>
-                            <option value="dark" data-i18n="panelColorDark">Dark black</option>
-                            <option value="charcoal" data-i18n="panelColorCharcoal">Charcoal gray</option>
-                            <option value="navy" data-i18n="panelColorNavy">Navy blue</option>
-                            <option value="purple" data-i18n="panelColorPurple">Royal purple</option>
-                            <option value="burgundy" data-i18n="panelColorBurgundy">Burgundy</option>
-                            <option value="forest" data-i18n="panelColorForest">Forest green</option>
-                            <option value="transparent" data-i18n="panelColorTransparent">Transparent</option>
-                            <option value="custom" data-i18n="panelColorCustom">Custom color</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Custom panel color picker -->
-                <div class="setting-row" id="panelCustomColorSection" style="display:none;">
-                    <div class="setting-info">
-                        <span class="setting-title" data-i18n="settingPanelCustomColor">Custom color</span>
-                        <span class="setting-desc" data-i18n="settingPanelCustomColorDesc">Pick your own panel background color.</span>
-                    </div>
-                    <div class="setting-control panel-color-picker-wrap">
-                        <input type="color" id="panelColorPicker" class="panel-color-picker" value="#000000">
-                    </div>
-                </div>
-
-                <!-- Panel color live preview -->
-                <div class="setting-row panel-color-preview-row">
-                    <div class="setting-info">
-                        <span class="setting-title" data-i18n="settingPanelPreview">Panel preview</span>
-                        <span class="setting-desc" data-i18n="settingPanelPreviewDesc">Live preview of the panel background color.</span>
-                    </div>
-                    <div class="setting-control panel-color-preview-wrap">
-                        <div class="panel-color-preview" id="panelColorPreview">
-                            <span class="panel-color-preview-text" data-i18n="panelPreviewSample">Sample verse text</span>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Text Alignment -->
                 <div class="setting-row">
                     <div class="setting-info">
@@ -692,6 +647,26 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Control panel color -->
+                <div class="setting-row setting-row-stack">
+                    <div class="setting-info">
+                        <span class="setting-title" data-i18n="settingCpColor">Control panel color</span>
+                        <span class="setting-desc" data-i18n="settingCpColorDesc">Choose the color of this control panel interface. Colors stay dark so text remains readable.</span>
+                    </div>
+                    <div class="cp-color-swatches" id="cpColorSwatches" role="listbox">
+                        <button type="button" class="cp-color-swatch active" data-cp-color="obs" style="background:#272727;" title="OBS Dark" data-i18n-title="cpColorObs" role="option" aria-selected="true"><span class="cp-swatch-check">✓</span></button>
+                        <button type="button" class="cp-color-swatch" data-cp-color="charcoal" style="background:#3f3f46;" title="Charcoal" data-i18n-title="cpColorCharcoal" role="option" aria-selected="false"><span class="cp-swatch-check">✓</span></button>
+                        <button type="button" class="cp-color-swatch" data-cp-color="slate" style="background:#334155;" title="Slate" data-i18n-title="cpColorSlate" role="option" aria-selected="false"><span class="cp-swatch-check">✓</span></button>
+                        <button type="button" class="cp-color-swatch" data-cp-color="navy" style="background:#1e3a5f;" title="Navy" data-i18n-title="cpColorNavy" role="option" aria-selected="false"><span class="cp-swatch-check">✓</span></button>
+                        <button type="button" class="cp-color-swatch" data-cp-color="blue" style="background:#1a365d;" title="Blue" data-i18n-title="cpColorBlue" role="option" aria-selected="false"><span class="cp-swatch-check">✓</span></button>
+                        <button type="button" class="cp-color-swatch" data-cp-color="teal" style="background:#134e4a;" title="Teal" data-i18n-title="cpColorTeal" role="option" aria-selected="false"><span class="cp-swatch-check">✓</span></button>
+                        <button type="button" class="cp-color-swatch" data-cp-color="forest" style="background:#14532d;" title="Forest" data-i18n-title="cpColorForest" role="option" aria-selected="false"><span class="cp-swatch-check">✓</span></button>
+                        <button type="button" class="cp-color-swatch" data-cp-color="purple" style="background:#4c1d95;" title="Purple" data-i18n-title="cpColorPurple" role="option" aria-selected="false"><span class="cp-swatch-check">✓</span></button>
+                        <button type="button" class="cp-color-swatch" data-cp-color="burgundy" style="background:#7f1d1d;" title="Burgundy" data-i18n-title="cpColorBurgundy" role="option" aria-selected="false"><span class="cp-swatch-check">✓</span></button>
+                        <button type="button" class="cp-color-swatch" data-cp-color="warm" style="background:#78350f;" title="Warm" data-i18n-title="cpColorWarm" role="option" aria-selected="false"><span class="cp-swatch-check">✓</span></button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -786,22 +761,6 @@
                 opacityGlobal: 'Tout le bloc',
                 opacityBackground: 'Fond uniquement',
                 opacityText: 'Texte uniquement',
-                settingPanelColor: 'Couleur du panneau',
-                settingPanelColorDesc: 'Choisissez une couleur prédéfinie ou personnalisée pour le fond du panneau d\'affichage.',
-                panelColorTheme: 'Thème (défaut)',
-                panelColorDark: 'Noir sombre',
-                panelColorCharcoal: 'Gris charbon',
-                panelColorNavy: 'Bleu marine',
-                panelColorPurple: 'Violet royal',
-                panelColorBurgundy: 'Bordeaux',
-                panelColorForest: 'Vert forêt',
-                panelColorTransparent: 'Transparent',
-                panelColorCustom: 'Couleur personnalisée',
-                settingPanelCustomColor: 'Couleur personnalisée',
-                settingPanelCustomColorDesc: 'Choisissez votre propre couleur de fond.',
-                settingPanelPreview: 'Aperçu du panneau',
-                settingPanelPreviewDesc: 'Aperçu en direct de la couleur du panneau d\'affichage.',
-                panelPreviewSample: 'Exemple de texte',
                 settingAlignment: 'Alignement du texte',
                 settingAlignmentDesc: 'Définit l\'alignement du texte des versets.',
                 alignLeft: 'Gauche',
@@ -850,6 +809,18 @@
                 settingTheme: 'Thème actuel',
                 settingThemeDesc: 'Style visuel appliqué à la source navigateur.',
                 btnChange: 'Changer →',
+                settingCpColor: 'Couleur du panneau',
+                settingCpColorDesc: 'Choisissez la couleur de cette interface de contrôle. Les teintes restent sombres pour garder le texte lisible.',
+                cpColorObs: 'OBS sombre',
+                cpColorCharcoal: 'Charbon',
+                cpColorSlate: 'Ardoise',
+                cpColorNavy: 'Marine',
+                cpColorBlue: 'Bleu',
+                cpColorTeal: 'Sarcelle',
+                cpColorForest: 'Forêt',
+                cpColorPurple: 'Violet',
+                cpColorBurgundy: 'Bordeaux',
+                cpColorWarm: 'Ambre',
                 // Nav bar
                 navSearch: 'Recherche',
                 navBible: 'Bible',
@@ -931,22 +902,6 @@
                 opacityGlobal: 'Everything',
                 opacityBackground: 'Background only',
                 opacityText: 'Text only',
-                settingPanelColor: 'Panel background color',
-                settingPanelColorDesc: 'Choose a preset or custom color for the verse display panel background.',
-                panelColorTheme: 'Theme (default)',
-                panelColorDark: 'Dark black',
-                panelColorCharcoal: 'Charcoal gray',
-                panelColorNavy: 'Navy blue',
-                panelColorPurple: 'Royal purple',
-                panelColorBurgundy: 'Burgundy',
-                panelColorForest: 'Forest green',
-                panelColorTransparent: 'Transparent',
-                panelColorCustom: 'Custom color',
-                settingPanelCustomColor: 'Custom color',
-                settingPanelCustomColorDesc: 'Pick your own panel background color.',
-                settingPanelPreview: 'Panel preview',
-                settingPanelPreviewDesc: 'Live preview of the panel background color.',
-                panelPreviewSample: 'Sample verse text',
                 settingAlignment: 'Text Alignment',
                 settingAlignmentDesc: 'Sets the text alignment for the verse display.',
                 alignLeft: 'Left',
@@ -995,6 +950,18 @@
                 settingTheme: 'Current Theme',
                 settingThemeDesc: 'Visual style applied to the browser source display.',
                 btnChange: 'Change →',
+                settingCpColor: 'Control panel color',
+                settingCpColorDesc: 'Choose the color of this control panel interface. Colors stay dark so text remains readable.',
+                cpColorObs: 'OBS Dark',
+                cpColorCharcoal: 'Charcoal',
+                cpColorSlate: 'Slate',
+                cpColorNavy: 'Navy',
+                cpColorBlue: 'Blue',
+                cpColorTeal: 'Teal',
+                cpColorForest: 'Forest',
+                cpColorPurple: 'Purple',
+                cpColorBurgundy: 'Burgundy',
+                cpColorWarm: 'Amber',
                 navSearch: 'Search',
                 navBible: 'Bible',
                 navList: 'List',
@@ -1529,7 +1496,6 @@
             $(this).addClass('selected');
             localStorage.setItem('bibleTheme', theme);
             notifySettingsChanged();
-            updatePanelColorPreview();
             $('#currentThemeName').text($(this).find('.theme-name').text());
         });
 
@@ -1552,10 +1518,6 @@
             $('#splitVersesToggle').prop('checked', localStorage.getItem('bibleSplitVerses') === 'true');
             $('#opacityInput').val(localStorage.getItem('bibleOpacity') || '100');
             $('#opacityTargetSelect').val(localStorage.getItem('bibleOpacityTarget') || 'global');
-            $('#panelColorSelect').val(localStorage.getItem('biblePanelBg') || 'theme');
-            $('#panelColorPicker').val(localStorage.getItem('biblePanelCustomColor') || '#000000');
-            $('#panelCustomColorSection').toggle($('#panelColorSelect').val() === 'custom');
-            updatePanelColorPreview();
             $('#alignmentSelect').val(localStorage.getItem('bibleAlignment') || 'center');
             $('#transitionSelect').val(localStorage.getItem('bibleTransition') || 'fade');
             // Text styles (migrate legacy bibleBold toggle)
@@ -1576,49 +1538,87 @@
             $('#autoHideToggle').prop('checked', savedAutoHide);
             $('#autoHideTimerSection').toggle(savedAutoHide);
             $('#timerInput').val(localStorage.getItem('bibleAutoHideTimer') || '5');
+
+            applyControlPanelColor(localStorage.getItem('controlPanelColor') || 'obs');
         }
 
-        // ====== Panel color preview ======
-        const PANEL_BG_PRESETS = {
-            dark: 'linear-gradient(180deg, rgba(0, 0, 0, 0.66) 0%, rgba(0, 0, 0, 0.8) 100%)',
-            charcoal: 'rgba(28, 28, 32, 0.92)',
-            navy: 'linear-gradient(180deg, rgba(8, 18, 38, 0.9) 0%, rgba(14, 28, 56, 0.94) 100%)',
-            purple: 'linear-gradient(180deg, rgba(35, 18, 55, 0.88) 0%, rgba(50, 25, 75, 0.92) 100%)',
-            burgundy: 'linear-gradient(180deg, rgba(55, 12, 22, 0.88) 0%, rgba(75, 18, 30, 0.92) 100%)',
-            forest: 'linear-gradient(180deg, rgba(12, 32, 18, 0.88) 0%, rgba(18, 48, 28, 0.92) 100%)',
-            transparent: 'transparent'
+        // ====== Control panel color palette ======
+        const CP_COLOR_PRESETS = {
+            obs: {
+                '--cp-bg': '#1e1e1e', '--cp-panel': '#272727', '--cp-input': '#323232', '--cp-input-focus': '#3a3a3a',
+                '--cp-border': '#404040', '--cp-accent': '#c8c8c8', '--cp-accent-hover': '#e0e0e0'
+            },
+            charcoal: {
+                '--cp-bg': '#18181b', '--cp-panel': '#27272a', '--cp-input': '#3f3f46', '--cp-input-focus': '#52525b',
+                '--cp-border': '#52525b', '--cp-accent': '#d4d4d8', '--cp-accent-hover': '#f4f4f5'
+            },
+            slate: {
+                '--cp-bg': '#0f172a', '--cp-panel': '#1e293b', '--cp-input': '#334155', '--cp-input-focus': '#475569',
+                '--cp-border': '#475569', '--cp-accent': '#cbd5e1', '--cp-accent-hover': '#e2e8f0'
+            },
+            navy: {
+                '--cp-bg': '#0b1524', '--cp-panel': '#132337', '--cp-input': '#1e3a5f', '--cp-input-focus': '#274b78',
+                '--cp-border': '#2a4a70', '--cp-accent': '#93c5fd', '--cp-accent-hover': '#bfdbfe'
+            },
+            blue: {
+                '--cp-bg': '#0a1628', '--cp-panel': '#12233d', '--cp-input': '#1a365d', '--cp-input-focus': '#234876',
+                '--cp-border': '#2a4a73', '--cp-accent': '#90cdf4', '--cp-accent-hover': '#bee3f8'
+            },
+            teal: {
+                '--cp-bg': '#0a1f1c', '--cp-panel': '#11332f', '--cp-input': '#134e4a', '--cp-input-focus': '#0f766e',
+                '--cp-border': '#115e59', '--cp-accent': '#5eead4', '--cp-accent-hover': '#99f6e4'
+            },
+            forest: {
+                '--cp-bg': '#0a1a10', '--cp-panel': '#12261a', '--cp-input': '#14532d', '--cp-input-focus': '#166534',
+                '--cp-border': '#166534', '--cp-accent': '#86efac', '--cp-accent-hover': '#bbf7d0'
+            },
+            purple: {
+                '--cp-bg': '#140b24', '--cp-panel': '#22153a', '--cp-input': '#4c1d95', '--cp-input-focus': '#5b21b6',
+                '--cp-border': '#5b21b6', '--cp-accent': '#d8b4fe', '--cp-accent-hover': '#e9d5ff'
+            },
+            burgundy: {
+                '--cp-bg': '#1a0b0b', '--cp-panel': '#2a1212', '--cp-input': '#7f1d1d', '--cp-input-focus': '#991b1b',
+                '--cp-border': '#991b1b', '--cp-accent': '#fca5a5', '--cp-accent-hover': '#fecaca'
+            },
+            warm: {
+                '--cp-bg': '#1a1208', '--cp-panel': '#2a1c0e', '--cp-input': '#78350f', '--cp-input-focus': '#92400e',
+                '--cp-border': '#92400e', '--cp-accent': '#fcd34d', '--cp-accent-hover': '#fde68a'
+            }
         };
 
-        function hexToRgba(hex, alpha) {
-            const h = hex.replace('#', '');
-            const full = h.length === 3 ? h.split('').map(c => c + c).join('') : h;
-            const r = parseInt(full.substring(0, 2), 16);
-            const g = parseInt(full.substring(2, 4), 16);
-            const b = parseInt(full.substring(4, 6), 16);
-            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        function applyControlPanelColor(key) {
+            const preset = CP_COLOR_PRESETS[key] || CP_COLOR_PRESETS.obs;
+            const root = document.documentElement;
+            Object.keys(preset).forEach(function(prop) {
+                root.style.setProperty(prop, preset[prop]);
+            });
+            // Keep text readable on all dark presets
+            root.style.setProperty('--cp-text', '#e8e8e8');
+            root.style.setProperty('--cp-text-strong', '#ffffff');
+            root.style.setProperty('--cp-muted', '#b0b0b0');
+            root.style.setProperty('--cp-dim', '#7a7a7a');
+            root.style.setProperty('--cp-highlight', 'rgba(255, 255, 255, 0.08)');
+            root.style.setProperty('--cp-highlight-strong', 'rgba(255, 255, 255, 0.14)');
+
+            $('#cpColorSwatches .cp-color-swatch').each(function() {
+                const active = $(this).data('cp-color') === key;
+                $(this).toggleClass('active', active);
+                $(this).attr('aria-selected', active ? 'true' : 'false');
+            });
         }
 
-        function getPanelBackgroundCss(panelBg, customColor) {
-            if (panelBg === 'theme') {
-                return 'linear-gradient(180deg, rgba(0, 0, 0, 0.66) 0%, rgba(0, 0, 0, 0.8) 100%)';
-            }
-            if (panelBg === 'custom') {
-                const top = hexToRgba(customColor, 0.72);
-                const bottom = hexToRgba(customColor, 0.88);
-                return `linear-gradient(180deg, ${top} 0%, ${bottom} 100%)`;
-            }
-            return PANEL_BG_PRESETS[panelBg] || PANEL_BG_PRESETS.dark;
-        }
+        $('#cpColorSwatches').on('click', '.cp-color-swatch', function() {
+            const key = $(this).data('cp-color');
+            localStorage.setItem('controlPanelColor', key);
+            applyControlPanelColor(key);
+        });
 
+        // Apply early so first paint matches saved preference when possible
+        applyControlPanelColor(localStorage.getItem('controlPanelColor') || 'obs');
+
+        // ====== Settings helpers ======
         function notifySettingsChanged() {
             localStorage.setItem('bibleSettingsTick', Date.now().toString());
-        }
-
-        function updatePanelColorPreview() {
-            const panelBg = $('#panelColorSelect').val() || 'theme';
-            const customColor = $('#panelColorPicker').val() || '#000000';
-            const bg = getPanelBackgroundCss(panelBg, customColor);
-            $('#panelColorPreview').css('background', bg);
         }
 
         // ====== Settings: Spin controls ======
@@ -1712,19 +1712,6 @@
 
         $('#opacityTargetSelect').on('change', function() {
             localStorage.setItem('bibleOpacityTarget', $(this).val());
-            notifySettingsChanged();
-        });
-
-        $('#panelColorSelect').on('change', function() {
-            localStorage.setItem('biblePanelBg', $(this).val());
-            $('#panelCustomColorSection').toggle($(this).val() === 'custom');
-            updatePanelColorPreview();
-            notifySettingsChanged();
-        });
-
-        $('#panelColorPicker').on('input change', function() {
-            localStorage.setItem('biblePanelCustomColor', $(this).val());
-            updatePanelColorPreview();
             notifySettingsChanged();
         });
 

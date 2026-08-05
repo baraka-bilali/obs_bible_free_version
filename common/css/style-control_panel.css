@@ -3,20 +3,21 @@
    OBS Studio dark theme
    ======================== */
 
-/* OBS-style dark palette */
+/* Control panel color variables (overridden by palette choice) */
 :root {
-    --obs-bg-deep: #1e1e1e;
-    --obs-bg-panel: #272727;
-    --obs-bg-input: #323232;
-    --obs-bg-hover: #3a3a3a;
-    --obs-border: #404040;
-    --obs-accent: #c8c8c8;
-    --obs-accent-hover: #e0e0e0;
-    --obs-accent-dim: #8e8e8e;
-    --obs-text-muted: #9b9b9b;
-    --obs-text-dim: #6e6e6e;
-    --obs-highlight: rgba(255, 255, 255, 0.08);
-    --obs-highlight-strong: rgba(255, 255, 255, 0.14);
+    --cp-bg: #1e1e1e;
+    --cp-panel: #272727;
+    --cp-input: #323232;
+    --cp-input-focus: #3a3a3a;
+    --cp-border: #404040;
+    --cp-accent: #c8c8c8;
+    --cp-accent-hover: #e0e0e0;
+    --cp-text: #e0e0e0;
+    --cp-text-strong: #ffffff;
+    --cp-muted: #9b9b9b;
+    --cp-dim: #6e6e6e;
+    --cp-highlight: rgba(255, 255, 255, 0.08);
+    --cp-highlight-strong: rgba(255, 255, 255, 0.14);
 }
 
 * {
@@ -27,8 +28,8 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #1e1e1e;
-    color: #e0e0e0;
+    background-color: var(--cp-bg);
+    color: var(--cp-text);
     line-height: 1.6;
     padding-bottom: 60px;
 }
@@ -57,8 +58,8 @@ body {
 
 /* ===== Main Panel ===== */
 .main-panel {
-    background: #272727;
-    border: 1px solid #404040;
+    background: var(--cp-panel);
+    border: 1px solid var(--cp-border);
     border-radius: 12px;
     padding: 30px 28px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
@@ -75,7 +76,7 @@ h1 {
     text-align: center;
     margin-bottom: 24px;
     font-size: 22px;
-    color: #ffffff;
+    color: var(--cp-text-strong);
     text-transform: uppercase;
     letter-spacing: 2px;
     font-weight: 700;
@@ -84,9 +85,9 @@ h1 {
 h3 {
     font-size: 13px;
     margin: 15px 0 10px 0;
-    color: #9b9b9b;
+    color: var(--cp-muted);
     text-transform: uppercase;
-    border-bottom: 2px solid #c8c8c8;
+    border-bottom: 2px solid var(--cp-accent);
     padding-bottom: 5px;
 }
 
@@ -99,7 +100,7 @@ label {
     display: block;
     margin-bottom: 6px;
     font-weight: 600;
-    color: #9b9b9b;
+    color: var(--cp-muted);
     text-transform: uppercase;
     font-size: 11px;
     letter-spacing: 1px;
@@ -108,23 +109,23 @@ label {
 .form-control {
     width: 100%;
     padding: 10px 12px;
-    background-color: #323232;
-    border: 2px solid #404040;
+    background-color: var(--cp-input);
+    border: 2px solid var(--cp-border);
     border-radius: 6px;
-    color: #e0e0e0;
+    color: var(--cp-text);
     font-size: 14px;
     transition: all 0.3s ease;
 }
 
 .form-control:focus {
     outline: none;
-    border-color: #c8c8c8;
-    background-color: #3a3a3a;
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.18);
+    border-color: var(--cp-accent);
+    background-color: var(--cp-input-focus);
+    box-shadow: 0 0 0 3px var(--cp-highlight-strong);
 }
 
 .form-control::placeholder {
-    color: #6e6e6e;
+    color: var(--cp-dim);
 }
 
 select.form-control {
@@ -228,17 +229,17 @@ select.form-control option {
 
 .btn-primary {
     width: 100%;
-    background: #c8c8c8;
-    color: #ffffff;
+    background: var(--cp-accent);
+    color: var(--cp-bg);
     margin-top: 12px;
     padding: 12px 20px;
     font-size: 14px;
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.22);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
 }
 
 .btn-primary:hover {
-    background: #a8a8a8;
-    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.30);
+    background: var(--cp-accent-hover);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
     transform: translateY(-1px);
 }
 
@@ -596,8 +597,8 @@ select.form-control option {
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: #272727;
-    border-top: 1px solid #404040;
+    background-color: var(--cp-panel);
+    border-top: 1px solid var(--cp-border);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -615,7 +616,7 @@ select.form-control option {
     gap: 2px;
     background: none;
     border: none;
-    color: #6e6e6e;
+    color: var(--cp-dim);
     cursor: pointer;
     transition: all 0.2s ease;
     padding: 6px 16px;
@@ -624,11 +625,11 @@ select.form-control option {
 }
 
 .nav-btn:hover {
-    color: #c8c8c8;
+    color: var(--cp-accent);
 }
 
 .nav-btn.active {
-    color: #c8c8c8;
+    color: var(--cp-accent);
 }
 
 .nav-btn .icon {
@@ -848,7 +849,7 @@ select.form-control option {
 
 .setting-title {
     display: block;
-    color: #e0e0e0;
+    color: var(--cp-text);
     font-size: 14px;
     font-weight: 600;
     margin-bottom: 3px;
@@ -856,7 +857,7 @@ select.form-control option {
 
 .setting-desc {
     display: block;
-    color: #6e6e6e;
+    color: var(--cp-dim);
     font-size: 12px;
     line-height: 1.4;
 }
@@ -869,17 +870,17 @@ select.form-control option {
 .spin-control {
     display: flex;
     align-items: stretch;
-    border: 1px solid #404040;
+    border: 1px solid var(--cp-border);
     border-radius: 4px;
     overflow: hidden;
-    background: #0a1929;
+    background: var(--cp-input);
 }
 
 .spin-input {
     width: 52px;
-    background: #0a1929;
+    background: var(--cp-input);
     border: none;
-    color: #e0e0e0;
+    color: var(--cp-text);
     font-size: 14px;
     font-weight: 600;
     text-align: center;
@@ -926,10 +927,10 @@ select.form-control option {
 
 /* Select dropdown */
 .setting-select {
-    background: #0a1929;
-    border: 1px solid #404040;
+    background: var(--cp-input);
+    border: 1px solid var(--cp-border);
     border-radius: 4px;
-    color: #e0e0e0;
+    color: var(--cp-text);
     font-size: 13px;
     padding: 7px 28px 7px 10px;
     outline: none;
@@ -937,63 +938,65 @@ select.form-control option {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238892b0'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%239b9b9b'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 10px center;
     min-width: 120px;
 }
 
 .setting-select:hover {
-    border-color: #c8c8c8;
+    border-color: var(--cp-accent);
 }
 
-.panel-color-picker-wrap {
+/* ===== Control panel color palette ===== */
+.setting-row-stack {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+}
+
+.cp-color-swatches {
     display: flex;
-    align-items: center;
-}
-
-.panel-color-picker {
-    width: 48px;
-    height: 36px;
-    padding: 2px;
-    border: 1px solid #404040;
-    border-radius: 6px;
-    background: #0d1b2a;
-    cursor: pointer;
-}
-
-.panel-color-picker::-webkit-color-swatch-wrapper {
-    padding: 2px;
-}
-
-.panel-color-picker::-webkit-color-swatch {
-    border: none;
-    border-radius: 4px;
-}
-
-.panel-color-preview-wrap {
-    width: 160px;
-}
-
-.panel-color-preview {
+    flex-wrap: wrap;
+    gap: 8px;
     width: 100%;
-    height: 44px;
-    border-radius: 6px;
-    border: 1px solid #404040;
-    display: flex;
+}
+
+.cp-color-swatch {
+    position: relative;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cp-color-swatch:hover {
+    transform: translateY(-1px);
+    border-color: rgba(255, 255, 255, 0.55);
+}
+
+.cp-color-swatch.active {
+    border-color: #ffffff;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+.cp-color-swatch .cp-swatch-check {
+    display: none;
+    position: absolute;
+    inset: 0;
     align-items: center;
     justify-content: center;
-    padding: 6px 10px;
-    box-sizing: border-box;
-    transition: background 0.2s ease;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
-.panel-color-preview-text {
-    color: #ffffff;
-    font-size: 11px;
-    font-weight: 600;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-    white-space: nowrap;
+.cp-color-swatch.active .cp-swatch-check {
+    display: flex;
 }
 
 .style-toggles {

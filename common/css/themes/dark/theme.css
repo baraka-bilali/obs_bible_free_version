@@ -1,20 +1,20 @@
-/* Dark Theme — OBS Studio style */
+/* Dark Theme — OBS Studio style (follows control panel color palette) */
 :root {
-    --primary-color: #c8c8c8;
-    --primary-dark: #a8a8a8;
-    --bg-primary: #1e1e1e;
-    --bg-secondary: #272727;
-    --bg-tertiary: #323232;
-    --text-primary: #ffffff;
-    --text-secondary: #9b9b9b;
-    --border-color: #404040;
+    --primary-color: var(--cp-accent, #c8c8c8);
+    --primary-dark: var(--cp-accent-hover, #a8a8a8);
+    --bg-primary: var(--cp-bg, #1e1e1e);
+    --bg-secondary: var(--cp-panel, #272727);
+    --bg-tertiary: var(--cp-input, #323232);
+    --text-primary: var(--cp-text-strong, #ffffff);
+    --text-secondary: var(--cp-muted, #9b9b9b);
+    --border-color: var(--cp-border, #404040);
     --success: #28a745;
     --danger: #dc3545;
 }
 
 body {
     background-color: var(--bg-primary);
-    color: var(--text-primary);
+    color: var(--cp-text, #e0e0e0);
 }
 
 .main-panel {
@@ -24,7 +24,7 @@ body {
 .form-control {
     background-color: var(--bg-tertiary);
     border-color: var(--border-color);
-    color: var(--text-primary);
+    color: var(--cp-text, #e0e0e0);
 }
 
 .form-control:focus {
@@ -33,7 +33,7 @@ body {
 
 .btn-primary {
     background-color: var(--primary-color);
-    color: #1e1e1e;
+    color: var(--cp-bg, #1e1e1e);
 }
 
 .btn-primary:hover {

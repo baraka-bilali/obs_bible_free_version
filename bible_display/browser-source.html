@@ -196,52 +196,13 @@
             }
         }
 
-        function hexToRgba(hex, alpha) {
-            const h = hex.replace('#', '');
-            const full = h.length === 3 ? h.split('').map(c => c + c).join('') : h;
-            const r = parseInt(full.substring(0, 2), 16);
-            const g = parseInt(full.substring(2, 4), 16);
-            const b = parseInt(full.substring(4, 6), 16);
-            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-        }
-
-        const PANEL_BG_PRESETS = {
-            dark: 'linear-gradient(180deg, rgba(0, 0, 0, 0.66) 0%, rgba(0, 0, 0, 0.8) 100%)',
-            charcoal: 'rgba(28, 28, 32, 0.92)',
-            navy: 'linear-gradient(180deg, rgba(8, 18, 38, 0.9) 0%, rgba(14, 28, 56, 0.94) 100%)',
-            purple: 'linear-gradient(180deg, rgba(35, 18, 55, 0.88) 0%, rgba(50, 25, 75, 0.92) 100%)',
-            burgundy: 'linear-gradient(180deg, rgba(55, 12, 22, 0.88) 0%, rgba(75, 18, 30, 0.92) 100%)',
-            forest: 'linear-gradient(180deg, rgba(12, 32, 18, 0.88) 0%, rgba(18, 48, 28, 0.92) 100%)',
-            transparent: 'transparent'
-        };
-
-        function applyPanelBackground(theme) {
-            const panelBg = localStorage.getItem('biblePanelBg') || 'theme';
-            const customColor = localStorage.getItem('biblePanelCustomColor') || '#000000';
-
-            // Clear inline overrides so theme CSS can apply when using theme default.
+        function clearPanelBackgroundOverrides() {
+            // Always use theme colors for the panel background.
             $('#verseBg, #verseContent').css({
                 'background': '',
                 'background-image': '',
                 'background-color': ''
             });
-
-            if (panelBg === 'theme') {
-                return;
-            }
-
-            let background = PANEL_BG_PRESETS[panelBg];
-            if (panelBg === 'custom') {
-                const top = hexToRgba(customColor, 0.72);
-                const bottom = hexToRgba(customColor, 0.88);
-                background = `linear-gradient(180deg, ${top} 0%, ${bottom} 100%)`;
-            }
-
-            if (!background) {
-                return;
-            }
-
-            $('#verseBg').css('background', background);
         }
 
         function applySettings() {
@@ -318,8 +279,8 @@
             // Theme
             $('body').attr('data-theme', theme);
 
-            // Panel background color (preset or custom)
-            applyPanelBackground(theme);
+            // Reset any previous custom panel background overrides (themes own the colors)
+            clearPanelBackgroundOverrides();
 
             // Text styles — verse
             let verseWeight = localStorage.getItem('bibleVerseFontWeight');
@@ -443,7 +404,7 @@
         window.addEventListener('storage', function(e) {
             if (['currentVerseReference', 'currentVerseText', 'currentVerseSource',
                  'bibleRefFontSize', 'bibleVerseFontSize', 'bibleRefFontFamily', 'bibleVerseFontFamily', 'bibleLineHeight', 'bibleAlignment', 'bibleTheme',
-                 'bibleOpacity', 'bibleOpacityTarget', 'biblePanelBg', 'biblePanelCustomColor', 'bibleSettingsTick', 'bibleMaxLines', 'bibleSplitVerses', 'bibleTransition', 'bibleAutoHide', 'bibleAutoHideTimer',
+                 'bibleOpacity', 'bibleOpacityTarget', 'bibleSettingsTick', 'bibleMaxLines', 'bibleSplitVerses', 'bibleTransition', 'bibleAutoHide', 'bibleAutoHideTimer',
                  'bibleBold', 'bibleVerseFontWeight', 'bibleVerseItalic', 'bibleVerseUnderline', 'bibleVerseLetterSpacing',
                  'bibleRefFontWeight', 'bibleRefItalic', 'bibleRefLetterSpacing', 'bibleCapitalization'].includes(e.key)) {
                 updateVerseDisplay();
