@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bible Display - OBS Browser Source</title>
-    <link rel="stylesheet" href="../common/css/style-source.css?v=6">
+    <link rel="stylesheet" href="../common/css/style-source.css?v=7">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lato:wght@400;700&family=Merriweather:wght@400;700&family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Oswald:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
@@ -53,7 +53,6 @@
         updateObsCanvasScale();
         let lastReference = '';
         let lastText = '';
-        let autoHideTimeout = null;
         let isDisplayVisible = false; // Track whether the block is currently showing
 
         // When verses are split into slides, only a light shrink is needed.
@@ -98,7 +97,7 @@
 
         function fitVerseTextToMaxLines() {
             const maxLinesSetting = parseInt(localStorage.getItem('bibleMaxLines') || '0', 10);
-            const theme = localStorage.getItem('bibleTheme') || 'classic-dark';
+            const theme = localStorage.getItem('bibleTheme') || 'transparent';
             // Some themes get a small verse-text size boost.
             const verseScale = (theme === 'elegant-quote') ? 1.12 : 1;
             const baseFontSize = Math.round(parseInt(localStorage.getItem('bibleVerseFontSize') || '18', 10) * verseScale);
@@ -222,7 +221,7 @@
             const verseFontSize = localStorage.getItem('bibleVerseFontSize') || '18';
             const lineHeight = localStorage.getItem('bibleLineHeight') || '1.6';
             const alignment = localStorage.getItem('bibleAlignment') || 'center';
-            const theme = localStorage.getItem('bibleTheme') || 'classic-dark';
+            const theme = localStorage.getItem('bibleTheme') || 'transparent';
             const opacity = localStorage.getItem('bibleOpacity') || '100';
             const opacityTarget = localStorage.getItem('bibleOpacityTarget') || 'global';
 
@@ -255,8 +254,7 @@
             // Alignment
             $('#verseDisplay').css('text-align', alignment);
 
-            // Elegant Quote: make the reference (title) follow the alignment too,
-            // like the verse text does in other themes.
+            // Theme-specific layout tweaks
             if (theme === 'elegant-quote') {
                 const alignMap = { left: 'flex-start', center: 'center', right: 'flex-end' };
                 const alignItems = alignMap[alignment] || 'flex-start';
@@ -264,15 +262,33 @@
                 $('#verseReference').css({
                     'align-self': alignItems,
                     'padding-left': alignment === 'left' ? '29px' : '0',
-                    'padding-right': alignment === 'right' ? '2px' : '0'
+                    'padding-right': alignment === 'right' ? '2px' : '0',
+                    'margin-left': '',
+                    'margin-right': ''
                 });
+                $('#verseText').css('text-align', '');
+            } else if (theme === 'transparent') {
+                // Glass pill: reference stays top-left; verse text follows alignment setting
+                $('#verseDisplay').css('text-align', 'left');
+                $('#verseContent').css('align-items', 'flex-start');
+                $('#verseReference').css({
+                    'align-self': 'flex-start',
+                    'padding-left': '',
+                    'padding-right': '',
+                    'margin-left': '10px',
+                    'margin-right': ''
+                });
+                $('#verseText').css('text-align', alignment);
             } else {
                 $('#verseContent').css('align-items', '');
                 $('#verseReference').css({
                     'align-self': '',
                     'padding-left': '',
-                    'padding-right': ''
+                    'padding-right': '',
+                    'margin-left': '',
+                    'margin-right': ''
                 });
+                $('#verseText').css('text-align', '');
             }
 
             // Opacity (3 modes)
@@ -380,12 +396,6 @@
 
             lastReference = reference;
             lastText = text;
-
-            // Clear any existing auto-hide timer
-            if (autoHideTimeout) {
-                clearTimeout(autoHideTimeout);
-                autoHideTimeout = null;
-            }
 
             if (reference && text) {
                 // Is this the first verse appearing (hidden → visible)?

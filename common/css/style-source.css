@@ -306,19 +306,70 @@ body[data-theme="crimson"] .verse-text {
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
-/* --- Theme: Transparent Minimal --- */
+/* --- Theme: Transparent (Glass Pill) ---
+   Modern glassmorphism banner + overlapping blue reference pill
+   ======================================== */
+body[data-theme="transparent"] .verse-display {
+    padding: 22px 28px 18px 28px;
+    overflow: visible;
+    text-align: left;
+}
+
 body[data-theme="transparent"] .verse-bg {
-    background: rgba(0, 0, 0, 0.92);
-    border-top: none;
-    backdrop-filter: blur(6px);
+    background: rgba(210, 220, 230, 0.78);
+    backdrop-filter: blur(16px) saturate(1.15);
+    -webkit-backdrop-filter: blur(16px) saturate(1.15);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    border-radius: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.55);
+    box-shadow:
+        0 10px 36px rgba(15, 30, 50, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
+
+body[data-theme="transparent"] .verse-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 6px 2px;
+}
+
 body[data-theme="transparent"] .verse-reference {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    order: 0;
+    margin: -34px 0 14px 10px;
+    padding: 9px 20px;
+    background: #1e4fc4;
     color: #ffffff;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+    border-radius: 999px;
+    font-weight: 700;
+    font-style: normal;
+    font-variant: normal;
+    letter-spacing: 0.2px;
+    text-transform: none;
+    text-shadow: none;
+    white-space: nowrap;
+    line-height: 1.25;
+    box-shadow: 0 6px 18px rgba(30, 79, 196, 0.38);
 }
+
 body[data-theme="transparent"] .verse-text {
-    color: #f0f0f0;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+    order: 1;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 2px 14px 10px 14px;
+    color: #1c2430;
+    font-weight: 500;
+    text-shadow: none;
+    text-align: left;
+    line-height: 1.55;
 }
 
 /* ========================================

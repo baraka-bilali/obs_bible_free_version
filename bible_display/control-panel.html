@@ -104,6 +104,13 @@
                 <!-- Default Themes Section -->
                 <h3 class="theme-section-title" data-i18n="themeSectionDefault">Default Themes</h3>
                 <div class="theme-grid">
+                    <div class="theme-card" data-theme="transparent">
+                        <div class="theme-preview" style="background:linear-gradient(160deg,rgba(180,195,210,0.35),rgba(140,160,180,0.45));border:1px solid rgba(255,255,255,0.35);border-radius:10px;position:relative;overflow:visible;padding:18px 10px 10px;">
+                            <span style="position:absolute;top:6px;left:10px;background:#1e4fc4;color:#fff;font-size:8px;font-weight:700;padding:3px 9px;border-radius:999px;letter-spacing:0.2px;">JEAN 3:16</span>
+                            <span style="color:#1c2430;font-size:9px;margin-top:10px;display:block;">Car Dieu a tant aimé...</span>
+                        </div>
+                        <span class="theme-name">Transparent</span>
+                    </div>
                     <div class="theme-card" data-theme="classic-dark">
                         <div class="theme-preview" style="background:linear-gradient(135deg,#1e1e32,#2d2d46);border-top:3px solid #0a84ff;">
                             <span style="color:#0a84ff;font-size:10px;font-weight:700;">JEAN 3:16</span>
@@ -152,13 +159,6 @@
                             <span style="color:#fce4e4;font-size:9px;">Car Dieu a tant aimé...</span>
                         </div>
                         <span class="theme-name">Crimson</span>
-                    </div>
-                    <div class="theme-card" data-theme="transparent">
-                        <div class="theme-preview" style="background:rgba(0,0,0,0.55);border-top:none;">
-                            <span style="color:#fff;font-size:10px;font-weight:700;">JEAN 3:16</span>
-                            <span style="color:#f0f0f0;font-size:9px;">Car Dieu a tant aimé...</span>
-                        </div>
-                        <span class="theme-name">Transparent</span>
                     </div>
                 </div>
 
@@ -626,7 +626,7 @@
                     <div class="setting-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
                     <div class="setting-info">
                         <span class="setting-title" data-i18n="settingAutoHide">Auto-hide Verse</span>
-                        <span class="setting-desc" data-i18n="settingAutoHideDesc">Automatically hides the verse after a set duration.</span>
+                        <span class="setting-desc" data-i18n="settingAutoHideDesc">Hides the verse after the delay (like the eye button). It stays hidden until you show it again.</span>
                     </div>
                     <div class="setting-control">
                         <label class="toggle-switch">
@@ -837,9 +837,9 @@
                 transZoom: 'Zoom',
                 transNone: 'Aucun',
                 settingAutoHide: 'Masquer automatiquement',
-                settingAutoHideDesc: 'Masque automatiquement le verset après un délai.',
+                settingAutoHideDesc: 'Masque le verset après le délai (comme le bouton œil). Il reste caché jusqu\'à ce que vous le réaffichiez.',
                 settingAutoHideDelay: 'Délai de masquage',
-                settingAutoHideDelayDesc: 'Nombre de secondes avant disparition du verset.',
+                settingAutoHideDelayDesc: 'Nombre de secondes avant que le verset soit masqué.',
                 settingTheme: 'Thème actuel',
                 settingThemeDesc: 'Style visuel appliqué à la source navigateur.',
                 btnChange: 'Changer',
@@ -985,9 +985,9 @@
                 transZoom: 'Zoom',
                 transNone: 'None',
                 settingAutoHide: 'Auto-hide Verse',
-                settingAutoHideDesc: 'Automatically hides the verse after a set duration.',
+                settingAutoHideDesc: 'Hides the verse after the delay (like the eye button). It stays hidden until you show it again.',
                 settingAutoHideDelay: 'Auto-hide Delay',
-                settingAutoHideDelayDesc: 'Number of seconds before the verse disappears.',
+                settingAutoHideDelayDesc: 'Seconds before the verse is hidden.',
                 settingTheme: 'Current Theme',
                 settingThemeDesc: 'Visual style applied to the browser source display.',
                 btnChange: 'Change',
@@ -1584,9 +1584,9 @@
             applyLanguage();
             initFontFamilySettings();
 
-            const savedTheme = localStorage.getItem('bibleTheme') || 'classic-dark';
+            const savedTheme = localStorage.getItem('bibleTheme') || 'transparent';
             $(`.theme-card[data-theme="${savedTheme}"]`).addClass('selected');
-            $('#currentThemeName').text($(`.theme-card[data-theme="${savedTheme}"] .theme-name`).text() || 'Classic Dark');
+            $('#currentThemeName').text($(`.theme-card[data-theme="${savedTheme}"] .theme-name`).text() || 'Transparent');
 
             $('#refFontSizeInput').val(localStorage.getItem('bibleRefFontSize') || '20');
             $('#verseFontSizeInput').val(localStorage.getItem('bibleVerseFontSize') || '18');
