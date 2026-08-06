@@ -87,6 +87,9 @@ body {
     font-weight: 400;
     margin: 8px 0;
     line-height: 1.7;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 24px;
 }
 
 /* ===== Fade Animation (only on change) ===== */
@@ -378,7 +381,7 @@ body[data-theme="ruby-blue"] .verse-text {
     max-width: 100%;
     box-sizing: border-box;
     margin: 0;
-    padding: 12px 14px 14px 14px;
+    padding: 12px 24px 14px 24px;
     color: #ffffff;
     font-weight: 500;
     text-shadow: none;
@@ -447,7 +450,7 @@ body[data-theme="frosted-glass"] .verse-text {
     max-width: 100%;
     box-sizing: border-box;
     margin: 0;
-    padding: 2px 14px 10px 14px;
+    padding: 2px 24px 10px 24px;
     color: #1c2430;
     font-weight: 500;
     text-shadow: none;
@@ -829,7 +832,7 @@ body[data-theme="dark-cinema"] .verse-text {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    padding: 12px 14px 14px 14px;
+    padding: 12px 24px 14px 24px;
     margin: 0;
     font-size: 18px;
     line-height: 1.7;
