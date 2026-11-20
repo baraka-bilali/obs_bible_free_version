@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bible Display - OBS Browser Source</title>
-    <link rel="stylesheet" href="../common/css/style-source.css?v=16">
+    <link rel="stylesheet" href="../common/css/style-source.css?v=19">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lato:wght@400;700&family=Merriweather:wght@400;700&family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Oswald:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Fraunces:ital,opsz,wght@0,9..144,800;1,9..144,500&family=Inter:wght@600;700&family=Playfair+Display:ital,wght@1,500&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <script src="../common/js/jquery.js"></script>
     <script src="../common/js/bible-fonts.js"></script>
 </head>
@@ -16,6 +17,7 @@
         <div class="bible-display-container">
             <div class="verse-display hidden" id="verseDisplay">
                 <div class="verse-bg" id="verseBg"></div>
+                <div class="lt-deco" id="ltDeco" aria-hidden="true"></div>
                 <div class="verse-content" id="verseContent">
                     <h2 class="verse-reference" id="verseReference"></h2>
                     <p class="verse-text" id="verseText"></p>
@@ -28,57 +30,65 @@
         const OBS_DESIGN_WIDTH = 1920;
         const OBS_DESIGN_HEIGHT = 1080;
 
-        function updateObsCanvasScale() {
-            const w = window.innerWidth;
-            const h = window.innerHeight;
-            const canvas = document.getElementById('obsCanvas');
+        // Layout units are design pixels of a 1920-wide canvas. The canvas is
+        // scaled uniformly to the source width and stretched in height to fill
+        // the source, so the lower third always spans the full width at the
+        // bottom. If the source is too short for it (e.g. a 1920x200 source),
+        // the scale drops so the whole lower third, tabs included, stays inside.
+        let canvasDesignWidth = OBS_DESIGN_WIDTH;
 
-            // Uniform scale (never stretch text). Width drives the scale so the
-            // overlay fills the browser source horizontally at any 16:9 size.
-            const scale = w / OBS_DESIGN_WIDTH;
-            canvas.style.transform = 'scale(' + scale + ')';
-
-            // If the source is not 16:9, fit entirely without deformation.
-            const scaledH = OBS_DESIGN_HEIGHT * scale;
-            if (scaledH > h + 1) {
-                const fitScale = h / OBS_DESIGN_HEIGHT;
-                canvas.style.transform = 'scale(' + fitScale + ')';
-            }
+        function getLowerThirdExtent() {
+            const display = document.getElementById('verseDisplay');
+            if (!display || display.classList.contains('hidden')) return 0;
+            const content = document.getElementById('verseContent');
+            const ref = document.getElementById('verseReference');
+            const refTop = (content ? content.offsetTop : 0) + (ref ? ref.offsetTop : 0);
+            const marginBottom = parseFloat(window.getComputedStyle(display).marginBottom) || 0;
+            return display.offsetHeight + marginBottom + Math.max(0, -refTop) + 4;
         }
 
-        window.addEventListener('resize', function() {
-            updateObsCanvasScale();
-            applySettings();
-        });
-        updateObsCanvasScale();
+        function updateObsCanvasScale() {
+            const w = Math.max(1, window.innerWidth);
+            const h = Math.max(1, window.innerHeight);
+            const canvas = document.getElementById('obsCanvas');
+
+            let scale = w / OBS_DESIGN_WIDTH;
+            const extent = getLowerThirdExtent();
+            if (extent > h / scale) scale = h / extent;
+
+            canvasDesignWidth = w / scale;
+            canvas.style.width = canvasDesignWidth + 'px';
+            canvas.style.height = (h / scale) + 'px';
+            canvas.style.transform = 'scale(' + scale + ')';
+        }
+
+        window.addEventListener('resize', applySettings);
         let lastReference = '';
         let lastText = '';
         let lastSource = '';
         let isDisplayVisible = false; // Track whether the block is currently showing
 
-        // When verses are split into slides, only a light shrink is needed.
-        const MIN_READABLE_FONT_SPLIT = 14;
+        // One rule for every theme: the lower third is always N lines tall at
+        // the chosen font size; a longer verse shrinks the font, never the box.
+        const DEFAULT_LOWER_THIRD_LINES = 2;
+        const MAX_LOWER_THIRD_LINES = 6;
+        const MIN_FIT_RATIO = 0.4;
+        const MIN_FIT_FONT = 10;
 
-        function getMinReadableFontSize(baseFontSize, splitEnabled) {
-            if (splitEnabled) {
-                // Light shrink only: never below 85% of chosen size, floor 14px
-                return Math.max(MIN_READABLE_FONT_SPLIT, Math.round(baseFontSize * 0.85));
-            }
-            // Whole-verse mode: do not shrink — banner stretches instead.
-            return baseFontSize;
+        function getLowerThirdLines() {
+            const n = parseInt(localStorage.getItem('bibleMaxLines'), 10);
+            return (n >= 1 && n <= MAX_LOWER_THIRD_LINES) ? n : DEFAULT_LOWER_THIRD_LINES;
         }
 
-        function getVerseLineCount(element) {
+        function getVerseBaseFontSize(theme) {
+            const verseScale = (theme === 'elegant-quote') ? 1.12 : 1;
+            const size = parseInt(localStorage.getItem('bibleVerseFontSize'), 10) || 18;
+            return Math.round(size * verseScale);
+        }
+
+        function getContentHeight(element) {
             const style = window.getComputedStyle(element);
-            const lineHeightPx = parseFloat(style.lineHeight);
-            if (!lineHeightPx) return 1;
-
-            // scrollHeight includes padding — exclude it so line count stays accurate
-            const paddingTop = parseFloat(style.paddingTop) || 0;
-            const paddingBottom = parseFloat(style.paddingBottom) || 0;
-            const contentHeight = element.scrollHeight - paddingTop - paddingBottom;
-
-            return Math.max(1, Math.round(contentHeight / lineHeightPx));
+            return element.scrollHeight - (parseFloat(style.paddingTop) || 0) - (parseFloat(style.paddingBottom) || 0);
         }
 
         function resetVerseTextLayout() {
@@ -92,6 +102,7 @@
                 'overflow': '',
                 'text-overflow': '',
                 'min-height': '',
+                'max-height': '',
                 'height': '',
                 'width': '',
                 'max-width': '',
@@ -104,79 +115,48 @@
             });
         }
 
-        function fitVerseTextToMaxLines() {
-            const maxLinesSetting = parseInt(localStorage.getItem('bibleMaxLines') || '0', 10);
+        function fitVerseTextToLowerThird() {
             const theme = localStorage.getItem('bibleTheme') || 'transparent';
-            // Some themes get a small verse-text size boost.
-            const verseScale = (theme === 'elegant-quote') ? 1.12 : 1;
-            const baseFontSize = Math.round(parseInt(localStorage.getItem('bibleVerseFontSize') || '18', 10) * verseScale);
-            const lineHeight = localStorage.getItem('bibleLineHeight') || '1.6';
-            const splitEnabled = localStorage.getItem('bibleSplitVerses') === 'true';
+            const lines = getLowerThirdLines();
+            const baseFontSize = getVerseBaseFontSize(theme);
+            const lineHeight = parseFloat(localStorage.getItem('bibleLineHeight')) || 1.6;
             const verseTextEl = document.getElementById('verseText');
-            const minFontSize = getMinReadableFontSize(baseFontSize, splitEnabled);
-            const configuredLH = parseFloat(lineHeight) || 1.6;
-
-            // Elegant Quote always uses a reserved block height (default 3 lines).
-            const isElegantQuote = (theme === 'elegant-quote');
-            const maxLines = isElegantQuote
-                ? (maxLinesSetting > 0 ? maxLinesSetting : 3)
-                : maxLinesSetting;
+            const setFontSize = function(px) {
+                verseTextEl.style.setProperty('font-size', px + 'px', 'important');
+            };
 
             resetVerseTextLayout();
             $('#verseContent').css('min-height', '');
             verseTextEl.style.lineHeight = lineHeight;
-            verseTextEl.style.setProperty('font-size', baseFontSize + 'px', 'important');
+            setFontSize(baseFontSize);
 
-            if (!verseTextEl.textContent.trim()) {
-                return;
-            }
+            // The text box height depends only on the settings, not on the verse
+            const boxHeight = Math.ceil(baseFontSize * lineHeight * lines);
+            const fits = function() { return getContentHeight(verseTextEl) <= boxHeight + 1; };
 
-            // No line limit (non elegant): use chosen size, natural banner height.
-            if (!isElegantQuote && maxLines <= 0) {
-                return;
-            }
-
-            let bestFit = baseFontSize;
-            let actualLines = getVerseLineCount(verseTextEl);
-
-            // Split mode only: gently shrink so each slide fits maxLines.
-            // Whole-verse mode: keep the chosen size and stretch the banner.
-            if (splitEnabled && actualLines > maxLines) {
-                let low = minFontSize;
+            let fontSize = baseFontSize;
+            if (verseTextEl.textContent.trim() && !fits()) {
+                let low = Math.max(MIN_FIT_FONT, Math.floor(baseFontSize * MIN_FIT_RATIO));
                 let high = baseFontSize - 1;
-                bestFit = minFontSize;
-
+                fontSize = low;
                 while (low <= high) {
                     const mid = Math.floor((low + high) / 2);
-                    verseTextEl.style.setProperty('font-size', mid + 'px', 'important');
-                    const lines = getVerseLineCount(verseTextEl);
-
-                    if (lines <= maxLines) {
-                        bestFit = mid;
+                    setFontSize(mid);
+                    if (fits()) {
+                        fontSize = mid;
                         low = mid + 1;
                     } else {
                         high = mid - 1;
                     }
                 }
-
-                verseTextEl.style.setProperty('font-size', bestFit + 'px', 'important');
-                actualLines = getVerseLineCount(verseTextEl);
+                setFontSize(fontSize);
             }
+            const overflows = verseTextEl.textContent.trim() && !fits();
 
-            // Banner height follows the chosen font size and grows with content.
-            // With a max-lines setting, keep at least that many lines of height
-            // for short verses, and stretch further when the verse needs more.
-            const linesForBanner = splitEnabled
-                ? maxLines
-                : Math.max(actualLines, maxLines > 0 ? maxLines : 1);
-            const reservedHeight = Math.ceil(baseFontSize * configuredLH * linesForBanner);
-
-            // border-box so horizontal padding stays inside the banner width
-            // (content-box was pushing text in on the left and past the right edge).
             const computed = window.getComputedStyle(verseTextEl);
-            const padT = parseFloat(computed.paddingTop) || 0;
-            const padB = parseFloat(computed.paddingBottom) || 0;
-            const totalHeight = reservedHeight + padT + padB;
+            const totalHeight = boxHeight
+                + (parseFloat(computed.paddingTop) || 0) + (parseFloat(computed.paddingBottom) || 0)
+                + (parseFloat(computed.borderTopWidth) || 0) + (parseFloat(computed.borderBottomWidth) || 0);
 
             const css = {
                 'width': '100%',
@@ -187,47 +167,35 @@
                 'margin-right': '0',
                 'height': totalHeight + 'px',
                 'min-height': totalHeight + 'px',
+                'max-height': totalHeight + 'px',
                 'overflow': 'hidden'
             };
 
-            const stillTooLong = getVerseLineCount(verseTextEl) > linesForBanner;
-
-            if (stillTooLong && splitEnabled) {
+            if (overflows) {
+                // Even the smallest readable size does not fit: cut with an ellipsis
                 css['display'] = '-webkit-box';
-                css['-webkit-line-clamp'] = maxLines.toString();
+                css['-webkit-line-clamp'] = Math.max(1, Math.floor(boxHeight / (fontSize * lineHeight))).toString();
                 css['-webkit-box-orient'] = 'vertical';
                 css['text-overflow'] = 'ellipsis';
-            } else if (isElegantQuote) {
-                verseTextEl.style.lineHeight = lineHeight;
-                css['display'] = 'flex';
-                css['flex-direction'] = 'column';
-                css['justify-content'] = 'center';
-                css['align-items'] = 'stretch';
             } else {
-                // Full-width flex: keeps text-align (L/C/R). Vertically center
-                // except Solid theme (verse stays top, reference bottom-right).
-                verseTextEl.style.lineHeight = lineHeight;
+                // Flex column keeps text-align (L/C/R) and centers the text
+                // vertically; Solid keeps it at the top (reference bottom-right).
                 css['display'] = 'flex';
                 css['flex-direction'] = 'column';
                 css['justify-content'] = (theme === 'solid') ? 'flex-start' : 'center';
                 css['align-items'] = 'stretch';
-                css['overflow'] = 'hidden';
             }
 
             $('#verseText').css(css);
+        }
 
-            // Elegant Quote: lock overlay height (padding + text + reference).
-            if (isElegantQuote) {
-                const refFontSize = parseInt(localStorage.getItem('bibleRefFontSize') || '20', 10);
-                const refBlock = Math.round(refFontSize * 1.3) + 12;
-                const contentMinHeight = 10 + 14 + reservedHeight + refBlock;
-                $('#verseContent').css('min-height', contentMinHeight + 'px');
-            } else {
-                // Let the whole banner stretch with large fonts / long verses.
-                const refEl = document.getElementById('verseReference');
-                const refH = refEl ? refEl.offsetHeight : 0;
-                const contentPad = 8;
-                $('#verseContent').css('min-height', (reservedHeight + refH + contentPad) + 'px');
+        function layoutLowerThird() {
+            fitVerseTextToLowerThird();
+            const widthBefore = canvasDesignWidth;
+            updateObsCanvasScale();
+            // A shorter source widens the design canvas: re-fit at the new width
+            if (Math.abs(canvasDesignWidth - widthBefore) > 0.5) {
+                fitVerseTextToLowerThird();
             }
         }
 
@@ -248,11 +216,119 @@
             'church-broadcast',
             'church-broadcast-gold',
             'church-broadcast-blue',
-            'dark-cinema'
+            'dark-cinema',
+            'studio-neon'
         ];
 
         function isTabbedRefTheme(theme) {
             return TABBED_REF_THEMES.indexOf(theme) !== -1;
+        }
+
+        // ===== Studio lower thirds: decor elements (static markup only) =====
+        function isStudioTheme(theme) {
+            return theme.indexOf('studio-') === 0;
+        }
+
+        const CROSS_SVG = '<svg class="lt-cross" viewBox="0 0 40 56" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><line x1="20" y1="4" x2="20" y2="52"/><line x1="6" y1="18" x2="34" y2="18"/></svg>';
+
+        const VITRAIL_SVG = '<svg viewBox="0 0 240 240" preserveAspectRatio="xMidYMid slice" stroke="#0d0818" stroke-width="6" stroke-linejoin="round">' +
+            '<polygon points="0,0 120,0 60,120" fill="#c0392b"/>' +
+            '<polygon points="120,0 240,0 180,120" fill="#2c6fbb"/>' +
+            '<polygon points="0,0 60,120 0,240" fill="#2e8b57"/>' +
+            '<polygon points="240,0 180,120 240,240" fill="#7a3fa0"/>' +
+            '<polygon points="0,240 60,120 120,240" fill="#d9822b"/>' +
+            '<polygon points="120,240 180,120 240,240" fill="#1f9bb5"/>' +
+            '<polygon points="120,0 180,120 120,240 60,120" style="fill:var(--lt-accent)"/>' +
+            '<g stroke="#140c22" stroke-width="10" stroke-linecap="round"><line x1="120" y1="78" x2="120" y2="170"/><line x1="96" y1="108" x2="144" y2="108"/></g>' +
+            '</svg>';
+
+        const STUDIO_DECOR = {
+            'studio-vitrail': '<div class="lt-vitrail">' + VITRAIL_SVG + '</div><div class="lt-stripes"></div>',
+            'studio-or-royal': '<div class="lt-ornament"><span class="lt-rule lt-rule-l"></span>' + CROSS_SVG + '<span class="lt-rule lt-rule-r"></span></div>',
+            'studio-editorial': '<div class="lt-bignum"><span class="lt-bignum-text" data-ref="cv"></span></div>',
+            'studio-aube': '<div class="lt-sun">' + CROSS_SVG + '</div><div class="lt-timer"><span class="lt-timer-fill"></span></div>'
+        };
+
+        let currentDecorTheme = null;
+        let currentRefParts = { book: '', cv: '', version: '' };
+
+        function renderDecor(theme) {
+            if (theme === currentDecorTheme) return;
+            currentDecorTheme = theme;
+            document.getElementById('ltDeco').innerHTML = STUDIO_DECOR[theme] || '';
+            fillDecorRefs();
+            restartDisplayTimer();
+        }
+
+        function fillDecorRefs() {
+            $('#ltDeco [data-ref="cv"]').text(currentRefParts.cv || currentRefParts.book);
+            fitBigNumber();
+        }
+
+        // The giant chapter:verse must stay inside its block (e.g. "119:176")
+        function fitBigNumber() {
+            const el = document.querySelector('#ltDeco .lt-bignum-text');
+            if (!el) return;
+            el.style.fontSize = '';
+            const box = el.parentElement;
+            const maxWidth = box.clientWidth * 0.86;
+            const width = el.scrollWidth;
+            if (width > maxWidth && width > 0) {
+                const size = parseFloat(window.getComputedStyle(el).fontSize);
+                el.style.fontSize = Math.floor(size * maxWidth / width) + 'px';
+            }
+        }
+
+        // "Jean 3:16" -> book "Jean", cv "3:16" (ranges such as "1 Jean 1:8-10" too)
+        function splitReference(reference) {
+            const m = reference.match(/^(.*\S)\s+(\d+(?::\d+)?(?:\s*[-–]\s*\d+(?::\d+)?)?)$/);
+            return m ? { book: m[1], cv: m[2] } : { book: reference, cv: '' };
+        }
+
+        // Reference markup: the text stays "Jean 3:16 (LSG)" for classic themes;
+        // studio themes hide the parentheses and style each part.
+        function renderReference(reference, version) {
+            const parts = splitReference(reference);
+            currentRefParts = { book: parts.book, cv: parts.cv, version: version };
+            const $main = $('<span class="ref-main"></span>')
+                .append($('<span class="ref-book"></span>').text(parts.book));
+            if (parts.cv) {
+                $main.append($('<span class="ref-sep"></span>').text(' '))
+                    .append($('<span class="ref-cv"></span>').text(parts.cv));
+            }
+            const $ref = $('#verseReference').empty().append($main);
+            if (version) {
+                $ref.append($('<span class="ref-version"></span>')
+                    .append($('<span class="ref-paren"></span>').text(' ('))
+                    .append(document.createTextNode(version))
+                    .append($('<span class="ref-paren"></span>').text(')')));
+            }
+            fillDecorRefs();
+        }
+
+        // Display timer bar (Aube): restarts with every verse shown
+        function restartDisplayTimer() {
+            const fill = document.querySelector('#ltDeco .lt-timer-fill');
+            if (!fill) return;
+            fill.classList.remove('run');
+            fill.style.transform = '';
+            void fill.offsetWidth;
+            if (isDisplayVisible || $('#verseText').text()) fill.classList.add('run');
+        }
+
+        function applyStageSettings(theme) {
+            const body = document.body;
+            const stage = localStorage.getItem('bibleStageBackground') || 'transparent';
+            body.setAttribute('data-stage', stage);
+            body.setAttribute('data-autohide', localStorage.getItem('bibleAutoHide') === 'true' ? 'true' : 'false');
+            const seconds = parseInt(localStorage.getItem('bibleAutoHideTimer'), 10) || 12;
+            body.style.setProperty('--lt-duration', seconds + 's');
+            const accent = localStorage.getItem('bibleAccentColor') || '';
+            if (/^#[0-9a-f]{6}$/i.test(accent) && isStudioTheme(theme)) {
+                body.style.setProperty('--lt-accent', accent);
+            } else {
+                body.style.removeProperty('--lt-accent');
+            }
         }
 
         // Place panel background under the reference tab for tabbed themes.
@@ -287,7 +363,6 @@
         function applySettings() {
             lastSettingsSignature = getSettingsSignature();
             const refFontSize = localStorage.getItem('bibleRefFontSize') || '20';
-            const verseFontSize = localStorage.getItem('bibleVerseFontSize') || '18';
             const lineHeight = localStorage.getItem('bibleLineHeight') || '1.6';
             const alignment = localStorage.getItem('bibleAlignment') || 'center';
             const theme = localStorage.getItem('bibleTheme') || 'transparent';
@@ -297,15 +372,9 @@
             // Font sizes (independent). Some themes get a small size boost.
             // Use setProperty so theme CSS cannot override the chosen size.
             const refScale = (theme === 'elegant-quote') ? 1.3 : 1;
-            const verseScale = (theme === 'elegant-quote') ? 1.12 : 1;
             document.getElementById('verseReference').style.setProperty(
                 'font-size',
                 Math.round(parseFloat(refFontSize) * refScale) + 'px',
-                'important'
-            );
-            document.getElementById('verseText').style.setProperty(
-                'font-size',
-                Math.round(parseFloat(verseFontSize) * verseScale) + 'px',
                 'important'
             );
 
@@ -336,6 +405,15 @@
                     'margin-right': ''
                 });
                 $('#verseText').css('text-align', '');
+            } else if (isStudioTheme(theme)) {
+                // Studio styles own their layout (CSS); only the verse follows alignment
+                $('#verseDisplay').css('text-align', 'left');
+                $('#verseContent').css({ 'align-items': '', 'display': '', 'flex-direction': '' });
+                $('#verseReference').css({
+                    'align-self': '', 'padding-left': '', 'padding-right': '',
+                    'margin-left': '', 'margin-right': '', 'margin-top': '', 'margin-bottom': ''
+                });
+                $('#verseText').css('text-align', alignment);
             } else if (theme === 'frosted-glass' || isTabbedRefTheme(theme)) {
                 // Badge above panel (or frosted pill); verse follows alignment
                 $('#verseDisplay').css('text-align', 'left');
@@ -407,6 +485,8 @@
 
             // Theme
             $('body').attr('data-theme', theme);
+            applyStageSettings(theme);
+            renderDecor(theme);
 
             // Reset any previous custom panel background overrides (themes own the colors)
             clearPanelBackgroundOverrides();
@@ -440,49 +520,77 @@
             const capitalization = localStorage.getItem('bibleCapitalization') || 'none';
             $('#verseText').css('text-transform', capitalization !== 'none' ? capitalization : '');
 
-            // Shrink verse text to fit within the configured line limit
-            fitVerseTextToMaxLines();
-            // After layout: place ruby-blue bandeau under the reference tab
+            layoutLowerThird();
+            fitBigNumber();
             // After layout: place tabbed-theme bandeau under the reference tab
             syncTabbedPanelBg();
             requestAnimationFrame(syncTabbedPanelBg);
         }
 
-        const ALL_TRANSITION_CLASSES = 'fade fade-in slide-up slide-down slide-left zoom none ' +
-            'fade-out slide-up-out slide-down-out slide-left-out zoom-out none-out';
+        const ALL_TRANSITION_CLASSES = 'fade fade-in slide-up slide-down slide-left zoom none theme ' +
+            'fade-out slide-up-out slide-down-out slide-left-out zoom-out none-out theme-out';
         let hideTimeout = null; // Pending end of exit animation
+
+        let hideEndHandler = null; // animationend listener of the running exit
+
+        function stopWaitingForExit() {
+            clearTimeout(hideTimeout);
+            hideTimeout = null;
+            if (hideEndHandler) {
+                document.getElementById('verseDisplay').removeEventListener('animationend', hideEndHandler);
+                hideEndHandler = null;
+            }
+        }
+
+        function finishHide() {
+            stopWaitingForExit();
+            $('#verseReference').text('');
+            $('#verseText').text('');
+            $('#verseDisplay').removeClass(ALL_TRANSITION_CLASSES);
+            $('#verseDisplay').addClass('hidden');
+            lastReference = '';
+            lastText = '';
+            lastSource = '';
+            isDisplayVisible = false;
+        }
+
+        // Aube: hold the timer bar where it is, so the exit can finish emptying it
+        function freezeDisplayTimer() {
+            const fill = document.querySelector('#ltDeco .lt-timer-fill');
+            if (!fill) return;
+            const current = window.getComputedStyle(fill).transform;
+            fill.style.transform = (current && current !== 'none') ? current : '';
+            fill.classList.remove('run');
+            void fill.offsetWidth;
+        }
 
         function hideVerse() {
             if (!isDisplayVisible || hideTimeout) return;
 
-            // Get transition type for exit animation
             const transition = localStorage.getItem('bibleTransition') || 'fade';
+            const display = document.getElementById('verseDisplay');
 
-            // Remove all entrance classes, add exit class
+            freezeDisplayTimer();
             $('#verseDisplay').removeClass(ALL_TRANSITION_CLASSES);
+            void display.offsetWidth;
             $('#verseDisplay').addClass(transition + '-out');
 
-            // Wait for exit animation to finish, then hide
-            const exitDuration = (transition === 'none') ? 300 : 550;
-            hideTimeout = setTimeout(function() {
-                hideTimeout = null;
-                $('#verseReference').text('');
-                $('#verseText').text('');
-                $('#verseDisplay').removeClass(ALL_TRANSITION_CLASSES);
-                $('#verseDisplay').addClass('hidden');
-                lastReference = '';
-                lastText = '';
-                lastSource = '';
-                isDisplayVisible = false;
-            }, exitDuration);
+            // Remove the verse only once the block's own exit animation has ended
+            // (child animations and the decorative pseudo-elements are ignored).
+            hideEndHandler = function(e) {
+                if (e.target !== display || e.pseudoElement) return;
+                finishHide();
+            };
+            display.addEventListener('animationend', hideEndHandler);
+            // Safety net if no animation runs (e.g. animations disabled)
+            hideTimeout = setTimeout(finishHide, transition === 'theme' ? 2200 : 900);
         }
 
         // A new verse arrived during the exit animation: cancel the pending
         // hide so it does not wipe the new verse, and replay the entrance.
         function cancelPendingHide() {
             if (!hideTimeout) return;
-            clearTimeout(hideTimeout);
-            hideTimeout = null;
+            stopWaitingForExit();
             $('#verseDisplay').removeClass(ALL_TRANSITION_CLASSES);
             isDisplayVisible = false;
         }
@@ -524,8 +632,8 @@
                 
                 // Extract abbreviation from parentheses (e.g. "Louis Segond (LSG)" → "LSG")
                 const parenMatch = source.match(/\(([^)]+)\)/);
-                const abbr = source ? ' (' + (parenMatch ? parenMatch[1].toUpperCase() : source.substring(0, 3).toUpperCase()) + ')' : '';
-                $('#verseReference').text(reference + abbr);
+                const abbr = source ? (parenMatch ? parenMatch[1].toUpperCase() : source.substring(0, 3).toUpperCase()) : '';
+                renderReference(reference, abbr);
                 $('#verseText').text(text);
 
                 // Entrance transition ONLY when going from nothing → first verse
@@ -538,6 +646,7 @@
                 }
 
                 isDisplayVisible = true;
+                restartDisplayTimer();
             }
 
             applySettings();
@@ -548,7 +657,8 @@
             'bibleRefFontSize', 'bibleVerseFontSize', 'bibleRefFontFamily', 'bibleVerseFontFamily', 'bibleLineHeight', 'bibleAlignment', 'bibleTheme',
             'bibleOpacity', 'bibleOpacityTarget', 'bibleSettingsTick', 'bibleMaxLines', 'bibleSplitVerses', 'bibleTransition', 'bibleAutoHide', 'bibleAutoHideTimer',
             'bibleBold', 'bibleVerseFontWeight', 'bibleVerseItalic', 'bibleVerseUnderline', 'bibleVerseLetterSpacing',
-            'bibleRefFontWeight', 'bibleRefItalic', 'bibleRefLetterSpacing', 'bibleCapitalization'
+            'bibleRefFontWeight', 'bibleRefItalic', 'bibleRefLetterSpacing', 'bibleCapitalization',
+            'bibleStageBackground', 'bibleAccentColor'
         ];
         const VERSE_KEYS = ['currentVerseReference', 'currentVerseText', 'currentVerseSource'];
 

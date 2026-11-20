@@ -140,9 +140,15 @@ select.form-control {
     background-size: 16px;
 }
 
-select.form-control option {
-    background-color: #323232;
-    color: #e0e0e0;
+select.form-control option,
+.setting-select option {
+    background-color: #2b2f38;
+    color: #e8e8e8;
+}
+
+.setting-select option:checked {
+    background-color: #3d6fd6;
+    color: #ffffff;
 }
 
 /* ===== Reference Input ===== */
@@ -866,6 +872,33 @@ select.form-control option {
 
 .theme-card-broadcast {
     position: relative;
+}
+
+.accent-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.accent-color-input {
+    width: 40px;
+    height: 30px;
+    padding: 2px;
+    border: 1px solid var(--cp-border, #404040);
+    border-radius: 6px;
+    background: var(--cp-input, #323232);
+    cursor: pointer;
+}
+
+.accent-color-input.is-default {
+    opacity: 0.55;
+}
+
+.theme-card-studio .theme-preview {
+    align-items: flex-start;
+    gap: 2px;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .theme-card-broadcast .theme-preview {

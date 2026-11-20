@@ -88,8 +88,9 @@ obs_bible_free_version/
 3. **Ajouter la source navigateur dans OBS** :
    - Ajouter une source `Navigateur` dans votre scène
    - Cocher `Fichier local` et sélectionner `bible_display/browser-source.html`
-   - **Largeur : `1920` — Hauteur : `1080`** (ou `1280` × `720`, même ratio 16:9)
-   - Dans OBS, redimensionnez la source en gardant le **ratio 16:9** (maintenez **Shift** en étirant) pour éviter toute déformation du texte
+   - **Largeur et hauteur = la résolution de votre canevas OBS** (en général `1920` × `1080`). Avec la taille par défaut d'OBS (`800` × `600`), « Adapter à l'écran » ne couvre que 75 % de la largeur.
+   - Clic droit sur la source → `Transformer` → `Adapter à l'écran` : le lower third occupe toute la largeur, collé en bas, sans déformation
+   - Le lower third remplit toujours toute la largeur de la source et reste entier (onglet de référence compris), quelle que soit sa taille : on peut aussi créer une source de la taille du bandeau seul (ex. `1920` × `260`)
 
 4. **Ouvrir le panneau de contrôle comme Dock OBS** (recommandé) :
    - `Docks` → `Docks de navigateur personnalisés`, URL : `file:///<chemin>/bible_display/control-panel.html`
@@ -187,15 +188,47 @@ John 3:16            → les noms anglais fonctionnent aussi
 
 ## 🎨 Thèmes
 
-28 thèmes sont inclus, répartis en cinq catégories :
+34 thèmes sont inclus, répartis en six catégories :
 
 - **Par défaut** — Transparent, Classic Dark, Royal Purple, Warm Gold, Ocean Blue, Clean White, Forest Green, Crimson
 - **Vedettes** — Ruby Blue, Frosted Glass, Solid, Bread and Wine
 - **Modernes** — Modern Neon, Cyber Pink, Electric Blue, Matrix Green, Professional Blue
 - **Artistiques** — Stained Glass, Sunset Horizon, Aurora Night, Vintage Parchment, Abstract Blue, Abstract Paint, Elegant Quote
 - **Diffusion** — Church Broadcast, Church Gold, Church Blue, Dark Cinema
+- **Studio (animés)** — Aurore, Vitrail, Or royal, Néon, Éditorial, Aube
 
 Changez de thème directement dans l'onglet **Thème** du panneau de contrôle.
+
+### Lower thirds Studio
+
+Six styles animés pensés pour la diffusion. Cycle complet : entrée → affichage (animations d'ambiance en boucle) → transition de fin propre au style (0,8 à 1 s) → disparition. Le verset n'est retiré qu'une fois la transition de fin terminée, et les animations d'ambiance se figent pendant la sortie.
+
+| Style | Look | Entrée | Ambiance | Fin |
+|---|---|---|---|---|
+| **Aurore** | Carte en verre dépoli, pastille dégradée | Monte + zoom léger (1 s) | Deux halos lumineux qui dérivent | Monte de 50 px, se floute et rétrécit en fondu |
+| **Vitrail** | Bandeau pleine largeur, vitrail à gauche | Révélation de gauche à droite (1,1 s) | Le vitrail « respire » | Se referme de gauche à droite |
+| **Or royal** | Cadre doré cérémonial, croix en tête | Monte en fondu (1,2 s) | Reflet doré qui traverse le cadre | Se contracte sur place en fondu |
+| **Néon** | Étiquette inclinée rose → cyan | Arrive depuis la gauche (0,8 s) | Halo néon qui pulse + faisceau qui balaie la barre | Glitch (3 secousses), puis part vers la droite |
+| **Éditorial** | Chapitre:verset géants sur bloc de couleur | Le bandeau monte, puis le texte glisse | — | Le texte glisse à gauche, puis le bandeau redescend |
+| **Aube** | Carte crème avec soleil et minuteur | Rebond (0,9 s) | Le soleil respire, le minuteur se vide | Le minuteur finit de se vider, puis la carte redescend |
+
+- Choisir un style Studio applique ses réglages recommandés : taille des polices, nombre de lignes, alignement et transition **Animation du thème**. Vous pouvez tous les modifier ensuite.
+- **Couleur d'accent** (`Paramètres` → `Affichage`) : change la couleur principale du style ; le bouton **Thème** remet la couleur d'origine. En CSS, ce sont les variables `--lt-accent` / `--lt-accent-2`.
+- **Fond** (`Paramètres` → `Affichage`) : `Transparent` (à l'antenne), `Scène de test` (prévisualiser l'overlay sur un dégradé sombre) ou `Vert chroma` (#00b140).
+- **Durée d'affichage** (`Paramètres` → `Comportement` → masquage auto) : le verset se masque tout seul après ce délai. Aube l'active à 12 s et affiche la barre de minuteur correspondante.
+- Afficher / masquer : bouton **œil** du panneau, ou raccourci OBS `Bible: Show / Hide Verse`.
+- Les polices (Inter, Cormorant Garamond, Playfair Display, Cinzel, Space Grotesk, Fraunces) viennent de Google Fonts : sans Internet, des polices de remplacement sont utilisées.
+
+**Dans OBS** : ajoutez une source `Navigateur` → `Fichier local` = `bible_display/browser-source.html`, **largeur `1920`, hauteur `1080`**, et **effacez le champ « CSS personnalisé »** (pour que rien n'écrase le fond ni la mise en page de la page). Gardez `Fond` sur `Transparent` dans le panneau.
+
+### Hauteur fixe du lower third
+
+Tous les thèmes suivent la même règle : le lower third a une **hauteur fixe** de N lignes à la taille de police choisie (**2 lignes** par défaut, de 1 à 6 dans `Paramètres` → `Lignes du lower third`). En passant d'un verset à l'autre, le bandeau ne change jamais de taille :
+- un verset court est centré dans le bandeau ;
+- un verset long garde le même bandeau, seule la police est réduite pour qu'il tienne (jusqu'à 40 % de la taille choisie) ;
+- la référence reste toujours sur une seule ligne.
+
+Pour garder une grande police sur les longs versets, activez **Découper les versets longs** : le verset est alors réparti en plusieurs diapositives.
 
 ---
 
@@ -333,8 +366,9 @@ A complete system to display Bible verses in real-time in **OBS Studio**, with a
 3. **Add the browser source in OBS**:
    - Add a `Browser` source to your scene
    - Check `Local File` and select `bible_display/browser-source.html`
-   - Recommended width: `1920` — Height: `1080` (or `1280` × `720`, same 16:9 ratio)
-   - In OBS, resize the source while keeping **16:9 aspect ratio** (hold **Shift** when dragging) to avoid text distortion
+   - **Width and height = your OBS canvas resolution** (usually `1920` × `1080`). With OBS's default size (`800` × `600`), "Fit to screen" only covers 75 % of the width.
+   - Right-click the source → `Transform` → `Fit to screen`: the lower third spans the full width at the bottom, without distortion
+   - The lower third always fills the full width of the source and stays whole (reference tab included), whatever its size: you can also create a source the size of the banner only (e.g. `1920` × `260`)
 
 4. **Open the control panel as an OBS Dock** (recommended):
    - `Docks` → `Custom Browser Docks`, URL: `file:///<path>/bible_display/control-panel.html`
@@ -432,15 +466,47 @@ Jean 3:16            → localized book names work with their version
 
 ## 🎨 Themes
 
-28 themes are included, split into five categories:
+34 themes are included, split into six categories:
 
 - **Default** — Transparent, Classic Dark, Royal Purple, Warm Gold, Ocean Blue, Clean White, Forest Green, Crimson
 - **Featured** — Ruby Blue, Frosted Glass, Solid, Bread and Wine
 - **Modern** — Modern Neon, Cyber Pink, Electric Blue, Matrix Green, Professional Blue
 - **Artistic** — Stained Glass, Sunset Horizon, Aurora Night, Vintage Parchment, Abstract Blue, Abstract Paint, Elegant Quote
 - **Broadcast** — Church Broadcast, Church Gold, Church Blue, Dark Cinema
+- **Studio (animated)** — Aurore, Vitrail, Or royal, Néon, Éditorial, Aube
 
 Switch themes directly from the **Theme** tab in the control panel.
+
+### Studio lower thirds
+
+Six animated styles designed for broadcast. Full cycle: entrance → display (ambient loops) → style-specific end transition (0.8 to 1 s) → removal. The verse is removed only once the end transition has finished, and ambient loops freeze during the exit.
+
+| Style | Look | Entrance | Ambient | End |
+|---|---|---|---|---|
+| **Aurore** | Frosted-glass card, gradient pill | Rise + slight zoom (1 s) | Two drifting light halos | Rises 50 px, blurs and shrinks while fading |
+| **Vitrail** | Full-width band, stained glass on the left | Left-to-right reveal (1.1 s) | Stained glass "breathes" | Closes from left to right |
+| **Or royal** | Ceremonial gold frame, cross on top | Fade rise (1.2 s) | Golden sheen crossing the frame | Contracts in place while fading |
+| **Néon** | Pink → cyan slanted label | Slams in from the left (0.8 s) | Pulsing neon glow + scanning beam | Glitch (3 jolts), then leaves to the right |
+| **Éditorial** | Giant chapter:verse on a color block | Band rises, then the text slides in | — | Text slides left, then the band drops |
+| **Aube** | Cream card with sun and timer | Bounce (0.9 s) | Breathing sun, emptying timer | Timer finishes emptying, then the card drops |
+
+- Picking a Studio style applies its recommended settings: font sizes, number of lines, alignment and the **Theme animation** transition. You can change all of them afterwards.
+- **Accent color** (`Settings` → `Display`): changes the main color of the style; the **Theme** button restores the original. In CSS these are the `--lt-accent` / `--lt-accent-2` variables.
+- **Background** (`Settings` → `Display`): `Transparent` (on air), `Test scene` (preview the overlay on a dark gradient) or `Chroma green` (#00b140).
+- **Display duration** (`Settings` → `Behavior` → auto-hide): the verse hides itself after this delay. Aube turns it on at 12 s and shows the matching timer bar.
+- Show / hide: the panel's **eye** button, or the OBS hotkey `Bible: Show / Hide Verse`.
+- Fonts (Inter, Cormorant Garamond, Playfair Display, Cinzel, Space Grotesk, Fraunces) come from Google Fonts; offline, fallback fonts are used.
+
+**In OBS**: add a `Browser` source → `Local file` = `bible_display/browser-source.html`, **width `1920`, height `1080`**, and **clear the "Custom CSS" field** (so nothing overrides the page background or layout). Keep `Background` on `Transparent` in the panel.
+
+### Fixed lower third height
+
+Every theme follows the same rule: the lower third has a **fixed height** of N lines at the chosen font size (**2 lines** by default, 1 to 6 in `Settings` → `Lower third lines`). When moving from verse to verse, the banner never changes size:
+- a short verse is centered in the banner;
+- a long verse keeps the same banner, only the font shrinks so it fits (down to 40 % of the chosen size);
+- the reference always stays on a single line.
+
+To keep a large font on long verses, turn on **Split long verses**: the verse is then spread over several slides.
 
 ---
 
