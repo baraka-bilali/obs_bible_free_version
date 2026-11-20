@@ -18,12 +18,13 @@ Système complet pour afficher des versets bibliques en temps réel dans **OBS S
 - 📖 **Recherche de versets** — par livre, chapitre et verset avec autocomplétion
 - 🔄 **Multi-versions** — Louis Segond 1910 (FR), King James Bible (EN), World English Bible (EN)
 - 🎬 **Intégration OBS native** — source navigateur avec animations de transition fluides
-- ⌨️ **Hotkeys OBS** — jusqu'à 10 emplacements de versets contrôlables par raccourcis clavier
-- 🎨 **16 Thèmes** — sombres, clairs, néon, artistiques et plus, tous personnalisables
+- ⌨️ **Hotkeys OBS** — afficher/masquer le verset et envoyer les 10 premiers favoris par raccourcis clavier
+- ⭐ **Favoris** — conservés entre les sessions
+- 🎨 **28 Thèmes** — sombres, clairs, néon, artistiques, diffusion et plus, tous personnalisables
 - 🔽 **Navigation double mode** — flèches pour parcourir ou basculer directement entre versets
 - 👁️ **Visibilité du verset** — masquer/afficher sans désélectionner
 - 🎚️ **Opacité 3 modes** — contrôle de transparence global, fond uniquement ou texte uniquement
-- 📂 **Hors-ligne** — toutes les Bibles sont stockées en JSON local, aucune connexion nécessaire
+- 📂 **Hors-ligne** — toutes les Bibles sont stockées localement, aucune connexion nécessaire (seules les polices web optionnelles viennent de Google Fonts ; sans Internet, une police de secours est utilisée)
 
 ---
 
@@ -45,23 +46,21 @@ obs_bible_free_version/
 │   │       ├── dark/theme.css
 │   │       └── light/theme.css
 │   └── js/
-│       ├── bible-api.js           # API de chargement des Bibles JSON
-│       ├── versets.js              # Base de données versets (exemples)
-│       ├── hotkeys.js              # État des hotkeys (écrit par le Lua)
+│       ├── bible-api.js           # API des Bibles (chargement, recherche, références)
+│       ├── bible-fonts.js         # Polices disponibles
+│       ├── hotkeys.js             # État des hotkeys (écrit par le Lua, lu par le panneau)
 │       ├── jquery.js
 │       └── jscolor.js
 │
-├── bible-versions/                # Sous-module : données bibliques
-│   ├── versions/
-│   │   ├── fr/
-│   │   │   └── LSG.json           # Louis Segond 1910 (31 102 versets)
-│   │   └── en/
-│   │       ├── KING JAMES BIBLE.json
-│   │       └── WORLD ENGLISH BIBLE.json
-│   ├── scraping/                  # Scripts de scraping
-│   └── ...
+├── bible-versions/                # Données bibliques
+│   ├── versions/                  # Sources JSON
+│   │   ├── fr/LSG.json            # Louis Segond 1910 (31 102 versets)
+│   │   └── en/                    # KING JAMES BIBLE.json, WORLD ENGLISH BIBLE.json
+│   ├── js/                        # Fichiers générés par generate_bible_js.py (chargés par le panneau)
+│   ├── book_name_mapping.json     # Noms de livres localisés
+│   └── scraping/                  # Scripts de scraping
 │
-├── logos/                         # Logos et ressources graphiques
+├── generate_bible_js.py           # Conversion JSON → JS (fonctionnement sans serveur)
 ├── LICENSE                        # Licence GPL-3.0
 └── README.md
 ```
@@ -79,7 +78,7 @@ obs_bible_free_version/
 
 1. **Cloner le dépôt** dans un dossier accessible par OBS :
    ```bash
-   git clone --recursive https://github.com/<votre-utilisateur>/obs_bible_free_version.git
+   git clone https://github.com/<votre-utilisateur>/obs_bible_free_version.git
    ```
 
 2. **Charger le script Lua dans OBS** :
@@ -92,9 +91,10 @@ obs_bible_free_version/
    - **Largeur : `1920` — Hauteur : `1080`** (ou `1280` × `720`, même ratio 16:9)
    - Dans OBS, redimensionnez la source en gardant le **ratio 16:9** (maintenez **Shift** en étirant) pour éviter toute déformation du texte
 
-4. **Ouvrir le panneau de contrôle** :
-   - Ouvrir `bible_display/control-panel.html` dans votre navigateur
-   - Ou l'ajouter comme Dock personnalisé dans OBS (`Vue` → `Docks` → `Docks de navigateur personnalisés`)
+4. **Ouvrir le panneau de contrôle comme Dock OBS** (recommandé) :
+   - `Docks` → `Docks de navigateur personnalisés`, URL : `file:///<chemin>/bible_display/control-panel.html`
+
+   > ⚠️ Le panneau transmet les versets à la source navigateur via le `localStorage` du navigateur intégré d'OBS. Ouvert dans un navigateur externe (Chrome, Edge…), le panneau a son propre stockage et **les versets n'apparaîtront pas dans OBS**.
 
 ---
 
@@ -103,8 +103,23 @@ obs_bible_free_version/
 ### Panneau de contrôle
 
 1. **Sélectionner la version biblique** dans le menu déroulant (Louis Segond, KJV, etc.)
-2. **Saisir la référence** dans le format `Livre Chapitre:Verset` (ex : `Genesis 1:1`)
-3. **Cliquer sur Submit** pour afficher le verset dans OBS
+2. **Saisir la référence** dans le format `Livre Chapitre:Verset` (ex : `Jean 3:16`)
+3. **Cliquer sur Afficher**, puis cliquer sur un verset pour l'envoyer dans OBS
+
+Changer de version réaffiche le même passage dans la nouvelle version (et met à jour le verset à l'écran). La version choisie est mémorisée.
+
+### Recherche par mots clés 🔭
+
+Vous connaissez le récit mais pas la référence ? Cliquez sur le bouton à gauche du champ (l'icône devient des **jumelles**), puis tapez des mots ou une phrase :
+
+| Saisie | Résultat |
+|--------|----------|
+| `bon berger` | versets contenant **tous** ces mots (mots entiers, accents et majuscules ignorés) |
+| `"lumière du monde"` | la phrase exacte |
+| `pierre*` | les mots commençant par « pierre » (pierres, pierreux…) |
+| `lazare -marthe` | exclut les versets contenant « marthe » |
+
+Les versets contenant la phrase complète apparaissent en premier, puis les autres dans l'ordre biblique, avec les mots trouvés surlignés. Cliquez sur un résultat pour l'afficher dans OBS, ou sur **Chapitre ↗** pour lire le contexte (la flèche ← ramène aux résultats). Si aucun mot exact n'est trouvé, la recherche se fait automatiquement sur le début des mots.
 
 ### Raccourcis clavier (onglet Bible)
 
@@ -121,19 +136,20 @@ Le script Lua enregistre 12 hotkeys configurables dans OBS (`Paramètres` → `R
 
 | Hotkey | Action |
 |--------|--------|
-| **Display Verse** | Afficher / basculer le verset courant |
-| **Hide Verse** | Masquer le verset |
-| **Slot #1 à #10** | Charger un verset pré-enregistré |
+| **Bible: Show / Hide Verse** | Masquer le verset affiché / le réafficher (ou afficher le verset surligné) |
+| **Bible: Hide Verse** | Masquer le verset |
+| **Bible: Show Favorite #1 à #10** | Afficher le favori n° 1 à 10 de l'onglet Liste (numéro affiché devant chaque favori) |
+
+> Les hotkeys sont exécutées par le panneau de contrôle : il doit être ouvert (dans un Dock OBS).
 
 ### Format des références
 
 ```
-Genesis 1:1          → un verset unique
-Genesis 1:1-5        → une plage de versets
-John 3:16            → référence en anglais (noms des livres)
+Jean 3:16            → un verset unique
+Jean 3:16-18         → une plage de versets
+Jean 3               → un chapitre entier
+John 3:16            → les noms anglais fonctionnent aussi
 ```
-
-> **Note** : les noms de livres dans le JSON utilisent la convention anglaise (`Genesis`, `Exodus`, `I Samuel`, `Revelation of John`, etc.)
 
 ---
 
@@ -164,17 +180,20 @@ John 3:16            → référence en anglais (noms des livres)
    }
    ```
 2. Le placer dans `bible-versions/versions/<langue>/`
-3. Utiliser les scrapers fournis dans `bible-versions/scraping/` pour automatiser le processus
+3. L'ajouter à la liste `known_versions` de `generate_bible_js.py`, puis lancer `python generate_bible_js.py`
+4. Utiliser les scrapers fournis dans `bible-versions/scraping/` pour automatiser le processus
 
 ---
 
 ## 🎨 Thèmes
 
-16 thèmes sont inclus, répartis en trois catégories :
+28 thèmes sont inclus, répartis en cinq catégories :
 
-- **Par défaut** — Classic Dark, Royal Purple, Warm Gold, Ocean Blue, Clean White, Forest Green, Crimson, Transparent
+- **Par défaut** — Transparent, Classic Dark, Royal Purple, Warm Gold, Ocean Blue, Clean White, Forest Green, Crimson
+- **Vedettes** — Ruby Blue, Frosted Glass, Solid, Bread and Wine
 - **Modernes** — Modern Neon, Cyber Pink, Electric Blue, Matrix Green, Professional Blue
-- **Artistiques** — Stained Glass, Sunset Horizon, Aurora Night, Vintage Parchment
+- **Artistiques** — Stained Glass, Sunset Horizon, Aurora Night, Vintage Parchment, Abstract Blue, Abstract Paint, Elegant Quote
+- **Diffusion** — Church Broadcast, Church Gold, Church Blue, Dark Cinema
 
 Changez de thème directement dans l'onglet **Thème** du panneau de contrôle.
 
@@ -233,9 +252,9 @@ Votre soutien, même un simple message d'encouragement, nous motive à continuer
 └─────────────────────┘                        └──────────────────────┘
 ```
 
-- Le **panneau de contrôle** charge les Bibles JSON via `bible-api.js` et écrit le verset sélectionné dans le `localStorage`
+- Le **panneau de contrôle** charge uniquement la Bible choisie (fichier `bible-versions/js/*.js`) et écrit le verset sélectionné dans le `localStorage`
 - La **source navigateur** lit le `localStorage` et affiche le verset avec animations
-- Le **script Lua** écoute les hotkeys OBS et écrit l'état dans `hotkeys.js`
+- Le **script Lua** écoute les hotkeys OBS et écrit un compteur par hotkey dans `hotkeys.js` ; le **panneau** relit ce fichier régulièrement et exécute l'action correspondante
 
 ---
 
@@ -283,12 +302,13 @@ A complete system to display Bible verses in real-time in **OBS Studio**, with a
 - 📖 **Verse search** — by book, chapter and verse with autocomplete
 - 🔄 **Multi-version** — Louis Segond 1910 (FR), King James Bible (EN), World English Bible (EN)
 - 🎬 **Native OBS integration** — browser source with transition animations
-- ⌨️ **OBS Hotkeys** — up to 10 verse slots controllable by keyboard shortcuts
-- 🎨 **16 Themes** — dark, light, neon, artistic and more, all customizable
+- ⌨️ **OBS Hotkeys** — show/hide the verse and send the first 10 favorites with keyboard shortcuts
+- ⭐ **Favorites** — kept between sessions
+- 🎨 **28 Themes** — dark, light, neon, artistic, broadcast and more, all customizable
 - 🔽 **Dual-mode navigation** — arrow keys to browse or directly switch verses
 - 👁️ **Verse visibility toggle** — hide/show without deselecting
 - 🎚️ **3-mode opacity** — control transparency for the whole block, background only, or text only
-- 📂 **Offline** — all Bibles are stored locally in JSON, no internet connection needed
+- 📂 **Offline** — all Bibles are stored locally, no internet connection needed (only the optional web fonts come from Google Fonts; offline, a fallback font is used)
 
 ---
 
@@ -303,7 +323,7 @@ A complete system to display Bible verses in real-time in **OBS Studio**, with a
 
 1. **Clone the repository** into a folder accessible by OBS:
    ```bash
-   git clone --recursive https://github.com/<your-username>/obs_bible_free_version.git
+   git clone https://github.com/<your-username>/obs_bible_free_version.git
    ```
 
 2. **Load the Lua script in OBS**:
@@ -316,9 +336,10 @@ A complete system to display Bible verses in real-time in **OBS Studio**, with a
    - Recommended width: `1920` — Height: `1080` (or `1280` × `720`, same 16:9 ratio)
    - In OBS, resize the source while keeping **16:9 aspect ratio** (hold **Shift** when dragging) to avoid text distortion
 
-4. **Open the control panel**:
-   - Open `bible_display/control-panel.html` in your browser
-   - Or add it as a Custom Dock in OBS (`View` → `Docks` → `Custom Browser Docks`)
+4. **Open the control panel as an OBS Dock** (recommended):
+   - `Docks` → `Custom Browser Docks`, URL: `file:///<path>/bible_display/control-panel.html`
+
+   > ⚠️ The panel sends verses to the browser source through the `localStorage` of OBS's built-in browser. Opened in an external browser (Chrome, Edge…), the panel has its own storage and **verses will not appear in OBS**.
 
 ---
 
@@ -327,8 +348,23 @@ A complete system to display Bible verses in real-time in **OBS Studio**, with a
 ### Control Panel
 
 1. **Select the Bible version** from the dropdown menu (Louis Segond, KJV, etc.)
-2. **Enter the reference** in the format `Book Chapter:Verse` (e.g. `Genesis 1:1`)
-3. **Click Submit** to display the verse in OBS
+2. **Enter the reference** in the format `Book Chapter:Verse` (e.g. `John 3:16`)
+3. **Click Submit**, then click a verse to send it to OBS
+
+Switching versions shows the same passage in the new version (and updates the verse on screen). The selected version is remembered.
+
+### Keyword Search 🔭
+
+You remember the story but not the reference? Click the button left of the field (the icon turns into **binoculars**), then type words or a phrase:
+
+| Input | Result |
+|-------|--------|
+| `good shepherd` | verses containing **all** these words (whole words, accents and case ignored) |
+| `"light of the world"` | the exact phrase |
+| `stone*` | words starting with "stone" (stones, stoned…) |
+| `lazarus -martha` | excludes verses containing "martha" |
+
+Verses containing the whole phrase come first, then the others in Bible order, with matches highlighted. Click a result to show it in OBS, or **Chapter ↗** to read the context (the ← arrow returns to the results). If no exact word is found, the search automatically falls back to word beginnings.
 
 ### Keyboard Shortcuts (Bible tab)
 
@@ -345,16 +381,19 @@ The Lua script registers 12 configurable hotkeys in OBS (`Settings` → `Hotkeys
 
 | Hotkey | Action |
 |--------|--------|
-| **Display Verse** | Show / toggle the current verse |
-| **Hide Verse** | Hide the verse |
-| **Slot #1 to #10** | Load a pre-saved verse |
+| **Bible: Show / Hide Verse** | Hide the displayed verse / show it again (or show the highlighted verse) |
+| **Bible: Hide Verse** | Hide the verse |
+| **Bible: Show Favorite #1 to #10** | Show favorite #1 to #10 of the List tab (number shown before each favorite) |
+
+> Hotkeys are executed by the control panel: it must be open (in an OBS Dock).
 
 ### Reference Format
 
 ```
-Genesis 1:1          → a single verse
-Genesis 1:1-5        → a range of verses
-John 3:16            → English book names
+John 3:16            → a single verse
+John 3:16-18         → a range of verses
+John 3               → a whole chapter
+Jean 3:16            → localized book names work with their version
 ```
 
 ---
@@ -386,17 +425,20 @@ John 3:16            → English book names
    }
    ```
 2. Place it in `bible-versions/versions/<language>/`
-3. Use the scrapers provided in `bible-versions/scraping/` to automate the process
+3. Add it to the `known_versions` list of `generate_bible_js.py`, then run `python generate_bible_js.py`
+4. Use the scrapers provided in `bible-versions/scraping/` to automate the process
 
 ---
 
 ## 🎨 Themes
 
-16 themes are included, split into three categories:
+28 themes are included, split into five categories:
 
-- **Default** — Classic Dark, Royal Purple, Warm Gold, Ocean Blue, Clean White, Forest Green, Crimson, Transparent
+- **Default** — Transparent, Classic Dark, Royal Purple, Warm Gold, Ocean Blue, Clean White, Forest Green, Crimson
+- **Featured** — Ruby Blue, Frosted Glass, Solid, Bread and Wine
 - **Modern** — Modern Neon, Cyber Pink, Electric Blue, Matrix Green, Professional Blue
-- **Artistic** — Stained Glass, Sunset Horizon, Aurora Night, Vintage Parchment
+- **Artistic** — Stained Glass, Sunset Horizon, Aurora Night, Vintage Parchment, Abstract Blue, Abstract Paint, Elegant Quote
+- **Broadcast** — Church Broadcast, Church Gold, Church Blue, Dark Cinema
 
 Switch themes directly from the **Theme** tab in the control panel.
 

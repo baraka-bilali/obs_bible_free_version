@@ -149,10 +149,109 @@ select.form-control option {
 .reference-input-wrapper {
     position: relative;
     width: 100%;
+    display: flex;
+    gap: 6px;
+    align-items: stretch;
 }
 
 .reference-input-wrapper input {
     width: 100%;
+    flex: 1;
+    min-width: 0;
+}
+
+/* Reference / keyword search mode toggle */
+.search-mode-btn {
+    flex-shrink: 0;
+    width: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--cp-input);
+    border: 2px solid var(--cp-border);
+    border-radius: 6px;
+    color: var(--cp-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.search-mode-btn:hover {
+    color: var(--cp-text-strong);
+    border-color: var(--cp-accent);
+}
+
+.search-mode-btn .icon-keywords { display: none; }
+.search-mode-btn.active .icon-ref { display: none; }
+.search-mode-btn.active .icon-keywords { display: block; }
+
+.search-mode-btn.active {
+    background: var(--cp-accent);
+    border-color: var(--cp-accent);
+    color: var(--cp-bg);
+}
+
+.search-help {
+    margin-top: 6px;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--cp-muted);
+}
+
+.search-help code {
+    background: var(--cp-input);
+    border-radius: 3px;
+    padding: 0 4px;
+    color: var(--cp-text);
+}
+
+/* Keyword search results */
+.search-summary {
+    font-size: 12px;
+    color: var(--cp-muted);
+    padding: 4px 4px 10px;
+}
+
+.search-summary.search-warning {
+    color: #f5c842;
+}
+
+.search-result-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+}
+
+.search-result-ref {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--cp-text-strong);
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.search-open-context {
+    background: transparent;
+    border: 1px solid var(--cp-border);
+    border-radius: 4px;
+    color: var(--cp-muted);
+    font-size: 11px;
+    padding: 1px 6px;
+    cursor: pointer;
+}
+
+.search-open-context:hover {
+    color: var(--cp-text-strong);
+    border-color: var(--cp-accent);
+}
+
+.verse-item mark {
+    background: rgba(245, 200, 66, 0.35);
+    color: inherit;
+    border-radius: 2px;
+    padding: 0 1px;
 }
 
 /* ===== Autocomplete Dropdown ===== */

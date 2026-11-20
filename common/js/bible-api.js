@@ -10,6 +10,7 @@ let bookNameMapping = {};   // Full mapping from book_name_mapping.json
 let currentMapping = {};    // Current version: English -> Localized
 let reverseMapping = {};    // Current version: Localized -> English
 let currentVersion = '';
+let currentVersionKey = '';  // Registry key of the loaded version (e.g. "LSG")
 let availableVersions = [];
 
 // Initialize: read data from global window objects (set by <script> tags)
@@ -107,6 +108,49 @@ function getEnglishBookName(localizedName) {
     return null;
 }
 
+// Escape text before inserting it into HTML strings
+function escapeHtml(value) {
+    return String(value == null ? '' : value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+// Base path from the page (bible_display/*.html) to the project root,
+// used to resolve the jsFile paths of versions-index.js
+const BIBLE_JS_BASE_PATH = '../';
+
+// Load the JS data file of a version on demand (works with file://).
+// callback(success) is called once the version is in BIBLE_DATA_REGISTRY.
+function ensureBibleScript(versionInfo, callback) {
+    const registry = window.BIBLE_DATA_REGISTRY || (window.BIBLE_DATA_REGISTRY = {});
+    if (registry[versionInfo.key]) {
+        callback(true);
+        return;
+    }
+    const script = document.createElement('script');
+    script.src = BIBLE_JS_BASE_PATH + versionInfo.jsFile;
+    script.onload = function() {
+        callback(!!registry[versionInfo.key]);
+    };
+    script.onerror = function() {
+        console.error(`✗ Could not load ${script.src}`);
+        callback(false);
+    };
+    document.head.appendChild(script);
+}
+
+// Find the key of the same book in the currently loaded version
+// (versions use different conventions, e.g. "I Samuel" vs "1 Samuel")
+function findEquivalentBookKey(bookKey) {
+    if (!bookKey) return null;
+    if (bibleData[bookKey]) return bookKey;
+    const normalized = normalizeBookKey(bookKey);
+    return bibleBooks.find(b => normalizeBookKey(b) === normalized) || null;
+}
+
 // Load a Bible version from the global registry (no fetch needed)
 function loadBible(versionKey, mappingKey) {
     if (!window.BIBLE_DATA_REGISTRY || !window.BIBLE_DATA_REGISTRY[versionKey]) {
@@ -117,6 +161,7 @@ function loadBible(versionKey, mappingKey) {
     const entry = window.BIBLE_DATA_REGISTRY[versionKey];
     bibleData = entry.books;
     currentVersion = entry.meta ? entry.meta.version : versionKey;
+    currentVersionKey = versionKey;
 
     // Extract book list (English keys)
     bibleBooks = Object.keys(bibleData);
@@ -285,6 +330,193 @@ function findBook(bookQuery) {
     if (startsEng) return startsEng;
 
     return null;
+}
+
+/* ========================
+   KEYWORD SEARCH (full-text search in the loaded Bible)
+   Query syntax:
+     mot1 mot2        -> verses containing ALL the words (whole words)
+     "une phrase"     -> exact consecutive words (also « … » or “ … ”)
+     mot*             -> words starting with "mot"
+     -mot             -> exclude verses containing "mot"
+   Accent / case / apostrophe insensitive (é = e, œ = oe, ’ = ').
+   ======================== */
+
+const SEARCH_WORD_CHARS = 'a-z0-9';
+const SEARCH_SPECIAL_FOLDS = {
+    'œ': 'oe', 'Œ': 'oe', 'æ': 'ae', 'Æ': 'ae', 'ß': 'ss',
+    '’': "'", '‘': "'", '‛': "'", '`': "'", '´': "'", 'ʼ': "'",
+    '“': '"', '”': '"', '«': '"', '»': '"', '„': '"'
+};
+const SEARCH_SPECIAL_RE = /[œŒæÆß’‘‛`´ʼ“”«»„]/g;
+
+// Fold a whole string (fast, used for indexing and queries)
+function foldForSearch(str) {
+    return String(str)
+        .replace(SEARCH_SPECIAL_RE, c => SEARCH_SPECIAL_FOLDS[c])
+        .normalize('NFD').replace(/[̀-ͯ]/g, '')
+        .toLowerCase();
+}
+
+// Fold a string keeping, for each folded char, the index of its source char
+// (used to highlight matches in the original text)
+function foldWithMap(str) {
+    let folded = '';
+    const map = [];
+    for (let i = 0; i < str.length; i++) {
+        const f = foldForSearch(str[i]);
+        for (let k = 0; k < f.length; k++) {
+            folded += f[k];
+            map.push(i);
+        }
+    }
+    map.push(str.length);
+    return { folded, map };
+}
+
+// Cache: one index per loaded version
+const searchIndexCache = {};
+
+function getSearchIndex() {
+    const cacheKey = currentVersionKey || currentVersion;
+    if (searchIndexCache[cacheKey]) return searchIndexCache[cacheKey];
+    const index = [];
+    const byNum = (a, b) => parseInt(a, 10) - parseInt(b, 10);
+    for (const bookKey of bibleBooks) {
+        const book = bibleData[bookKey];
+        for (const ch of Object.keys(book).sort(byNum)) {
+            const chapter = book[ch];
+            for (const v of Object.keys(chapter).sort(byNum)) {
+                index.push({ bookKey, chapter: ch, verse: v, text: chapter[v], norm: foldForSearch(chapter[v]) });
+            }
+        }
+    }
+    searchIndexCache[cacheKey] = index;
+    return index;
+}
+
+function escapeRegExp(s) {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// Build the regex source matching a word or a phrase (already folded).
+// prefixAll: every word may be the start of a longer word (fallback mode).
+function buildTermPattern(term, prefixAll) {
+    const W = SEARCH_WORD_CHARS;
+    const words = term.split(new RegExp(`[^${W}*]+`)).filter(w => w.replace(/\*/g, ''));
+    if (words.length === 0) return null;
+    const parts = words.map(w => {
+        let p = escapeRegExp(w).replace(/\\\*/g, `[${W}]*`);
+        if (prefixAll && !w.endsWith('*')) p += `[${W}]*`;
+        return p;
+    });
+    return `(?<![${W}])${parts.join(`[^${W}]+`)}(?![${W}])`;
+}
+
+// Parse a user query into include / exclude terms. Returns null if empty.
+function parseSearchQuery(query) {
+    const folded = foldForSearch(query || '').trim();
+    if (!folded) return null;
+    const include = [];
+    const exclude = [];
+    const tokenRe = /(-?)"([^"]*)"?|(\S+)/g;
+    let m;
+    while ((m = tokenRe.exec(folded))) {
+        if (m[2] !== undefined) {
+            if (m[2].trim()) (m[1] ? exclude : include).push({ text: m[2].trim(), phrase: true });
+        } else {
+            let tok = m[3];
+            const neg = tok.length > 1 && tok[0] === '-';
+            if (neg) tok = tok.slice(1);
+            if (tok.replace(/[^a-z0-9]/g, '')) (neg ? exclude : include).push({ text: tok, phrase: false });
+        }
+    }
+    if (include.length === 0) return null;
+    return { include, exclude, raw: folded };
+}
+
+function compileQuery(parsed, prefixAll) {
+    const toRe = (term, prefix) => {
+        const src = buildTermPattern(term.text, prefix && !term.phrase);
+        return src ? new RegExp(src) : null;
+    };
+    const include = parsed.include.map(t => toRe(t, prefixAll)).filter(Boolean);
+    const exclude = parsed.exclude.map(t => toRe(t, false)).filter(Boolean);
+    // Whole query as one phrase: used to rank exact passages first
+    const unquotedWords = parsed.include.filter(t => !t.phrase);
+    const phraseSrc = !prefixAll && unquotedWords.length > 1 && unquotedWords.length === parsed.include.length
+        ? buildTermPattern(unquotedWords.map(t => t.text).join(' '), false) : null;
+    return { include, exclude, phrase: phraseSrc ? new RegExp(phraseSrc) : null };
+}
+
+function runCompiledSearch(compiled) {
+    const exact = [];
+    const others = [];
+    for (const entry of getSearchIndex()) {
+        if (!compiled.include.every(re => re.test(entry.norm))) continue;
+        if (compiled.exclude.some(re => re.test(entry.norm))) continue;
+        (compiled.phrase && compiled.phrase.test(entry.norm) ? exact : others).push(entry);
+    }
+    // Exact phrase first, then Bible order
+    return exact.concat(others);
+}
+
+// Search the loaded Bible. Returns { results, total, approximate, query }.
+// If no verse contains the exact words, retries with word beginnings
+// (approximate = true), e.g. "aimer" -> "aime", "aimé", "aimera"...
+function searchVerses(query) {
+    const parsed = parseSearchQuery(query);
+    if (!parsed) return { results: [], total: 0, approximate: false, query: null };
+
+    let approximate = false;
+    let compiled = compileQuery(parsed, false);
+    let matches = runCompiledSearch(compiled);
+    if (matches.length === 0) {
+        compiled = compileQuery(parsed, true);
+        matches = runCompiledSearch(compiled);
+        approximate = matches.length > 0;
+    }
+
+    const results = matches.map(e => ({
+        bookKey: e.bookKey,
+        chapter: e.chapter,
+        verse: e.verse,
+        text: e.text,
+        reference: `${getLocalizedBookName(e.bookKey)} ${e.chapter}:${e.verse}`
+    }));
+    return { results, total: results.length, approximate, query: parsed, compiled };
+}
+
+// Escaped HTML of a verse with the matched words wrapped in <mark>
+function highlightSearchMatches(text, compiled) {
+    if (!compiled) return escapeHtml(text);
+    const { folded, map } = foldWithMap(text);
+    const ranges = [];
+    // When the whole query appears as a phrase, highlight only that phrase
+    const patterns = compiled.phrase && compiled.phrase.test(folded) ? [compiled.phrase] : compiled.include;
+    for (const re of patterns) {
+        const g = new RegExp(re.source, 'g');
+        let m;
+        while ((m = g.exec(folded))) {
+            if (m[0].length === 0) { g.lastIndex++; continue; }
+            ranges.push([map[m.index], map[m.index + m[0].length]]);
+        }
+    }
+    if (ranges.length === 0) return escapeHtml(text);
+    ranges.sort((a, b) => a[0] - b[0]);
+    const merged = [ranges[0].slice()];
+    for (const r of ranges.slice(1)) {
+        const last = merged[merged.length - 1];
+        if (r[0] <= last[1]) last[1] = Math.max(last[1], r[1]);
+        else merged.push(r.slice());
+    }
+    let html = '';
+    let pos = 0;
+    for (const [s, e] of merged) {
+        html += escapeHtml(text.slice(pos, s)) + '<mark>' + escapeHtml(text.slice(s, e)) + '</mark>';
+        pos = e;
+    }
+    return html + escapeHtml(text.slice(pos));
 }
 
 // Obtenir un ou plusieurs versets basés sur une référence

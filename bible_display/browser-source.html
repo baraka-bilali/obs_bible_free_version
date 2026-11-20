@@ -53,6 +53,7 @@
         updateObsCanvasScale();
         let lastReference = '';
         let lastText = '';
+        let lastSource = '';
         let isDisplayVisible = false; // Track whether the block is currently showing
 
         // When verses are split into slides, only a light shrink is needed.
@@ -277,7 +278,14 @@
             bg.style.top = Math.max(0, top) + 'px';
         }
 
+        let lastSettingsSignature = null;
+
+        function getSettingsSignature() {
+            return SETTINGS_KEYS.map(function(k) { return localStorage.getItem(k); }).join('|');
+        }
+
         function applySettings() {
+            lastSettingsSignature = getSettingsSignature();
             const refFontSize = localStorage.getItem('bibleRefFontSize') || '20';
             const verseFontSize = localStorage.getItem('bibleVerseFontSize') || '18';
             const lineHeight = localStorage.getItem('bibleLineHeight') || '1.6';
@@ -440,27 +448,43 @@
             requestAnimationFrame(syncTabbedPanelBg);
         }
 
+        const ALL_TRANSITION_CLASSES = 'fade fade-in slide-up slide-down slide-left zoom none ' +
+            'fade-out slide-up-out slide-down-out slide-left-out zoom-out none-out';
+        let hideTimeout = null; // Pending end of exit animation
+
         function hideVerse() {
-            if (!isDisplayVisible) return;
+            if (!isDisplayVisible || hideTimeout) return;
 
             // Get transition type for exit animation
             const transition = localStorage.getItem('bibleTransition') || 'fade';
-            
+
             // Remove all entrance classes, add exit class
-            $('#verseDisplay').removeClass('fade fade-in slide-up slide-down slide-left zoom none');
+            $('#verseDisplay').removeClass(ALL_TRANSITION_CLASSES);
             $('#verseDisplay').addClass(transition + '-out');
-            
+
             // Wait for exit animation to finish, then hide
             const exitDuration = (transition === 'none') ? 300 : 550;
-            setTimeout(function() {
+            hideTimeout = setTimeout(function() {
+                hideTimeout = null;
                 $('#verseReference').text('');
                 $('#verseText').text('');
-                $('#verseDisplay').removeClass(transition + '-out');
+                $('#verseDisplay').removeClass(ALL_TRANSITION_CLASSES);
                 $('#verseDisplay').addClass('hidden');
                 lastReference = '';
                 lastText = '';
+                lastSource = '';
                 isDisplayVisible = false;
             }, exitDuration);
+        }
+
+        // A new verse arrived during the exit animation: cancel the pending
+        // hide so it does not wipe the new verse, and replay the entrance.
+        function cancelPendingHide() {
+            if (!hideTimeout) return;
+            clearTimeout(hideTimeout);
+            hideTimeout = null;
+            $('#verseDisplay').removeClass(ALL_TRANSITION_CLASSES);
+            isDisplayVisible = false;
         }
 
         function updateVerseDisplay() {
@@ -474,17 +498,24 @@
                 return;
             }
 
-            // Only update if something changed
-            if (reference === lastReference && text === lastText) {
-                // Still apply settings in case they changed
-                applySettings();
+            // Only update if something changed (the version label included:
+            // the panel's 3 keys may be observed before all are written)
+            if (reference === lastReference && text === lastText && source === lastSource) {
+                // Re-apply layout only when a display setting actually changed
+                // (avoids recomputing the layout every second while polling)
+                if (getSettingsSignature() !== lastSettingsSignature) {
+                    applySettings();
+                }
                 return;
             }
 
             lastReference = reference;
             lastText = text;
+            lastSource = source;
 
             if (reference && text) {
+                cancelPendingHide();
+
                 // Is this the first verse appearing (hidden → visible)?
                 const isEntrance = !isDisplayVisible;
 
@@ -501,7 +532,7 @@
                 // Switching between verses = instant update, no animation
                 if (isEntrance) {
                     const transition = localStorage.getItem('bibleTransition') || 'fade';
-                    $('#verseDisplay').removeClass('fade fade-in slide-up slide-down slide-left zoom none fade-out slide-up-out slide-down-out slide-left-out zoom-out none-out');
+                    $('#verseDisplay').removeClass(ALL_TRANSITION_CLASSES);
                     void document.getElementById('verseDisplay').offsetWidth;
                     $('#verseDisplay').addClass(transition);
                 }
@@ -512,16 +543,27 @@
             applySettings();
         }
 
+        // Display settings written by the control panel (localStorage keys)
+        const SETTINGS_KEYS = [
+            'bibleRefFontSize', 'bibleVerseFontSize', 'bibleRefFontFamily', 'bibleVerseFontFamily', 'bibleLineHeight', 'bibleAlignment', 'bibleTheme',
+            'bibleOpacity', 'bibleOpacityTarget', 'bibleSettingsTick', 'bibleMaxLines', 'bibleSplitVerses', 'bibleTransition', 'bibleAutoHide', 'bibleAutoHideTimer',
+            'bibleBold', 'bibleVerseFontWeight', 'bibleVerseItalic', 'bibleVerseUnderline', 'bibleVerseLetterSpacing',
+            'bibleRefFontWeight', 'bibleRefItalic', 'bibleRefLetterSpacing', 'bibleCapitalization'
+        ];
+        const VERSE_KEYS = ['currentVerseReference', 'currentVerseText', 'currentVerseSource'];
+
         // Listen for storage events (from control panel)
         window.addEventListener('storage', function(e) {
-            if (['currentVerseReference', 'currentVerseText', 'currentVerseSource',
-                 'bibleRefFontSize', 'bibleVerseFontSize', 'bibleRefFontFamily', 'bibleVerseFontFamily', 'bibleLineHeight', 'bibleAlignment', 'bibleTheme',
-                 'bibleOpacity', 'bibleOpacityTarget', 'bibleSettingsTick', 'bibleMaxLines', 'bibleSplitVerses', 'bibleTransition', 'bibleAutoHide', 'bibleAutoHideTimer',
-                 'bibleBold', 'bibleVerseFontWeight', 'bibleVerseItalic', 'bibleVerseUnderline', 'bibleVerseLetterSpacing',
-                 'bibleRefFontWeight', 'bibleRefItalic', 'bibleRefLetterSpacing', 'bibleCapitalization'].includes(e.key)) {
+            if (VERSE_KEYS.includes(e.key) || SETTINGS_KEYS.includes(e.key)) {
                 updateVerseDisplay();
             }
         });
+
+        // Web fonts load asynchronously: re-fit the layout once they are ready
+        if (document.fonts) {
+            if (document.fonts.ready) document.fonts.ready.then(applySettings);
+            if (document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', applySettings);
+        }
 
         // Poll as fallback (same-tab localStorage doesn't fire storage event)
         setInterval(updateVerseDisplay, 1000);
@@ -533,6 +575,7 @@
         localStorage.removeItem('currentVerseSource');
         lastReference = '';
         lastText = '';
+        lastSource = '';
         isDisplayVisible = false;
         applySettings();
     </script>

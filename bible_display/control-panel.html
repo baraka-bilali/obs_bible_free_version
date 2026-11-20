@@ -4,18 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OBS Bible Free Version - Control Panel</title>
-    <link rel="stylesheet" href="../common/css/style-control_panel.css?v=9">
+    <link rel="stylesheet" href="../common/css/style-control_panel.css?v=10">
     <link rel="stylesheet" href="../common/css/cp-icons.css">
     <link rel="stylesheet" href="../common/css/themes/dark/theme.css">
     <script src="../common/js/jquery.js"></script>
     <script src="../common/js/bible-fonts.js"></script>
     <script src="../common/js/jscolor.js"></script>
-    <!-- Bible data (pre-generated JS files, works with file:// protocol) -->
+    <!-- Bible data (pre-generated JS files, works with file:// protocol).
+         Only the index is loaded here; each Bible (~4 MB) is loaded on demand
+         by ensureBibleScript() when it is selected. -->
     <script src="../bible-versions/js/versions-index.js"></script>
     <script src="../bible-versions/js/book_name_mapping.js"></script>
-    <script src="../bible-versions/js/LSG.js"></script>
-    <script src="../bible-versions/js/KJV.js"></script>
-    <script src="../bible-versions/js/WEB.js"></script>
     <script src="../common/js/bible-api.js"></script>
 </head>
 <body>
@@ -35,11 +34,17 @@
 
                 <!-- Reference Input with Autocomplete -->
                 <div class="form-group">
-                    <label for="referenceInput" data-i18n="labelReference">Reference:</label>
+                    <label for="referenceInput" id="referenceLabel" data-i18n="labelReference">Reference:</label>
                     <div class="reference-input-wrapper">
-                        <input type="text" id="referenceInput" class="form-control" 
+                        <!-- Toggle: reference mode (book) <-> keyword search mode (binoculars) -->
+                        <button type="button" id="searchModeBtn" class="search-mode-btn" aria-pressed="false" data-i18n-title="titleSearchModeRef" title="Search verses by keywords">
+                            <svg class="icon-ref" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg>
+                            <svg class="icon-keywords" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="6" cy="16" r="4"/><circle cx="18" cy="16" r="4"/><path d="M10 16h4"/><path d="M2.5 14 5 5h3l1.5 7"/><path d="M21.5 14 19 5h-3l-1.5 7"/></svg>
+                        </button>
+                        <input type="text" id="referenceInput" class="form-control"
                                data-i18n-placeholder="placeholderBook" placeholder="Type a book name..." autocomplete="off">
                     </div>
+                    <p id="searchHelp" class="search-help" data-i18n-html="searchHelp" style="display:none;"></p>
                 </div>
 
                 <!-- Autocomplete Dropdown -->
@@ -769,6 +774,19 @@
                 labelBible: 'Bible :',
                 labelReference: 'Référence :',
                 placeholderBook: 'Tapez un nom de livre...',
+                // Keyword search mode
+                labelKeywords: 'Recherche par mots clés :',
+                placeholderKeywords: 'Mots clés ou phrase (ex : lumière du monde)',
+                titleSearchModeRef: 'Rechercher des versets contenant certains mots clés ou une phrase',
+                titleSearchModeKeywords: 'Revenir à la recherche par référence (livre, chapitre, verset)',
+                searchHelp: 'Tous les mots doivent être présents (accents ignorés). <code>"phrase exacte"</code> · <code>mot*</code> début de mot · <code>-mot</code> exclure',
+                searchResultsTitle: 'Recherche : « {q} »',
+                searchCount: '{n} verset(s) trouvé(s).',
+                searchTooMany: '{n} versets trouvés — seuls les {max} premiers sont affichés. Précisez la recherche.',
+                searchApprox: 'Aucun mot exact trouvé : résultats pour les mots commençant ainsi.',
+                searchNoResult: 'Aucun verset trouvé pour : ',
+                titleOpenContext: 'Ouvrir le chapitre',
+                btnOpenContext: 'Chapitre',
                 btnSubmit: 'Afficher',
                 // Bible tab
                 emptyVerses: 'Aucun verset sélectionné.',
@@ -915,13 +933,27 @@
                 chapterNotFound: 'Chapitre {ch} introuvable dans {book}',
                 versesNotFound: 'Verset(s) introuvable(s) : ',
                 invalidRef: 'Format invalide. Essayez : Genèse 1 ou Jean 3:16',
-                noDataFor: 'Aucune donnée pour '
+                noDataFor: 'Aucune donnée pour ',
+                bibleLoadError: 'Impossible de charger la Bible : '
             },
             en: {
                 searchTitle: 'OBS Bible Free Version',
                 labelBible: 'Bible:',
                 labelReference: 'Reference:',
                 placeholderBook: 'Type a book name...',
+                // Keyword search mode
+                labelKeywords: 'Keyword search:',
+                placeholderKeywords: 'Keywords or phrase (e.g. light of the world)',
+                titleSearchModeRef: 'Search verses containing keywords or a phrase',
+                titleSearchModeKeywords: 'Back to reference search (book, chapter, verse)',
+                searchHelp: 'All words must be present (accents ignored). <code>"exact phrase"</code> · <code>word*</code> word start · <code>-word</code> exclude',
+                searchResultsTitle: 'Search: “{q}”',
+                searchCount: '{n} verse(s) found.',
+                searchTooMany: '{n} verses found — only the first {max} are shown. Refine your search.',
+                searchApprox: 'No exact word found: showing words starting this way.',
+                searchNoResult: 'No verse found for: ',
+                titleOpenContext: 'Open the chapter',
+                btnOpenContext: 'Chapter',
                 btnSubmit: 'Submit',
                 emptyVerses: 'No verses selected.',
                 listTitle: 'Favorites',
@@ -1061,7 +1093,8 @@
                 chapterNotFound: 'Chapter {ch} not found in {book}',
                 versesNotFound: 'Verse(s) not found: ',
                 invalidRef: 'Invalid reference format. Try: Genesis 1 or John 3:16',
-                noDataFor: 'No data found for '
+                noDataFor: 'No data found for ',
+                bibleLoadError: 'Could not load the Bible: '
             }
         };
 
@@ -1071,7 +1104,8 @@
             let text = (i18n[currentLang] && i18n[currentLang][key]) || (i18n.en[key]) || key;
             if (replacements) {
                 for (const [k, v] of Object.entries(replacements)) {
-                    text = text.replace(`{${k}}`, v);
+                    // split/join: no special "$" patterns, all occurrences
+                    text = text.split(`{${k}}`).join(String(v));
                 }
             }
             return text;
@@ -1101,6 +1135,7 @@
             // Update html lang attribute
             $('html').attr('lang', currentLang);
             refreshFontSelectLabels();
+            applySearchModeUI();
         }
 
         function populateFontSelect(selectId, storageKey) {
@@ -1140,6 +1175,13 @@
         // ====== State ======
         let selectedBook = null;
         let isLoading = false;
+        let afterLoadAction = null;   // Action requested while a Bible was loading
+        let loadRequestId = 0;        // Ignore outdated loads when the version changes quickly
+        let lastPassage = null;       // { bookKey, chapter, verseStart, verseEnd } currently listed
+        let keywordMode = false;      // false: reference search (default) / true: keyword search
+        let lastSearchQuery = null;   // Keyword query whose results are currently listed
+        let searchReturnQuery = null; // Results to go back to after "open chapter"
+        const MAX_SEARCH_RESULTS = 300;
 
         // ====== Tab Navigation ======
         function switchTab(tabId) {
@@ -1168,28 +1210,85 @@
             }
 
             versions.forEach((v, idx) => {
-                select.append(`<option value="${idx}">${v.name}</option>`);
+                select.append(`<option value="${idx}">${escapeHtml(v.name)}</option>`);
             });
 
             console.log(`Dropdown populated with ${versions.length} versions`);
 
-            // Load the first version by default
-            if (versions.length > 0) {
-                loadBible(versions[0].key, versions[0].mappingKey);
-                console.log('Default Bible loaded:', versions[0].name);
-            }
+            // Restore the last used version (first one by default)
+            const savedKey = localStorage.getItem('bibleVersionKey');
+            const savedIdx = versions.findIndex(v => v.key === savedKey);
+            const startIdx = savedIdx >= 0 ? savedIdx : 0;
+            select.val(String(startIdx));
+            switchBibleVersion(startIdx, null);
         }
 
-        // When Bible version changes, reload
+        // Load a version (on demand), then run onReady.
+        function switchBibleVersion(idx, onReady) {
+            const version = availableVersions[idx];
+            if (!version) return;
+
+            const requestId = ++loadRequestId;
+            isLoading = true;
+            $('#bibleSelect, #displayBtn').prop('disabled', true);
+
+            ensureBibleScript(version, function(ok) {
+                if (requestId !== loadRequestId) return; // A newer version was selected meanwhile
+                isLoading = false;
+                $('#bibleSelect, #displayBtn').prop('disabled', false);
+
+                if (!ok || !loadBible(version.key, version.mappingKey)) {
+                    showBibleError(t('bibleLoadError') + version.name);
+                    afterLoadAction = null;
+                    return;
+                }
+                localStorage.setItem('bibleVersionKey', version.key);
+                console.log('Bible loaded:', version.name);
+
+                if (onReady) onReady();
+                if (afterLoadAction) {
+                    const action = afterLoadAction;
+                    afterLoadAction = null;
+                    action();
+                }
+            });
+        }
+
+        // When Bible version changes: load it and show the same passage in it
         $('#bibleSelect').on('change', function() {
             const idx = parseInt($(this).val());
-            if (availableVersions[idx]) {
-                isLoading = true;
-                $('#referenceInput').val('');
-                hideAutocomplete();
-                loadBible(availableVersions[idx].key, availableVersions[idx].mappingKey);
-                isLoading = false;
-            }
+            if (!availableVersions[idx]) return;
+            hideAutocomplete();
+
+            // Remember what is listed / live so it can be shown in the new version
+            const passage = lastPassage;
+            const searchQuery = lastSearchQuery;
+            const $selected = $('.verse-item.selected');
+            const liveLoc = $selected.length ? String($selected.attr('data-loc')) : null;
+            const isLive = !!(localStorage.getItem('currentVerseReference') || localStorage.getItem('currentVerseText'));
+
+            switchBibleVersion(idx, function() {
+                // Keep the typed reference usable (book names are localized per version);
+                // keywords are kept in keyword mode
+                if (!keywordMode) $('#referenceInput').val('');
+
+                if (searchQuery) {
+                    // Same keyword search in the new version
+                    runKeywordSearch(searchQuery);
+                } else if (passage) {
+                    const bookKey = findEquivalentBookKey(passage.bookKey);
+                    if (!bookKey) return;
+                    showPassage(bookKey, passage.chapter, passage.verseStart, passage.verseEnd);
+                } else {
+                    return;
+                }
+
+                // Re-send the verse that was live, now in the new version
+                if (liveLoc && isLive) {
+                    const $item = $('.verse-item').filter(function() { return $(this).attr('data-loc') === liveLoc; });
+                    if ($item.length) $item.first().trigger('click');
+                }
+            });
         });
 
         // ====== Autocomplete ======
@@ -1201,7 +1300,7 @@
                 list.html('<div class="autocomplete-item no-results">' + t('noBookFound') + '</div>');
             } else {
                 items.forEach(bookName => {
-                    const item = $(`<div class="autocomplete-item">${bookName}</div>`);
+                    const item = $('<div class="autocomplete-item"></div>').text(bookName);
                     item.on('mousedown', function(e) {
                         e.preventDefault(); // prevent blur
                         selectBook(bookName);
@@ -1228,6 +1327,12 @@
         // ====== Reference Input Handler ======
         $('#referenceInput').on('input', function() {
             const input = $(this).val().trim();
+
+            // Keyword mode: no book autocomplete
+            if (keywordMode) {
+                hideAutocomplete();
+                return;
+            }
 
             if (input.length === 0) {
                 hideAutocomplete();
@@ -1258,7 +1363,7 @@
 
         $('#referenceInput').on('focus', function() {
             const input = $(this).val().trim();
-            if (input.length > 0) {
+            if (input.length > 0 && !keywordMode) {
                 const parsed = parseReference(input);
                 if (!parsed || !findBook(parsed.book)) {
                     const matches = searchBooks(input);
@@ -1273,10 +1378,120 @@
             setTimeout(() => hideAutocomplete(), 150);
         });
 
+        // ====== Keyword search mode ======
+        // Update the field (label, placeholder, icon, help) for the current mode
+        function applySearchModeUI() {
+            const $btn = $('#searchModeBtn');
+            $btn.toggleClass('active', keywordMode).attr('aria-pressed', keywordMode ? 'true' : 'false');
+            $btn.attr('data-i18n-title', keywordMode ? 'titleSearchModeKeywords' : 'titleSearchModeRef')
+                .attr('title', t(keywordMode ? 'titleSearchModeKeywords' : 'titleSearchModeRef'));
+            $('#referenceLabel').attr('data-i18n', keywordMode ? 'labelKeywords' : 'labelReference')
+                .text(t(keywordMode ? 'labelKeywords' : 'labelReference'));
+            $('#referenceInput').attr('data-i18n-placeholder', keywordMode ? 'placeholderKeywords' : 'placeholderBook')
+                .attr('placeholder', t(keywordMode ? 'placeholderKeywords' : 'placeholderBook'));
+            $('#searchHelp').toggle(keywordMode);
+        }
+
+        $('#searchModeBtn').on('click', function() {
+            keywordMode = !keywordMode;
+            hideAutocomplete();
+            applySearchModeUI();
+            $('#referenceInput').focus().select();
+            // Build the search index in advance (first search is then instant)
+            if (keywordMode) {
+                setTimeout(function() { if (!isLoading && bibleBooks.length) getSearchIndex(); }, 50);
+            }
+        });
+
+        // Full-text search in the loaded Bible, results listed in the Bible tab
+        function runKeywordSearch(query) {
+            const res = searchVerses(query);
+            // Remember the query even without result: switching to another
+            // version (e.g. FR words in an EN Bible) re-runs it
+            lastPassage = null;
+            lastSearchQuery = query;
+            if (res.total === 0) {
+                showBibleError(t('searchNoResult') + query);
+                return;
+            }
+
+            const summary = res.total > MAX_SEARCH_RESULTS
+                ? t('searchTooMany', { n: res.total, max: MAX_SEARCH_RESULTS })
+                : t('searchCount', { n: res.total });
+
+            displayVerses(res.results.slice(0, MAX_SEARCH_RESULTS), t('searchResultsTitle', { q: query }), null, null, {
+                search: { compiled: res.compiled, summary: summary, approximate: res.approximate }
+            });
+            // displayVerses does not touch them, but keep the state explicit
+            lastPassage = null;
+            lastSearchQuery = query;
+        }
+
+        // "Chapter" button of a result: show the whole chapter around the verse
+        function openSearchContext(v) {
+            searchReturnQuery = lastSearchQuery;
+            if (!showPassage(v.bookKey, v.chapter, null, null)) return;
+            const loc = verseLocation(v);
+            const $item = $('.verse-item').filter(function() { return $(this).attr('data-loc') === loc; }).first();
+            if ($item.length) {
+                $item.addClass('highlighted');
+                $item[0].scrollIntoView({ block: 'center' });
+            }
+        }
+
+        // Version-independent location of a verse ("1 Samuel|3|2")
+        function verseLocation(v) {
+            return `${normalizeBookKey(v.bookKey || '')}|${v.chapter}|${v.verse}`;
+        }
+
         // ====== Submit / Display ======
+        // List a chapter (verseStart null) or a verse range of the loaded version.
+        // Returns false when nothing was found.
+        function showPassage(bookKey, chapter, verseStart, verseEnd) {
+            const localName = getLocalizedBookName(bookKey);
+            const chapterVerses = getChapter(bookKey, chapter);
+            if (chapterVerses.length === 0) return false;
+
+            let verses = chapterVerses;
+            let title = `${localName} ${chapter}`;
+            if (verseStart !== null && verseStart !== undefined) {
+                const start = parseInt(verseStart, 10);
+                const end = parseInt(verseEnd, 10);
+                verses = chapterVerses.filter(v => {
+                    const n = parseInt(v.verse, 10);
+                    return n >= start && n <= end;
+                });
+                if (verses.length === 0) return false;
+                title += start === end ? `:${start}` : `:${start}-${end}`;
+            }
+
+            lastSearchQuery = null;
+            lastPassage = {
+                bookKey: bookKey,
+                chapter: String(chapter),
+                verseStart: verseStart === undefined ? null : verseStart,
+                verseEnd: verseEnd === undefined ? null : verseEnd
+            };
+            displayVerses(verses, title, bookKey, chapter);
+            return true;
+        }
+
         function submitReference() {
             const reference = $('#referenceInput').val().trim();
             if (!reference) {
+                return;
+            }
+
+            // Bible still loading: run the search as soon as it is ready
+            if (isLoading) {
+                afterLoadAction = submitReference;
+                return;
+            }
+
+            searchReturnQuery = null;
+
+            if (keywordMode) {
+                runKeywordSearch(reference);
                 return;
             }
 
@@ -1293,35 +1508,23 @@
 
                 if (parsed.verse === null) {
                     // Whole chapter: "Book Chapter"
-                    const verses = getChapter(bookKey, parsed.chapter);
-                    if (verses.length > 0) {
-                        displayVerses(verses, `${localName} ${parsed.chapter}`, bookKey, parsed.chapter);
-                    } else {
+                    if (!showPassage(bookKey, parsed.chapter, null, null)) {
                         showBibleError(t('chapterNotFound', {ch: parsed.chapter, book: localName}));
                     }
                 } else {
-                    // Specific verse or range
-                    const verses = getVersesByReference(reference);
-                    if (verses) {
-                        const rangeStr = parsed.verse === parsed.verseEnd
-                            ? `${localName} ${parsed.chapter}:${parsed.verse}`
-                            : `${localName} ${parsed.chapter}:${parsed.verse}-${parsed.verseEnd}`;
-                        displayVerses(verses, rangeStr, bookKey, parsed.chapter);
-                    } else {
+                    // Specific verse or range (accept a reversed range like 16-14)
+                    const a = parseInt(parsed.verse, 10);
+                    const b = parseInt(parsed.verseEnd, 10);
+                    if (!showPassage(bookKey, parsed.chapter, Math.min(a, b), Math.max(a, b))) {
                         showBibleError(t('versesNotFound') + reference);
                     }
                 }
             } else {
-                // Maybe just a book name? Show all chapters info
+                // Maybe just a book name? Default to chapter 1
                 const bookKey = findBook(reference);
                 if (bookKey) {
-                    const localName = getLocalizedBookName(bookKey);
-                    // Default to chapter 1
-                    const verses = getChapter(bookKey, '1');
-                    if (verses.length > 0) {
-                        displayVerses(verses, `${localName} 1`, bookKey, '1');
-                    } else {
-                        showBibleError(t('noDataFor') + localName);
+                    if (!showPassage(bookKey, '1', null, null)) {
+                        showBibleError(t('noDataFor') + getLocalizedBookName(bookKey));
                     }
                 } else {
                     showBibleError(t('invalidRef'));
@@ -1333,6 +1536,40 @@
         let verseHidden = false;
         let hiddenVerseData = null;
         let autoHideTimeout = null;
+
+        // Forget any hidden verse (a new verse is being sent or selected)
+        function resetHiddenState() {
+            clearAutoHideTimer();
+            verseHidden = false;
+            hiddenVerseData = null;
+            $('#btnToggleVisibility').removeClass('toolbar-btn-hidden');
+        }
+
+        // Send a verse to the browser source
+        function sendVerseToDisplay(reference, text, source) {
+            // Source first: the browser source displays a verse as soon as
+            // reference + text are present
+            localStorage.setItem('currentVerseSource', source);
+            localStorage.setItem('currentVerseText', text);
+            localStorage.setItem('currentVerseReference', reference);
+            scheduleAutoHide();
+        }
+
+        function clearVerseOnDisplay() {
+            localStorage.setItem('currentVerseReference', '');
+            localStorage.setItem('currentVerseText', '');
+            localStorage.setItem('currentVerseSource', '');
+        }
+
+        // Eye button / OBS "Show / Hide Verse" hotkey
+        function toggleVerseVisibility() {
+            if (verseHidden) {
+                restoreVerseDisplay();
+            } else if (!hideVerseDisplay()) {
+                // Nothing on screen: show the verse under the cursor, if any
+                confirmHighlightedVerse();
+            }
+        }
 
         function clearAutoHideTimer() {
             if (autoHideTimeout) {
@@ -1370,9 +1607,7 @@
                 return false;
             }
             hiddenVerseData = { ref, txt, src };
-            localStorage.setItem('currentVerseReference', '');
-            localStorage.setItem('currentVerseText', '');
-            localStorage.setItem('currentVerseSource', '');
+            clearVerseOnDisplay();
             verseHidden = true;
             $('#btnToggleVisibility').addClass('toolbar-btn-hidden');
             return true;
@@ -1380,21 +1615,16 @@
 
         function restoreVerseDisplay() {
             if (!hiddenVerseData) return false;
-            localStorage.setItem('currentVerseReference', hiddenVerseData.ref);
-            localStorage.setItem('currentVerseText', hiddenVerseData.txt);
-            localStorage.setItem('currentVerseSource', hiddenVerseData.src);
-            verseHidden = false;
-            hiddenVerseData = null;
-            $('#btnToggleVisibility').removeClass('toolbar-btn-hidden');
-            scheduleAutoHide();
+            const data = hiddenVerseData;
+            resetHiddenState();
+            sendVerseToDisplay(data.ref, data.txt, data.src);
             return true;
         }
 
-        function displayVerses(verses, title, bookKeyParam, chapterParam) {
-            clearAutoHideTimer();
-            verseHidden = false;
-            hiddenVerseData = null;
-            $('#btnToggleVisibility').removeClass('toolbar-btn-hidden');
+        // options.search = { compiled, summary, approximate } for keyword results
+        function displayVerses(verses, title, bookKeyParam, chapterParam, options) {
+            resetHiddenState();
+            const search = options && options.search ? options.search : null;
 
             const container = $('#versesContainer');
             container.empty();
@@ -1407,7 +1637,14 @@
             $('#bibleTitle').text(`${title} (${versionAbbr})`);
 
             // Track context for chapter navigation
-            if (bookKeyParam && chapterParam) {
+            if (search) {
+                // Results span several books: no chapter navigation
+                currentBibleContext = null;
+                if (search.approximate) {
+                    container.append($('<div class="search-summary search-warning"></div>').text(t('searchApprox')));
+                }
+                container.append($('<div class="search-summary"></div>').text(search.summary));
+            } else if (bookKeyParam && chapterParam) {
                 currentBibleContext = {
                     bookKey: bookKeyParam,
                     chapter: String(chapterParam),
@@ -1425,42 +1662,60 @@
             }
 
             verses.forEach(v => {
-                const verseEl = $(`
-                    <div class="verse-item" data-ref="${v.reference || ''}" data-verse-text="${(v.text || '').replace(/"/g, '&quot;')}">
-                        <span class="verse-num">${v.verse}</span>
-                        <span class="verse-text">${v.text}</span>
+                // Verse text as HTML (keyword matches highlighted in search results)
+                const textHtml = search ? highlightSearchMatches(v.text, search.compiled) : escapeHtml(v.text);
+                const attrs = `data-verse="${escapeHtml(v.verse)}" data-loc="${escapeHtml(verseLocation(v))}" ` +
+                    `data-ref="${escapeHtml(v.reference || '')}" data-verse-text="${escapeHtml(v.text || '')}"`;
+                const verseEl = search ? $(`
+                    <div class="verse-item search-result" ${attrs}>
+                        <div class="search-result-body">
+                            <div class="search-result-ref">
+                                <span>${escapeHtml(v.reference)}</span>
+                                <button type="button" class="search-open-context" title="${escapeHtml(t('titleOpenContext'))}">${escapeHtml(t('btnOpenContext'))} ↗</button>
+                            </div>
+                            <span class="verse-text">${textHtml}</span>
+                        </div>
+                    </div>
+                `) : $(`
+                    <div class="verse-item" ${attrs}>
+                        <span class="verse-num">${escapeHtml(v.verse)}</span>
+                        <span class="verse-text">${textHtml}</span>
                     </div>
                 `);
+                verseEl.data('display-html', textHtml);
+
+                if (search) {
+                    verseEl.find('.search-open-context').on('click', function(e) {
+                        e.stopPropagation();
+                        openSearchContext(v);
+                    });
+                }
 
                 // Click to select/send verse
                 verseEl.on('click', function() {
                     const wasSelected = $(this).hasClass('selected');
-                    
+
                     // Clear highlight on any click
                     $('.verse-item').removeClass('highlighted');
 
                     // Reset hidden state on any verse click
-                    clearAutoHideTimer();
-                    verseHidden = false;
-                    hiddenVerseData = null;
-                    $('#btnToggleVisibility').removeClass('toolbar-btn-hidden');
+                    resetHiddenState();
 
                     if (wasSelected) {
                         // Deselect and clear browser-source
                         $(this).removeClass('selected');
                         $(this).find('.verse-chunks-nav').remove();
-                        $(this).find('.verse-text').text(v.text);
-                        localStorage.setItem('currentVerseReference', '');
-                        localStorage.setItem('currentVerseText', '');
-                        localStorage.setItem('currentVerseSource', '');
+                        $(this).find('.verse-text').html(textHtml);
+                        clearVerseOnDisplay();
                     } else {
                         // Deselect previous
                         $('.verse-item').removeClass('selected');
                         $('.verse-chunks-nav').remove();
-                        // Restore full text on previously selected items
+                        // Restore full text on previously selected (chunked) items
                         $('.verse-item').each(function() {
-                            const origText = $(this).data('fulltext');
-                            if (origText) $(this).find('.verse-text').text(origText);
+                            if ($(this).data('fulltext')) {
+                                $(this).find('.verse-text').html($(this).data('display-html'));
+                            }
                         });
 
                         $(this).addClass('selected');
@@ -1485,10 +1740,7 @@
                         }
                         
                         // Normal (no chunking needed)
-                        localStorage.setItem('currentVerseReference', v.reference || `${title}`);
-                        localStorage.setItem('currentVerseText', v.text);
-                        localStorage.setItem('currentVerseSource', versionName);
-                        scheduleAutoHide();
+                        sendVerseToDisplay(v.reference || `${title}`, v.text, versionName);
                     }
                 });
 
@@ -1543,7 +1795,7 @@
             // Update text display in control panel
             const displayText = chunks[chunkIdx] + (chunkIdx < chunks.length - 1 ? ' ...' : '');
             verseEl.find('.verse-text').html(
-                `<span class="chunk-text">${displayText}</span>`
+                `<span class="chunk-text">${escapeHtml(displayText)}</span>`
             );
 
             // Remove old nav, add new
@@ -1566,19 +1818,18 @@
                 showVerseChunk(verseEl, chunkIdx + 1);
             });
 
-            verseEl.append(nav);
+            // In a search result the nav goes under the text
+            const $navHost = verseEl.find('.search-result-body');
+            ($navHost.length ? $navHost : verseEl).append(nav);
 
             // Send chunk to browser-source
             const suffix = chunks.length > 1 ? ` (${chunkIdx + 1}/${chunks.length})` : '';
-            localStorage.setItem('currentVerseReference', ref + suffix);
-            localStorage.setItem('currentVerseText', chunks[chunkIdx]);
-            localStorage.setItem('currentVerseSource', versionName);
-            scheduleAutoHide();
+            sendVerseToDisplay(ref + suffix, chunks[chunkIdx], versionName);
         }
 
         function showBibleError(msg) {
             const container = $('#versesContainer');
-            container.html(`<div class="bible-error"><p>⚠️ ${msg}</p></div>`);
+            container.html(`<div class="bible-error"><p>⚠️ ${escapeHtml(msg)}</p></div>`);
             switchTab('tabBible');
         }
 
@@ -1597,6 +1848,13 @@
 
         // Back button in Bible tab
         $('#bibleBackBtn').click(function() {
+            // Coming from "open chapter" of a keyword result: back to the results
+            if (searchReturnQuery) {
+                const q = searchReturnQuery;
+                searchReturnQuery = null;
+                runKeywordSearch(q);
+                return;
+            }
             switchTab('tabSearch');
         });
 
@@ -1992,11 +2250,7 @@
         });
 
         $('#btnToggleVisibility').click(function() {
-            if (!verseHidden) {
-                hideVerseDisplay();
-            } else {
-                restoreVerseDisplay();
-            }
+            toggleVerseVisibility();
         });
 
         // ====== Chapter Navigation ======
@@ -2005,14 +2259,7 @@
             const newChapter = parseInt(currentBibleContext.chapter) + delta;
             if (newChapter < 1 || newChapter > currentBibleContext.totalChapters) return;
 
-            const bookKey = currentBibleContext.bookKey;
-            const localName = getLocalizedBookName(bookKey);
-            const verses = getChapter(bookKey, String(newChapter));
-            if (verses.length > 0) {
-                displayVerses(verses, `${localName} ${newChapter}`, bookKey, newChapter);
-                // Update context
-                currentBibleContext.chapter = String(newChapter);
-            }
+            showPassage(currentBibleContext.bookKey, String(newChapter), null, null);
         }
 
         $('#btnPrevChapter').click(function() {
@@ -2023,17 +2270,41 @@
         });
 
         // ====== Favorites / List ======
+        // Favorites persist in localStorage (they also feed the OBS slot hotkeys).
+        // One-time migration from the former sessionStorage storage.
+        (function migrateFavorites() {
+            try {
+                const legacy = sessionStorage.getItem('bibleFavorites');
+                if (legacy && !localStorage.getItem('bibleFavorites')) {
+                    localStorage.setItem('bibleFavorites', legacy);
+                }
+                sessionStorage.removeItem('bibleFavorites');
+            } catch (e) { /* storage unavailable */ }
+        })();
+
         function getFavorites() {
             try {
-                return JSON.parse(sessionStorage.getItem('bibleFavorites') || '[]');
+                const favs = JSON.parse(localStorage.getItem('bibleFavorites') || '[]');
+                return Array.isArray(favs) ? favs : [];
             } catch(e) {
                 return [];
             }
         }
 
         function saveFavorites(favs) {
-            sessionStorage.setItem('bibleFavorites', JSON.stringify(favs));
+            localStorage.setItem('bibleFavorites', JSON.stringify(favs));
             renderFavorites();
+        }
+
+        // Send favorite #idx (0-based) to the browser source
+        function sendFavorite(idx) {
+            const fav = getFavorites()[idx];
+            if (!fav) return false;
+            $('.fav-item').removeClass('fav-active');
+            $(`.fav-item[data-index="${idx}"]`).addClass('fav-active');
+            resetHiddenState();
+            sendVerseToDisplay(fav.reference, fav.text, fav.version);
+            return true;
         }
 
         function addToFavorites() {
@@ -2077,29 +2348,23 @@
             }
 
             favs.forEach((fav, idx) => {
-                const shortText = fav.text.length > 120 ? fav.text.substring(0, 120) + '...' : fav.text;
+                const favText = String(fav.text || '');
+                const shortText = favText.length > 120 ? favText.substring(0, 120) + '...' : favText;
+                // Slot number usable with the OBS hotkeys "Show Favorite #N"
+                const slot = idx < 10 ? `<span class="fav-version">#${idx + 1}</span> ` : '';
                 const item = $(`
                     <div class="fav-item" data-index="${idx}">
                         <div class="fav-content">
-                            <div class="fav-ref">${fav.reference} <span class="fav-version">(${fav.version})</span></div>
-                            <div class="fav-text">${shortText}</div>
+                            <div class="fav-ref">${slot}${escapeHtml(fav.reference)} <span class="fav-version">(${escapeHtml(fav.version)})</span></div>
+                            <div class="fav-text">${escapeHtml(shortText)}</div>
                         </div>
-                        <button class="fav-remove" title="${t('favRemove')}">✕</button>
+                        <button class="fav-remove" title="${escapeHtml(t('favRemove'))}">✕</button>
                     </div>
                 `);
 
                 // Click to send to browser source
                 item.find('.fav-content').on('click', function() {
-                    $('.fav-item').removeClass('fav-active');
-                    item.addClass('fav-active');
-                    clearAutoHideTimer();
-                    verseHidden = false;
-                    hiddenVerseData = null;
-                    $('#btnToggleVisibility').removeClass('toolbar-btn-hidden');
-                    localStorage.setItem('currentVerseReference', fav.reference);
-                    localStorage.setItem('currentVerseText', fav.text);
-                    localStorage.setItem('currentVerseSource', fav.version);
-                    scheduleAutoHide();
+                    sendFavorite(idx);
                 });
 
                 // Remove button
@@ -2129,6 +2394,55 @@
         $(`.nav-btn[data-tab="tabList"]`).click(function() {
             renderFavorites();
         });
+
+        // ====== OBS hotkeys (bible_hotkeys.lua) ======
+        // The Lua script increments a counter per hotkey in common/js/hotkeys.js.
+        // This panel re-reads that file regularly and reacts to each new press.
+        const HOTKEYS_POLL_MS = 300;
+        let hotkeyState = null; // { session, counters } last seen
+
+        function runHotkeyAction(id) {
+            if (id === 'DISPLAY_VERSE') {
+                toggleVerseVisibility();
+            } else if (id === 'HIDE_VERSE') {
+                hideVerseDisplay();
+            } else {
+                const m = /^SLOT_(\d+)$/.exec(id);
+                if (m) sendFavorite(parseInt(m[1], 10) - 1);
+            }
+        }
+
+        function handleHotkeyState(state) {
+            if (!state || !state.counters) return;
+            const counters = Object.assign({}, state.counters);
+
+            // First read, or OBS/script restarted (counters reset): just sync
+            if (!hotkeyState || hotkeyState.session !== state.session) {
+                hotkeyState = { session: state.session, counters: counters };
+                return;
+            }
+
+            Object.keys(counters).forEach(function(id) {
+                const presses = (counters[id] || 0) - (hotkeyState.counters[id] || 0);
+                if (presses <= 0) return;
+                // A toggle pressed twice cancels out; other actions run once
+                const times = id === 'DISPLAY_VERSE' ? presses % 2 : 1;
+                for (let i = 0; i < times; i++) runHotkeyAction(id);
+            });
+            hotkeyState.counters = counters;
+        }
+
+        function pollHotkeys() {
+            const script = document.createElement('script');
+            script.src = '../common/js/hotkeys.js?t=' + Date.now();
+            script.onload = script.onerror = function() {
+                script.remove();
+                handleHotkeyState(window.BIBLE_HOTKEYS);
+                setTimeout(pollHotkeys, HOTKEYS_POLL_MS);
+            };
+            document.head.appendChild(script);
+        }
+        pollHotkeys();
     </script>
 </body>
 </html>
