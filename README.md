@@ -188,12 +188,11 @@ John 3:16            → les noms anglais fonctionnent aussi
 
 ## 🎨 Thèmes
 
-34 thèmes sont inclus, répartis en six catégories :
+27 thèmes sont inclus, répartis en cinq catégories :
 
 - **Par défaut** — Transparent, Classic Dark, Royal Purple, Warm Gold, Ocean Blue, Clean White, Forest Green, Crimson
 - **Vedettes** — Ruby Blue, Frosted Glass, Solid, Bread and Wine
 - **Modernes** — Modern Neon, Cyber Pink, Electric Blue, Matrix Green, Professional Blue
-- **Artistiques** — Stained Glass, Sunset Horizon, Aurora Night, Vintage Parchment, Abstract Blue, Abstract Paint, Elegant Quote
 - **Diffusion** — Church Broadcast, Church Gold, Church Blue, Dark Cinema
 - **Studio (animés)** — Aurore, Vitrail, Or royal, Néon, Éditorial, Aube
 
@@ -471,7 +470,6 @@ Jean 3:16            → localized book names work with their version
 - **Default** — Transparent, Classic Dark, Royal Purple, Warm Gold, Ocean Blue, Clean White, Forest Green, Crimson
 - **Featured** — Ruby Blue, Frosted Glass, Solid, Bread and Wine
 - **Modern** — Modern Neon, Cyber Pink, Electric Blue, Matrix Green, Professional Blue
-- **Artistic** — Stained Glass, Sunset Horizon, Aurora Night, Vintage Parchment, Abstract Blue, Abstract Paint, Elegant Quote
 - **Broadcast** — Church Broadcast, Church Gold, Church Blue, Dark Cinema
 - **Studio (animated)** — Aurore, Vitrail, Or royal, Néon, Éditorial, Aube
 
@@ -484,7 +482,7 @@ Six animated styles designed for broadcast. Full cycle: entrance → display (am
 | Style | Look | Entrance | Ambient | End |
 |---|---|---|---|---|
 | **Aurore** | Frosted-glass card, gradient pill | Rise + slight zoom (1 s) | Two drifting light halos | Rises 50 px, blurs and shrinks while fading |
-| **Vitrail** | Full-width band, stained glass on the left | Left-to-right reveal (1.1 s) | Stained glass "breathes" | Closes from left to right |
+| **Vitrail** | Full-width band, decorative pattern on the left | Left-to-right reveal (1.1 s) | Decorative pattern animates | Closes from left to right |
 | **Or royal** | Ceremonial gold frame, cross on top | Fade rise (1.2 s) | Golden sheen crossing the frame | Contracts in place while fading |
 | **Néon** | Pink → cyan slanted label | Slams in from the left (0.8 s) | Pulsing neon glow + scanning beam | Glitch (3 jolts), then leaves to the right |
 | **Éditorial** | Giant chapter:verse on a color block | Band rises, then the text slides in | — | Text slides left, then the band drops |

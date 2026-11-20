@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bible Display - OBS Browser Source</title>
-    <link rel="stylesheet" href="../common/css/style-source.css?v=19">
+    <link rel="stylesheet" href="../common/css/style-source.css?v=20">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lato:wght@400;700&family=Merriweather:wght@400;700&family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Oswald:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
@@ -81,9 +81,8 @@
         }
 
         function getVerseBaseFontSize(theme) {
-            const verseScale = (theme === 'elegant-quote') ? 1.12 : 1;
             const size = parseInt(localStorage.getItem('bibleVerseFontSize'), 10) || 18;
-            return Math.round(size * verseScale);
+            return Math.round(size);
         }
 
         function getContentHeight(element) {
@@ -369,12 +368,10 @@
             const opacity = localStorage.getItem('bibleOpacity') || '100';
             const opacityTarget = localStorage.getItem('bibleOpacityTarget') || 'global';
 
-            // Font sizes (independent). Some themes get a small size boost.
-            // Use setProperty so theme CSS cannot override the chosen size.
-            const refScale = (theme === 'elegant-quote') ? 1.3 : 1;
+            // Font sizes (independent). Use setProperty so theme CSS cannot override.
             document.getElementById('verseReference').style.setProperty(
                 'font-size',
-                Math.round(parseFloat(refFontSize) * refScale) + 'px',
+                refFontSize + 'px',
                 'important'
             );
 
@@ -393,19 +390,7 @@
             $('#verseDisplay').css('text-align', alignment);
 
             // Theme-specific layout tweaks
-            if (theme === 'elegant-quote') {
-                const alignMap = { left: 'flex-start', center: 'center', right: 'flex-end' };
-                const alignItems = alignMap[alignment] || 'flex-start';
-                $('#verseContent').css('align-items', alignItems);
-                $('#verseReference').css({
-                    'align-self': alignItems,
-                    'padding-left': alignment === 'left' ? '29px' : '0',
-                    'padding-right': alignment === 'right' ? '2px' : '0',
-                    'margin-left': '',
-                    'margin-right': ''
-                });
-                $('#verseText').css('text-align', '');
-            } else if (isStudioTheme(theme)) {
+            if (isStudioTheme(theme)) {
                 // Studio styles own their layout (CSS); only the verse follows alignment
                 $('#verseDisplay').css('text-align', 'left');
                 $('#verseContent').css({ 'align-items': '', 'display': '', 'flex-direction': '' });
